@@ -1,0 +1,11 @@
+<button
+  class="botao-custom"
+  [disabled]="disabled"
+  [ngStyle]="{
+    'height': height,
+    'width': width,
+    'color': textColor
+  }"
+  (click)="onButtonClick()" >
+  {{ text }}
+</button>

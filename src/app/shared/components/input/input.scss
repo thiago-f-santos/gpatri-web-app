@@ -1,0 +1,111 @@
+$color-accent: #01B0F1;
+$color-border-default: #898989;
+$color-border-hover: #ffffff;
+$color-text-input: #ffffff;
+$color-text-placeholder: #ffffff;
+
+$font-size-input: 16px;
+$font-size-label: 10px;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+
+$border-radius: 12px;
+$transition-speed: 0.2s;
+$input-height-default: 56px;
+$input-padding-vertical: 16px;
+$input-padding-horizontal: 16px;
+$label-y-offset: 22px;
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&display=swap');
+
+:host {
+  display: block;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+
+  textarea, input {
+    font-family: 'Inter', sans-serif;
+    padding-top: 0;
+  }
+}
+
+.input-fieldset {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  border: 2px solid $color-border-default;
+  border-radius: $border-radius;
+  transition: border-color $transition-speed ease-in-out;
+
+  &:hover {
+    border-color: $color-border-hover;
+  }
+}
+
+.input-legend {
+  margin-left: 12px;
+  padding: 0;
+  overflow: visible;
+  max-width: 0.01px;
+  transition: max-width 0.15s ease-in-out;
+
+  span {
+    display: inline-block;
+    padding: 0 4px;
+    white-space: nowrap;
+    font-size: $font-size-input;
+    font-weight: $font-weight-normal;
+    color: $color-text-placeholder;
+    transform: translateY($label-y-offset);
+    transition: all $transition-speed ease-in-out;
+    pointer-events: none;
+  }
+}
+
+.input-element {
+  width: 100%;
+  padding: $input-padding-vertical $input-padding-horizontal;
+  color: $color-text-input;
+  font-size: $font-size-input;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: vertical;
+}
+
+.input-fieldset:focus-within,
+.input-fieldset.has-value {
+  border-color: $color-accent;
+
+  .input-legend {
+    max-width: 100%;
+
+    > span {
+      transform: translateY(-2px);
+      font-size: $font-size-label;
+      font-weight: $font-weight-bold;
+      color: $color-accent;
+    }
+  }
+}
+
+
+:host(:not(.textarea-host)) {
+  .input-fieldset {
+    height: $input-height-default;
+  }
+
+  .input-element {
+    height: 100%;
+    box-sizing: border-box;
+
+    $new-padding-vertical: calc(($input-height-default - $font-size-input - 2px) / 2);
+    padding-top: $new-padding-vertical;
+    padding-bottom: $new-padding-vertical;
+  }
+
+  .input-legend > span {
+    transform: translateY(24px);
+  }
+}

@@ -1,0 +1,23 @@
+<div class="content">
+  <form class="form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <app-input
+      label="E-mail"
+      type="email"
+      formControlName="email"
+    ></app-input>
+
+    <app-input
+      label="Senha"
+      type="password"
+      formControlName="password"
+    ></app-input>
+
+    <app-button
+      text="Entrar"
+      [disabled]="productForm.invalid"
+      (click)="onSubmit()"
+      width="100%">
+    </app-button>
+  </form>
+</div>
+<pre>{{ productForm.value | json }}</pre>

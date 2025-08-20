@@ -1,0 +1,25 @@
+<fieldset class="input-fieldset" [class.has-value]="value && value.length > 0">
+    <legend class="input-legend">
+        <span>{{ label }}</span>
+    </legend>
+
+    @if (type === 'textarea') {
+        <textarea
+            class="input-element"
+            [value]="value"
+            (input)="onValueChange($event)"
+            [disabled]="isDisabled"
+            placeholder=" "
+            rows="4"
+        ></textarea>
+    } @else {
+        <input
+            [type]="type"
+            class="input-element"
+            [value]="value"
+            (input)="onValueChange($event)"
+            [disabled]="isDisabled"
+            placeholder=" "
+        />
+    }
+</fieldset>
