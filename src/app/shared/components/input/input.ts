@@ -18,7 +18,8 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 export class InputComponent {
   @Input() label!: string;
   @Input() type: 'text' | 'email' | 'password' | 'number' | 'textarea' = 'text';
-
+  @Input() backgroundColor: string = '#03060F';
+  
   value: string = '';
   isDisabled: boolean = false;
 

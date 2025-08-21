@@ -1,25 +1,22 @@
-<fieldset class="input-fieldset" [class.has-value]="value && value.length > 0">
-    <legend class="input-legend">
-        <span>{{ label }}</span>
-    </legend>
-
+<div class="input">
     @if (type === 'textarea') {
         <textarea
             class="input-element"
             [value]="value"
-            (input)="onValueChange($event)"
             [disabled]="isDisabled"
             placeholder=" "
+            (input)="onValueChange($event)"
             rows="4"
         ></textarea>
     } @else {
-        <input
-            [type]="type"
-            class="input-element"
-            [value]="value"
-            (input)="onValueChange($event)"
+        <input 
+            class="input-element" 
+            [type]="type" 
+            [value]="value" 
             [disabled]="isDisabled"
             placeholder=" "
+            (input)="onValueChange($event)" 
         />
     }
-</fieldset>
+    <label class="label" for="text" [ngStyle] = "{'background-color': backgroundColor}"> {{label}} </label>
+</div>
