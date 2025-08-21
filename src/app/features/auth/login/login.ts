@@ -1,37 +1,37 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputComponent } from '../../../shared/components/input/input';
 import { Button } from "../../../shared/components/button/button";
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputComponent, Button],
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
-export class Login {
+export class Login implements OnInit{
 
-  productForm!: FormGroup;
+  loginForm!: FormGroup;
 
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    this.productForm = this.fb.group({
-      email: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.maxLength(500)]],
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
-  onSubmit(): void {
-    if (this.productForm.valid) {
-      console.log('Formulário válido!');
-      console.log('Valor do formulário:', this.productForm.value);
+  get f() { return this.loginForm.controls; }
 
-      const description = this.productForm.get('productDescription')?.value;
-      console.log('Apenas a descrição:', description);
+  onSubmit(): void {
+    if (this.loginForm.valid) {
+      console.log('Formulário enviado!', this.loginForm.value);
     } else {
       console.log('Formulário inválido.');
+      this.loginForm.markAllAsTouched();
     }
   }
 

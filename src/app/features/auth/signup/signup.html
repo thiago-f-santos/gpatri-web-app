@@ -1,0 +1,98 @@
+<div class="signup-container">
+  <div class="signup-form-wrapper">
+    <h1 class="title">Registre-se para continuar!</h1>
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      
+      <div class="form-field">
+        <app-input
+          label="Nome"
+          type="text"
+          formControlName="firstName">
+        </app-input>
+
+        @if (signupForm.get('firstName')?.touched && signupForm.get('firstName')?.invalid) {
+          @if (signupForm.get('firstName')?.hasError('required')) {
+            <p class="error-message">Nome é obrigatório.</p>
+          }
+        }
+      </div>
+
+      <div class="form-field">
+        <app-input
+          label="Sobrenome"
+          type="text"
+          formControlName="lastName">
+        </app-input>
+
+        @if (signupForm.get('lastName')?.touched && signupForm.get('lastName')?.invalid) {
+          @if (signupForm.get('lastName')?.hasError('required')) {
+            <p class="error-message">Sobrenome é obrigatório.</p>
+          }
+        }
+      </div>
+
+      <div class="form-field">
+        <app-input
+          label="E-mail"
+          type="email"
+          formControlName="email">
+        </app-input>
+
+        @if (signupForm.get('email')?.touched && signupForm.get('email')?.invalid) {
+          @if (signupForm.get('email')?.hasError('required')) {
+            <p class="error-message">Email é obrigatório.</p>
+          }
+          @if (signupForm.get('email')?.hasError('email')) {
+            <p class="error-message">Email inválido.</p>
+          }
+        }
+      </div>
+
+      <div class="form-field">
+        <app-input
+          label="Senha"
+          type="password"
+          formControlName="password">
+        </app-input>
+        
+        @if (signupForm.get('password')?.touched && signupForm.get('password')?.invalid) {
+          @if (signupForm.get('password')?.hasError('required')) {
+            <p class="error-message">Senha é obrigatório.</p>
+          }
+          @if (signupForm.get('password')?.hasError('minlength')) {
+            <p class="error-message">A senha deve ter no mínimo 8 caracteres.</p>
+          }
+        }
+      </div>
+
+      <div class="form-field">
+        <app-input
+          label="Confirmar senha"
+          type="password"
+          formControlName="confirmPassword"
+          parentError="passwordMismatch">
+        </app-input>
+
+        @if (signupForm.get('confirmPassword')?.touched && signupForm.get('confirmPassword')?.invalid) {
+          @if (signupForm.get('confirmPassword')?.hasError('required')) {
+            <p class="error-message">Confirmar senha é obrigatório.</p>
+          }
+        }
+        @if (signupForm.hasError('passwordMismatch') && signupForm.get('confirmPassword')?.touched) {
+          <p class="error-message">As senhas não conferem.</p>
+        }
+      </div>
+
+      <app-button
+        text="Registrar"
+        [disabled]="signupForm.invalid"
+        (onClick)="onSubmit()">
+      </app-button>
+    </form>
+
+    <div class="login-link">
+      <a href="/login">Já possuo uma conta!</a>
+    </div>
+  </div>
+</div>

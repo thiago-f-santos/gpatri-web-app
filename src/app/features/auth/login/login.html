@@ -1,23 +1,49 @@
-<div class="content">
-  <form class="form" [formGroup]="productForm" (ngSubmit)="onSubmit()">
-    <app-input
-      label="E-mail"
-      type="email"
-      formControlName="email"
-    ></app-input>
+<div class="login-container">
+  <div class="login-form-wrapper">
+    <img src="logo.png" alt="Logo Numbers" class="logo">
 
-    <app-input
-      label="Senha"
-      type="password"
-      formControlName="password"
-    ></app-input>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <app-input
+          label="E-mail"
+          type="email"
+          formControlName="email">
+        </app-input>
 
-    <app-button
-      text="Entrar"
-      [disabled]="productForm.invalid"
-      (click)="onSubmit()"
-      width="100%">
-    </app-button>
-  </form>
+        @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+          @if (loginForm.get('email')?.hasError('required')) {
+            <p class="error-message">E-mail é obrigatório.</p>
+          } @else if (loginForm.get('email')?.hasError('email')) {
+            <p class="error-message">Por favor, insira um e-mail válido.</p>
+          }
+        }
+      </div>
+
+      <div class="form-field">
+        <app-input
+          label="Senha"
+          type="password"
+          formControlName="password">
+        </app-input>
+        
+        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+          @if (loginForm.get('password')?.hasError('required')) {
+            <p class="error-message">Senha é obrigatória.</p>
+          } @else if (loginForm.get('password')?.hasError('minlength')) {
+            <p class="error-message">A senha deve ter no mínimo 8 caracteres.</p>
+          }
+        }
+      </div>
+      
+      <app-button
+        text="Login"
+        [disabled]="loginForm.invalid"
+        (onClick)="onSubmit()">
+      </app-button>
+    </form>
+
+    <div class="signup-link">
+      <a href="/signup">Não tem conta? <strong>Registre-se</strong></a>
+    </div>
+  </div>
 </div>
-<pre>{{ productForm.value | json }}</pre>

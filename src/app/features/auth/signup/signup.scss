@@ -1,9 +1,9 @@
 @use 'variables' as v;
 
-$size-logo-width: 162px;
 $color-error: #EF233C;
+$font-size-title: 24px;
 
-.login-container {
+.signup-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,19 +12,23 @@ $color-error: #EF233C;
   background-color: v.$color-background-dark;
 }
 
-.login-form-wrapper {
+.signup-form-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   max-width: v.$layout-max-width-form;
   padding: 20px;
-  gap: v.$spacing-base-unit;
 }
 
-.logo {
-  width: $size-logo-width;
-  height: auto;
+.title {
+  font-family: v.$font-family-secondary;
+  font-size: $font-size-title;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-text-light;
+  margin-bottom: v.$spacing-base-unit;
+  text-align: center;
+  text-shadow: 0 1px 16px #506BD5;
 }
 
 form {
@@ -48,7 +52,8 @@ form {
   font-size: 12px;
 }
 
-.signup-link {
+.login-link {
+  margin-top: v.$spacing-base-unit;
   a {
     font-family: v.$font-family-base;
     font-size: v.$font-size-small;
@@ -61,4 +66,3 @@ form {
     }
   }
 }
-
