@@ -1,60 +1,49 @@
-$color-accent: #01B0F1;
-$color-border-default: #898989;
-$color-border-hover: #ffffff;
-$color-text-input: #ffffff;
-$color-text-placeholder: #ffffff;
+@use 'variables' as v;
 
-$font-size-input: 16px;
 $font-size-label: 10px;
-$font-weight-normal: 400;
-$font-weight-bold: 700;
-
-$border-radius: 12px;
 $transition-speed: 0.2s;
-$input-height-default: 56px;
-$input-padding-vertical: 16px;
-$input-padding-horizontal: 16px;
-$label-y-offset: 22px;
-
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&display=swap');
+$label-y-offset: 20px;
+$color-error: #EF233C;
 
 .input {
   position: relative;
-  font-family: 'Inter';
-  font-size: $font-size-input;
-  font-weight: $font-weight-normal;
+  font-family: v.$font-family-base;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-normal;
+}
+
+.input-element {
+  font-family: v.$font-family-base;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-normal;
 }
 
 .input .input-element {
-  box-sizing: border-box; 
+  box-sizing: border-box;
   width: 100%;
-  height: 56px;
+  height: v.$input-height-default;
 
-  padding: $input-padding-horizontal $input-padding-vertical;
-  border: 2px solid $color-border-default;
-  border-radius: $border-radius;
+  padding: v.$spacing-base-unit;
+  border: 2px solid v.$color-border-default;
+  border-radius: v.$border-radius-default;
   background-color: transparent;
-  color: $color-text-input;
+  color: v.$color-text-light;
 
   &::placeholder {
-    color: $color-text-placeholder;
+    color: v.$color-text-light;
   }
 }
 
 .input .input-element:hover {
-  border-color: $color-border-hover;
-  transition: all .15s ease-out;
+  border-color: v.$color-border-hover;
+  transition: all $transition-speed ease-out;
 }
 
 .input .input-element:focus,
 .input .input-element:not(:placeholder-shown) {
   outline: none;
-  border-color: $color-accent;
-  font-family: 'Inter';
-  font-size: $font-size-input;
-  font-weight: $font-weight-normal;
-  color: $color-text-input;
+  border-color: v.$color-primary;
+  color: v.$color-text-light;
 }
 
 .input .input-element:focus + .label,
@@ -62,19 +51,19 @@ $label-y-offset: 22px;
   top: -5px;
   left: 8px;
   font-size: $font-size-label;
-  font-weight: $font-weight-bold;
-  color: $color-accent;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-primary;
 }
 
 .input .label {
   position: absolute;
-  left: 16px;
-  top: 22px;
+  left: v.$spacing-base-unit;
+  top: $label-y-offset;
   padding: 0 4px;
-  font-size: 14px;
+  font-size: v.$font-size-base;
   line-height: 1;
-  color: $color-text-input;
-  transition: all .15s ease-out;
+  color: v.$color-text-light;
+  transition: all $transition-speed ease-out;
   cursor: text;
 }
 
@@ -82,8 +71,20 @@ $label-y-offset: 22px;
   height: auto;
   min-width: 128px;
   resize: vertical;
-  font-family: 'Inter';
-  font-size: $font-size-input;
-  font-weight: $font-weight-normal;
-  color: $color-text-input;
+}
+
+:host(.has-error) {
+  .input-element {
+    border-color: $color-error;
+  }
+
+  .input .input-element:focus,
+  .input .input-element:not(:placeholder-shown) {
+    border-color: $color-error;
+  }
+
+  .input-element:focus + .label,
+  .input-element:not(:placeholder-shown) + .label {
+    color: $color-error;
+  }
 }

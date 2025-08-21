@@ -1,6 +1,7 @@
 <div class="input">
     @if (type === 'textarea') {
         <textarea
+            [id]="id"
             class="input-element"
             [value]="value"
             [disabled]="isDisabled"
@@ -10,6 +11,7 @@
         ></textarea>
     } @else {
         <input 
+            [id]="id"
             class="input-element" 
             [type]="type" 
             [value]="value" 
@@ -18,5 +20,5 @@
             (input)="onValueChange($event)" 
         />
     }
-    <label class="label" for="text" [ngStyle] = "{'background-color': backgroundColor}"> {{label}} </label>
+    <label class="label" [for]="id" [ngStyle] = "{'background-color': backgroundColor}"> {{label}} </label>
 </div>
