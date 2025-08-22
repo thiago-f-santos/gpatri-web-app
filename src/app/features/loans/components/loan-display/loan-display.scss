@@ -1,0 +1,112 @@
+@use 'variables' as v;
+
+$card-background-color: #35383F;
+$request-gap: 8px;
+
+$color-status-pending: #FCBA04;
+$color-status-approved: #80D8F8;
+$color-status-denied: #EF233C;
+$color-status-returned: #80D8F8;
+$color-delete-button: #017BA9;
+
+.loan-request {
+  display: flex;
+  padding: 12px;
+  flex-direction: column;
+  align-items: stretch;
+  align-self: stretch;
+
+  border-radius: v.$border-radius-default;
+  gap: v.$spacing-base-unit;
+  background: $card-background-color;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  font-family: v.$font-family-secondary;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-normal;
+  color: v.$color-text-light;
+  margin: 0;
+
+  strong {
+    font-weight: v.$font-weight-bold;
+  }
+}
+
+.card-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+  gap: 8px;
+}
+
+.status-tag {
+    height: 32px;
+    font-family: v.$font-family-base;
+    font-size: 12px;
+    font-weight: v.$font-weight-bold;
+    color: v.$color-text-dark;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 8px;
+    border-radius: v.$border-radius-default;
+}
+
+.tag-pending {
+  background-color: $color-status-pending;
+}
+
+.tag-approved {
+  background-color: $color-status-approved;
+}
+
+.tag-denied {
+  background-color: $color-status-denied;
+}
+
+.tag-returned {
+  background-color: $color-status-returned;
+}
+
+.delete-button {
+  border: none;
+  outline: none;
+  border-radius: v.$border-radius-default;
+  background-color: $color-delete-button;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    stroke-width: 4px;
+    stroke: v.$color-text-light;
+  }
+
+  &:hover {
+    background-color: darken($color-delete-button, 10%);
+  }
+
+  transition: background-color 0.2s ease-in-out;
+}
+
+.request-items-list {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: $request-gap;
+}
