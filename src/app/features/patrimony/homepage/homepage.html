@@ -1,0 +1,49 @@
+<div class="homepage-container">
+  <app-search-input (search)="onSearch($event)"></app-search-input>
+
+  @if (requestItems$ | async; as items) {
+  <div class="request-section">
+    <h2 class="request-title">Sua solicitação</h2>
+      @if (items.length === 0) {
+        <p class="request-subtitle">Sua solicitação ainda está vazia...</p>
+      } @else {
+        <div class="request-items-list">
+        @for (item of items; track item.id) {
+          <app-item-display
+            [mainText]="item.id"
+            [secondaryText]="item.condition"
+            [showDeleteButton]="true" 
+            [isSelectable]="false"
+            (delete)="removeItemFromRequest(item)">>
+          </app-item-display>
+        }
+        </div>
+
+        <app-button
+          text="Confirmar"
+          (onClick)="confirmRequest()">
+        </app-button>
+      }
+    
+  </div>
+
+  <div class="available-items-section">
+    <h2 class="available-items-title">Itens disponíveis</h2>
+      @if (patrimonies$ | async; as patrimonies) {
+        @for (patrimony of patrimonies; track patrimony.id) {
+          <app-patrimony-display
+            [patrimonyName]="patrimony.patrimonyName"
+            [categoryName]="patrimony.categoryName"
+            [items]="patrimony.items"
+            [selectedItems]="items"
+            (itemSelected)="selectItem($event)"
+          ></app-patrimony-display>
+        }
+      } @else {
+        <p class="request-subtitle">Carregando itens...</p>
+      }
+  </div>
+  } @else {
+    <!-- TO DO: implementar página de carregamento -->
+  }
+</div>
