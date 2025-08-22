@@ -1,0 +1,94 @@
+@use 'variables' as v;
+
+$font-size: 12px;
+$background-color-light: #FAFBFF;
+$font-weight-light: 300;
+
+$color-status-available: #80D8F8;
+$color-status-borrowed: #EF233C;
+$color-delete-button: #4F5157;
+
+.item-card {
+    display: flex;
+    padding: 10px 12px;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    background-color: $background-color-light;
+    border-radius: v.$border-radius-default;
+}
+
+.item-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.main-text {
+    font-family: v.$font-family-base;
+    font-size: $font-size;
+    font-weight: v.$font-weight-normal;
+    color: v.$color-text-dark;
+    margin: 0;
+}
+
+.secondary-text {
+    font-family: v.$font-family-base;
+    font-size: $font-size;
+    font-weight: $font-weight-light;
+    color: v.$color-text-dark;
+    margin: 0;
+}
+
+.item-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.status-tag {
+    height: 32px;
+    font-family: v.$font-family-base;
+    font-size: $font-size;
+    font-weight: v.$font-weight-bold;
+    color: v.$color-text-dark;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 4px;
+    border-radius: v.$border-radius-default;
+}
+
+.tag-available {
+    background-color: $color-status-available;
+}
+
+.tag-borrowed {
+    background-color: $color-status-borrowed;
+}
+
+.delete-button {
+    border: none;
+    outline: none;
+    border-radius: v.$border-radius-default;
+    background-color: $color-delete-button;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+        width: 12px;
+        height: 12px;
+        flex-shrink: 0;
+        stroke-width: 4px;
+        stroke: v.$color-text-light;
+    }
+
+    &:hover {
+        background-color: darken($color-delete-button, 10%);
+    }
+}

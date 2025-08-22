@@ -1,0 +1,27 @@
+<div class="item-card">
+  <div class="item-content">
+    <p class="main-text">{{ mainText }}</p>
+    @if (secondaryText) {
+        <p class="secondary-text">{{ secondaryText }}</p>
+    }
+  </div>
+
+  <div class="item-actions">
+    @if (status) {
+      <span class="status-tag" [ngClass]="{
+          'tag-available': status === 'available',
+          'tag-borrowed': status === 'borrowed'
+        }">
+        {{ status === 'available' ? 'Disponível' : 'Emprestado' }}
+      </span>
+    }
+
+    @if (showDeleteButton) {
+      <button class="delete-button" (click)="onDelete()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M14 2L2 14M2 2L14 14" stroke="#FAFBFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    }
+  </div>
+</div>
