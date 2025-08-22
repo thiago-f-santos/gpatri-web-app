@@ -1,0 +1,19 @@
+<div class="patrimony-display-container">
+    <div class="top-text">
+        <p class="patrimony-name">{{ patrimonyName }}</p>
+        <p class="category-name">{{ categoryName }}</p>
+    </div>
+
+    <div class="item-list">
+        @for (item of items; track item.id) {
+            <app-item-display
+                [mainText]="item.id"
+                [secondaryText]="item.condition"
+                [status]="item.status"
+                [isSelectable]="true"
+                [isSelected]="isSelected(item)" 
+                (click)="!isSelected(item) && itemSelected.emit(item)">
+            </app-item-display>
+        }
+    </div>
+</div>

@@ -1,0 +1,48 @@
+@use 'variables' as v;
+
+$background-color: #35383F;
+
+.patrimony-display-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+
+    padding: 12px;
+    gap: v.$spacing-base-unit;
+
+    border-radius: v.$border-radius-default;
+    background: $background-color;
+}
+
+.top-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    gap: 4px;
+}
+
+.patrimony-name {
+    color: v.$color-text-light;
+    font-family: v.$font-family-secondary;
+    font-size: v.$font-size-base;
+    font-weight: v.$font-weight-bold;
+    margin: 0;
+}
+
+.category-name {
+    color: v.$color-text-light;
+    font-family: v.$font-family-secondary;
+    font-size: v.$font-size-base;
+    font-weight: v.$font-weight-normal;
+    margin: 0;
+}
+
+.item-list {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    align-self: stretch;
+    gap: 8px;
+}
