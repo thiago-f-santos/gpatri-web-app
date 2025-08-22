@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputComponent } from '../../../shared/components/input/input';
 import { Button } from "../../../shared/components/button/button";
+import { InputComponent } from '../../../shared/components/input/input';
 
 @Component({
   selector: 'app-login',
