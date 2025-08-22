@@ -1,4 +1,4 @@
-<div class="item-card">
+<div class="item-card" [class.is-selectable]="isSelectable" [class.is-selected]="isSelected">
   <div class="item-content">
     <p class="main-text">{{ mainText }}</p>
     @if (secondaryText) {

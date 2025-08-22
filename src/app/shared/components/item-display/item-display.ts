@@ -15,6 +15,9 @@ export class ItemDisplay {
   @Input() secondaryText?: string;
   @Input() status: ItemStatus | null = null;
   @Input() showDeleteButton: boolean = false;
+  @Input() isSelectable: boolean = false;
+  @Input() isSelected: boolean = false;
+  
   @Output() delete = new EventEmitter<void>();
 
   onDelete(): void {

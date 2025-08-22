@@ -16,6 +16,16 @@ $color-delete-button: #4F5157;
     align-self: stretch;
     background-color: $background-color-light;
     border-radius: v.$border-radius-default;
+    
+    &.is-selectable {
+        cursor: pointer;
+    }
+
+    &.is-selected {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: darken($background-color-light, 10%);
+    }
 }
 
 .item-content {
