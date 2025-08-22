@@ -2,8 +2,10 @@
     <input
         class="search-input"
         type="text"
-        [(ngModel)]="searchQuery"
+        [value]="value"
+        [disabled]="isDisabled"
         [placeholder]="placeholder"
+        (input)="onValueChange($event)"
         (keyup.enter)="onSearch()"
     />
 
