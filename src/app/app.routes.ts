@@ -19,7 +19,12 @@ export const routes: Routes = [
             },
             {
                 path: 'results',
-                loadComponent: () => import('./features/patrimony/search-results/search-results').then(m => m.SearchResults)}
+                loadComponent: () => import('./features/patrimony/search-results/search-results').then(m => m.SearchResults)
+            },
+            {
+                path: 'emprestimos',
+                loadComponent: () => import('./features/loans/user-loans/user-loans').then(m => m.UserLoans)
+            }
         ]
     }
 ];
