@@ -1,0 +1,26 @@
+<header class="header-container">
+    <div class="left-side">
+        @if (showBackButton$ | async) {
+            <button class="icon-button" (click)="goBack()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+                    <path d="M50.6666 32H13.3333M13.3333 32L31.9999 50.6666M13.3333 32L31.9999 13.3333" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        }
+        @if (!(showBackButton$ | async)) {
+            <button class="icon-button" (click)="openMenu()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+                    <path d="M8 48V42.6667H56V48H8ZM8 34.6667V29.3333H56V34.6667H8ZM8 21.3333V16H56V21.3333H8Z" fill="currentColor"/>
+                </svg>
+            </button>
+        }
+    </div>
+    <div class="right-side">
+        <button class="icon-button" (click)="openUserConfig()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+                <path d="M32.1199 29.88C39.5426 29.88 45.5599 23.8627 45.5599 16.44C45.5599 9.01729 39.5426 3 32.1199 3C24.6972 3 18.6799 9.01729 18.6799 16.44C18.6799 23.8627 24.6972 29.88 32.1199 29.88Z" fill="currentColor"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M11 54.84C11 56.368 11.608 57.832 12.688 58.912C13.768 59.992 15.232 60.6 16.76 60.6C24.12 60.6 40.12 60.6 47.48 60.6C49.008 60.6 50.472 59.992 51.552 58.912C52.632 57.832 53.24 56.368 53.24 54.84C53.24 43.176 43.784 33.72 32.12 33.72C20.456 33.72 11 43.176 11 54.84Z" fill="currentColor"/>
+            </svg>
+        </button>
+    </div>
+</header>

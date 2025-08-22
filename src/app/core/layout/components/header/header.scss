@@ -1,0 +1,39 @@
+@use 'variables' as v;
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  background-color: transparent;
+}
+
+.left-side, .right-side {
+  display: flex;
+  align-items: center;
+}
+
+.icon-button {
+  width: 64px;
+  height: 64px;
+  
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  svg {
+    color: v.$color-primary;
+    transition: color 0.2s ease-in-out;
+  }
+}
+
+.icon-button:hover {
+  svg {
+    color: v.$color-primary-hover;
+  }
+}

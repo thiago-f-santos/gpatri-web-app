@@ -1,0 +1,38 @@
+import { Component, EventEmitter, Output } from '@angular/core';
+import { Observable } from 'rxjs';
+import { HeaderService } from '../../../services/header-service';
+import { CommonModule, Location } from '@angular/common';
+
+@Component({
+  selector: 'app-header',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './header.html',
+  styleUrl: './header.scss'
+})
+export class Header {
+  showBackButton$: Observable<boolean>;
+
+  @Output() menuClick = new EventEmitter<void>();
+  @Output() userConfigClick = new EventEmitter<void>();
+
+  constructor(
+    private headerService: HeaderService,
+    private location: Location
+  ) {
+    this.showBackButton$ = this.headerService.showBackButton$;
+  }
+
+  goBack(): void {
+    this.location.back();
+  }
+
+  openMenu(): void {
+    this.menuClick.emit();
+  }
+
+  openUserConfig(): void {
+    this.userConfigClick.emit();
+  }
+
+}
