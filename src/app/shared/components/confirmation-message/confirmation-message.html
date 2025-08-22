@@ -1,0 +1,26 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-text">
+      <h2>{{ titleText }}</h2>
+      <p>{{ messageText }}</p>
+    </div>
+    
+    <div class="modal-buttons">
+      <app-button
+        text="Sim"
+        [backgroundColor]="'#01B0F1'"
+        [hoverColor]="'#0088BA'"
+        (onClick)="onConfirm()"
+        width="142px" height="42px">
+      </app-button>
+      
+      <app-button
+        text="Não"
+        [backgroundColor]="'#4F5157'"
+        [hoverColor]="'#333538'"
+        (onClick)="onCancel()"
+        width="142px" height="42px">
+      </app-button>
+    </div>
+  </div>
+</div>
