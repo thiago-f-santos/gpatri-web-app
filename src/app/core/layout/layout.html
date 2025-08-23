@@ -1,5 +1,18 @@
 <app-header (menuClick)="toggleMenu()" (userConfigClick)="toggleUserConfig()"></app-header>
 
+@if (showMenu) {
+    <app-menu-modal
+    (closeModal)="toggleMenu()"
+    (loansClick)="onLoansClick()">
+    </app-menu-modal>
+}
+
+@if (showUserConfig) {
+    <app-user-modal
+    (closeModal)="toggleUserConfig()">
+    </app-user-modal>
+}
+
 <main class="main">
     <router-outlet></router-outlet>
 </main>
