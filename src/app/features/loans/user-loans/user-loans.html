@@ -1,36 +1,38 @@
 <div class="user-loans-container">
-  <h1 class="page-title">Suas solicitações</h1>
+  <div class="loans-request-section">
+    <h1 class="page-title">Suas solicitações</h1>
 
-    @if (isConfirmMessageOpen) {
-        <app-confirmation-message
-        titleText="Deleção de solicitação"
-        messageText="Tem certeza que deseja apagar esta solicitação?"
-        (confirm)="confirmDeletion()"
-        (cancel)="cancelDeletion()">
-        </app-confirmation-message>
-    }
+      @if (isConfirmMessageOpen) {
+          <app-confirmation-message
+          titleText="Deleção de solicitação"
+          messageText="Tem certeza que deseja apagar esta solicitação?"
+          (confirm)="confirmDeletion()"
+          (cancel)="cancelDeletion()">
+          </app-confirmation-message>
+      }
 
-  @if (loanRequests$ | async; as loanRequests) {
-    @if (loanRequests.length === 0) {
-      <p class="no-requests-text">Você ainda não tem solicitações...</p>
+    @if (loanRequests$ | async; as loanRequests) {
+      @if (loanRequests.length === 0) {
+        <p class="no-requests-text">Você ainda não tem solicitações...</p>
+      } @else {
+        <div class="loan-requests-list">
+          @for (request of loanRequests; track request.id) {
+              @if (request.status === 'pending') {
+                  <app-loan-display
+                  [loanRequest]="request"
+                  [showDeleteButton]="true"
+                  (delete)="deleteRequest(request)">
+                  </app-loan-display>
+              } @else {
+                  <app-loan-display
+                  [loanRequest]="request">
+                  </app-loan-display>
+              }
+          }
+        </div>
+      }
     } @else {
-      <div class="loan-requests-list">
-        @for (request of loanRequests; track request.id) {
-            @if (request.status === 'pending') {
-                <app-loan-display
-                [loanRequest]="request"
-                [showDeleteButton]="true"
-                (delete)="deleteRequest(request)">
-                </app-loan-display>
-            } @else {
-                <app-loan-display
-                [loanRequest]="request">
-                </app-loan-display>
-            }
-        }
-      </div>
+      <p class="loading-text">Carregando solicitações...</p>
     }
-  } @else {
-    <p class="loading-text">Carregando solicitações...</p>
-  }
+  </div>
 </div>
