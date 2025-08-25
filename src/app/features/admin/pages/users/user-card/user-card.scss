@@ -1,0 +1,91 @@
+@use 'variables' as v;
+
+$card-background-color: #35383F;
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.user-card {
+  display: flex;
+  padding: 12px 18px;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  gap: 12px;
+  border-radius: v.$border-radius-default;
+  background: $card-background-color;
+  color: v.$color-text-light;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.initial-container {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #1C1F27;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-family: v.$font-family-secondary;
+  font-weight: v.$font-weight-bold;
+  font-size: 24px;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  h3 {
+    font-family: v.$font-family-base;
+    font-size: v.$font-size-base;
+    font-weight: v.$font-weight-bold;
+    margin: 0;
+  }
+  
+  p {
+    font-family: v.$font-family-base;
+    font-size: v.$font-size-small;
+    font-weight: v.$font-weight-light;
+    color: v.$color-border-default;
+    margin: 0;
+  }
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-button {
+  width: 56px;
+  height: 56px;
+  border-radius: v.$border-radius-default;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.2s ease;
+
+  &.view-button {
+    background-color: #017BA9;
+    font-size: 28px;
+    font-weight: bold;
+    color: v.$color-text-light;
+
+    &:hover { 
+      background-color: #005879; 
+    }
+  }
+}

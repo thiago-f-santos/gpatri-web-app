@@ -1,0 +1,18 @@
+<div class="admin-container">
+  <div class="admin-nav-bar" #navBar>
+    @for (link of adminLinks; track link.path) {
+      <a 
+        #navItem
+        class="nav-item" 
+        [routerLink]="link.path" 
+        routerLinkActive="active-link"
+        (click)="scrollToItem(navItem)">
+        {{ link.label }}
+      </a>
+    }
+  </div>
+
+  <div class="admin-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

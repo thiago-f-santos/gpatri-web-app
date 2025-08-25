@@ -28,4 +28,8 @@ export class Layout {
   onLoansClick() {
     this.router.navigate(['/emprestimos']);
   }
+
+  onAdminClick() {
+    this.router.navigate(['/admin']);
+  }
 }

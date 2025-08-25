@@ -1,0 +1,54 @@
+<div class="modal-overlay" (click)="onClose()">
+    @if (isConfirmationVisible) {
+        <app-confirmation-message
+            titleText="Deleção de item"
+            messageText="Certeza que deseja deletar o item de ID '{{itemToDeleteId}}'"
+            (confirm)="onConfirmDeletion()"
+            (cancel)="onCancelDeletion()"
+        ></app-confirmation-message>
+    }
+
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <section class="form-section">
+            <h2>Novo item</h2>
+            <form [formGroup]="itemForm" (ngSubmit)="createItem()">
+                <app-select-input
+                    formControlName="condition"
+                    [label]="'Condição'"
+                    [options]="conditions"
+                    [backgroundColor]="'#1C1F27'"
+                ></app-select-input>
+
+                <app-input
+                    formControlName="description"
+                    [label]="'Descrição'"
+                    type="textarea"
+                    [backgroundColor]="'#1C1F27'"
+                ></app-input>
+
+                <app-button
+                    [text]="'Criar'"
+                    type="submit"
+                    [disabled]="itemForm.invalid"
+                ></app-button>
+            </form>
+        </section>
+
+        <section class="list-section">
+            <h2>Itens Registrados</h2>
+            <div class="items-list">
+                @for (item of patrimony.items; track item.id) {
+                    <app-item-display
+                        [mainText]="item.id"
+                        [secondaryText]="item.condition"
+                        [status]="item.status"
+                        [showDeleteButton]="true"
+                        (delete)="deleteItem(item.id)"
+                    ></app-item-display>
+                } @empty {
+                    <p class="empty-list-message">Nenhum item registrado para este patrimônio.</p>
+                }
+            </div>
+        </section>
+    </div>
+</div>

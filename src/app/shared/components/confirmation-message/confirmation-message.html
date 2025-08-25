@@ -1,4 +1,4 @@
-<div class="modal-overlay" (click)="onCancel()">
+<div class="modal-overlay" (click)="onCancel($event)">
   <div class="modal-content">
     <div class="modal-text">
       <h2>{{ titleText }}</h2>
@@ -18,6 +18,7 @@
         text="Não"
         [backgroundColor]="'#4F5157'"
         [hoverColor]="'#333538'"
+        (click)="$event.stopPropagation()"
         (onClick)="onCancel()"
         width="142px" height="42px">
       </app-button>

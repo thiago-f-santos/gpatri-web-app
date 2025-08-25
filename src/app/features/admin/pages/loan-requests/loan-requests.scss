@@ -1,0 +1,55 @@
+@use 'variables' as v;
+
+$background-color-card: #1C1F27;
+
+:host {
+  color: v.$color-text-light;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border-radius: v.$border-radius-default;
+  background-color: $background-color-card;
+  color: v.$color-text-light;
+
+  h2 {
+    font-family: v.$font-family-secondary;
+    font-size: 24px;
+    font-weight: v.$font-weight-bold;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
+
+    margin: 0;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .subtitle {
+    font-size: v.$font-size-base;
+    font-family: v.$font-family-secondary;
+    font-weight: v.$font-weight-light;
+    text-align: center;
+    margin: 0;
+  }
+}
+
+.requests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

@@ -1,0 +1,19 @@
+<div class="loan-card" (click)="onClick()">
+  <div class="loan-details">
+    <p><strong>Solicitante</strong> {{ request.requester }}</p>
+    <p><strong>Empréstimo:</strong> {{ request.loanDate | date:'dd/MM/yyyy' }}</p>
+    <p><strong>Devolução:</strong> {{ request.returnDate | date:'dd/MM/yyyy' }}</p>
+  </div>
+  <div class="loan-actions">
+    <button class="action-button approve-button" (click)="onApprove()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 37 37" fill="none">
+            <path d="M30.5 9.05231L14 25.5523L6.5 18.0523" stroke="#FAFBFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+    <button class="action-button deny-button" (click)="onDeny()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 37 37" fill="none">
+            <path d="M27.5 9.05231L9.5 27.0523M9.5 9.05231L27.5 27.0523" stroke="#FAFBFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+  </div>
+</div>

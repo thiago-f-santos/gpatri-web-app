@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HeaderService } from '../../../services/header-service';
 import { CommonModule, Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -18,13 +19,18 @@ export class Header {
 
   constructor(
     private headerService: HeaderService,
-    private location: Location
+    private location: Location,
+    private router: Router
   ) {
     this.showBackButton$ = this.headerService.showBackButton$;
   }
 
   goBack(): void {
-    this.location.back();
+    if (this.router.url.startsWith('/admin')) {
+      this.router.navigate(['/']); 
+    } else {
+      this.location.back();
+    }
   }
 
   openMenu(): void {

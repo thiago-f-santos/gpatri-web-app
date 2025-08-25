@@ -1,0 +1,1 @@
+export type LoanStatus = 'pending' | 'approved' | 'denied' | 'returned';

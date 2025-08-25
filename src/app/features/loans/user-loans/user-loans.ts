@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { LoanDisplay } from '../components/loan-display/loan-display';
 import { Observable } from 'rxjs';
-import { LoanRequest } from '../../../shared/types/loan-request';
-import { LoanService } from '../services/loan-service';
+import { LoanService } from '../../../core/services/loan-service';
 import { ConfirmationMessage } from '../../../shared/components/confirmation-message/confirmation-message';
 import { HeaderService } from '../../../core/services/header-service';
+import { Loan } from '../../../core/models/loan.model';
 
 @Component({
   selector: 'app-user-loans',
@@ -16,9 +16,9 @@ import { HeaderService } from '../../../core/services/header-service';
 })
 export class UserLoans implements OnInit{
 
-  loanRequests$!: Observable<LoanRequest[]>;
+  loans$!: Observable<Loan[]>;
   isConfirmMessageOpen: boolean = false;
-  selectedLoan: LoanRequest | null = null;
+  selectedLoan: Loan | null = null;
 
   constructor(
     private loanService: LoanService,
@@ -26,13 +26,13 @@ export class UserLoans implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    this.loanRequests$ = this.loanService.getLoanRequests();
+    this.loans$ = this.loanService.getLoans();
     this.headerService.showBackButton();
   }
 
-  deleteRequest(loanRequest: LoanRequest): void {
+  deleteRequest(Loan: Loan): void {
     this.isConfirmMessageOpen = true;
-    this.selectedLoan = loanRequest;
+    this.selectedLoan = Loan;
   }
 
   confirmDeletion(): void {
@@ -41,10 +41,10 @@ export class UserLoans implements OnInit{
       return;
     }
 
-    this.loanService.deleteLoanRequest(this.selectedLoan).subscribe({
+    this.loanService.deleteLoan(this.selectedLoan).subscribe({
       next: () => {
         console.log('Solicitação deletada com sucesso!');
-        this.loanRequests$ = this.loanService.getLoanRequests();
+        this.loans$ = this.loanService.getLoans();
         this.closeModal();
       },
       error: (err) => {

@@ -1,0 +1,31 @@
+<div class="patrimony-card">
+    <div class="first-row">
+        <div class="initial-container">
+            <span class="initial-letter">
+            {{ patrimony.patrimonyName.charAt(0).toUpperCase() }}
+            </span>
+        </div>
+
+        <div class="patrimony-details">
+            <h3 class="patrimony-name">{{ patrimony.patrimonyName }}</h3>
+            <p class="patrimony-category">{{ patrimony.categoryName }}</p>
+            <p class="item-count">{{ patrimony.items.length }} item(s) registrados</p>
+        </div>
+    </div>
+
+    <div class="patrimony-actions">
+        <app-button
+        [text]="'Gerenciar Itens'"
+        [width]="'186px'"
+        [height]="'64px'"
+        backgroundColor="#017BA9"
+        hoverColor="#005879"
+        (onClick)="onEdit()"
+        ></app-button>
+        <button class="delete-button" (click)="onDelete()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 37 37" fill="none">
+                <path d="M27.5 9.05231L9.5 27.0523M9.5 9.05231L27.5 27.0523" stroke="#FAFBFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+    </div>
+</div>

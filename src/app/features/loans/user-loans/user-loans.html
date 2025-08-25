@@ -11,7 +11,7 @@
           </app-confirmation-message>
       }
 
-    @if (loanRequests$ | async; as loanRequests) {
+    @if (loans$ | async; as loanRequests) {
       @if (loanRequests.length === 0) {
         <p class="no-requests-text">Você ainda não tem solicitações...</p>
       } @else {

@@ -1,12 +1,12 @@
 @use 'variables' as v;
 
-$color-disabled-bg: #D3D3D3;
+$color-disabled-bg: #a2a5a8;
 $color-disabled-text: #A9A9A9;
 
 
 :host {
   display: block;
-}
+} 
 
 .botao-custom {
   font-family: v.$font-family-base;
@@ -24,6 +24,8 @@ $color-disabled-text: #A9A9A9;
   background-color: var(--background-color-btn);
 
   transition: background-color 0.2s ease-in-out;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+
 
   &:hover {
     background-color: var(--hover-color-btn);

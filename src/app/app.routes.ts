@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { Admin } from './features/admin/admin';
+import { ADMIN_ROUTES } from './features/admin/admin-routing';
 
 export const routes: Routes = [
     {
@@ -8,6 +10,10 @@ export const routes: Routes = [
     {
         path: 'signup',
         loadComponent: () => import('./features/auth/signup/signup').then(m => m.Signup)
+    },
+    {
+        path: 'users/:id',
+        loadComponent: () => import('./features/users/user-detail/user-detail').then(m => m.UserDetail)
     },
     {
         path: '',
@@ -24,7 +30,13 @@ export const routes: Routes = [
             {
                 path: 'emprestimos',
                 loadComponent: () => import('./features/loans/user-loans/user-loans').then(m => m.UserLoans)
+            },
+            {
+                path: 'admin',
+                component: Admin,
+                children: ADMIN_ROUTES
             }
         ]
-    }
+    },
+    
 ];

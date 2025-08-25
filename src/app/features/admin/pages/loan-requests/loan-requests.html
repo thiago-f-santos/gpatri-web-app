@@ -1,0 +1,30 @@
+@if (isModalOpen && selectedLoan) {
+  <app-loan-details-modal
+    [loan]="selectedLoan"
+    (close)="closeModal()"
+    (loanUpdated)="handleLoanUpdated()"
+  ></app-loan-details-modal>
+}
+
+<div class="section">
+  <div class="head-text">
+    <h2>Solicitações Pendentes</h2>
+    <p class="subtitle">Clique para ver detalhes</p>
+  </div>
+  <div class="requests-list">
+    @if (isLoading) {
+      <p>Carregando solicitações...</p>
+    } @else {
+      @for (request of pendingRequests; track request.id) {
+        <app-loan-request-card
+          [request]="request"
+          (approve)="handleApproveRequest(request)"
+          (deny)="handleDenyRequest(request)"
+          (cardClick)="openDetailsModal(request)"
+          ></app-loan-request-card>
+      } @empty {
+        <p>Nenhuma solicitação pendente.</p>
+      }
+    }
+  </div>
+</div>

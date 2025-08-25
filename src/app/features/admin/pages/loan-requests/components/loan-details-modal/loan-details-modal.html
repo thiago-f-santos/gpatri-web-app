@@ -1,0 +1,46 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="section-text">
+      <h3 class="section-title">Solicitante:</h3>
+      <p>{{ requesterName }}</p>
+    </div>
+    
+    <div class="section-items">
+      <h3 class="section-title">Itens Solicitados:</h3>
+      <div class="items-list">
+        @for (item of itemsRequested; track item.name) {
+          <app-loan-item-display [item]="item"></app-loan-item-display>
+        }
+      </div>
+    </div>
+    
+    <div class="section-dates">
+      <h3 class="section-title">Data Empréstimo:</h3>
+      <p>{{ loan.loanDate | date:'dd/MM/yyyy' }}</p>
+    </div>
+    
+    <div class="section-dates">
+      <h3 class="section-title">Data Devolução:</h3>
+      <p>{{ loan.returnDate | date:'dd/MM/yyyy' }}</p>
+    </div>
+
+    <div class="modal-buttons">
+      <app-button
+        text="Aprovar"
+        [width]="'142px'"
+        [height]="'43px'"
+        [backgroundColor]="'#01B0F1'"
+        [hoverColor]="'#0088BA'"
+        (onClick)="onApprove()"
+      ></app-button>
+      <app-button
+        text="Negar"
+        [width]="'142px'"
+        [height]="'43px'"
+        [backgroundColor]="'#4F5157'"
+        [hoverColor]="'#333538'"
+        (onClick)="onDeny()"
+      ></app-button>
+    </div>
+  </div>
+</div>

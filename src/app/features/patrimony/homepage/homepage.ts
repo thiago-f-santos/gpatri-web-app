@@ -6,9 +6,10 @@ import { Button } from '../../../shared/components/button/button';
 import { ItemDisplay } from '../../../shared/components/item-display/item-display';
 import { SearchInput } from '../../../shared/components/search-input/search-input';
 import { PatrimonyDisplay } from '../components/patrimony-display/patrimony-display';
-import { Patrimony, PatrimonyService } from '../services/patrimony-service';
+import { PatrimonyService } from '../../../core/services/patrimony-service';
 import { RequestStateService } from '../services/request-state-service';
 import { HeaderService } from '../../../core/services/header-service';
+import { Patrimony } from '../../../core/models/patrimony.model';
 
 export interface Item {
   id: string;

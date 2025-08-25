@@ -1,0 +1,20 @@
+<div class="category-card">
+  <div class="category-details">
+    <h3>{{ category.name }}</h3>
+    @if (category.parentCategoryName) {
+      <p>Mãe: {{ category.parentCategoryName }}</p>
+    }
+  </div>
+  <div class="category-actions">
+    <button class="action-button edit-button" (click)="onEdit()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" fill="none">
+            <path d="M6.33333 22.219H7.99583L19.4 10.8148L17.7375 9.15231L6.33333 20.5565V22.219ZM4 24.5523V19.594L19.4 4.22314C19.6333 4.00925 19.891 3.84397 20.1729 3.72731C20.4549 3.61064 20.7514 3.55231 21.0625 3.55231C21.3736 3.55231 21.675 3.61064 21.9667 3.72731C22.2583 3.84397 22.5111 4.01897 22.725 4.25231L24.3292 5.88564C24.5625 6.09953 24.7326 6.35231 24.8396 6.64397C24.9465 6.93564 25 7.22731 25 7.51897C25 7.83008 24.9465 8.12661 24.8396 8.40856C24.7326 8.6905 24.5625 8.94814 24.3292 9.18147L8.95833 24.5523H4ZM18.5542 9.99814L17.7375 9.15231L19.4 10.8148L18.5542 9.99814Z" fill="#FAFBFF"/>
+        </svg>
+    </button>
+    <button class="action-button delete-button" (click)="onDelete()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 37 37" fill="none">
+            <path d="M27.5 9.05231L9.5 27.0523M9.5 9.05231L27.5 27.0523" stroke="#FAFBFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+  </div>
+</div>

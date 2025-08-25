@@ -14,4 +14,12 @@
     </select>
     
     <label class="label" [for]="id" [ngStyle]="{'background-color': backgroundColor}">{{label}}</label>
+
+    @if(isClearable && value) {
+        <button type="button" class="clear-button" (click)="clearSelection($event)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 37 37" fill="none">
+                <path d="M27.5 9.05231L9.5 27.0523M9.5 9.05231L27.5 27.0523" stroke="#FAFBFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+    }
 </div>

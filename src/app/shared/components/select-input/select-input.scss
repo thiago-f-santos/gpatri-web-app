@@ -96,3 +96,17 @@ $color-error: #EF233C;
   color: v.$color-text-light;
   background-color: v.$color-background-dark;
 }
+
+.clear-button {
+  position: absolute;
+  right: 32px;
+  top: 9px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+
+  &:hover {
+    color: v.$color-text-light;
+  }
+}

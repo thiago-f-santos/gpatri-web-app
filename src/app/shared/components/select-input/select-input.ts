@@ -33,6 +33,7 @@ export class SelectInput implements ControlValueAccessor, OnInit {
   @Input() options: SelectOption[] = [];
   @Input() backgroundColor: string = '#03060F';
   @Input() parentError: string | null = null;
+  @Input() isClearable?: boolean = false;
 
   value: string | number = '';
   isDisabled: boolean = false;
@@ -91,6 +92,13 @@ export class SelectInput implements ControlValueAccessor, OnInit {
   onValueChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
     this.value = target.value;
+    this.onChange(this.value);
+    this.onTouched();
+  }
+
+  clearSelection(event: Event): void {
+    event.stopPropagation();
+    this.value = '';
     this.onChange(this.value);
     this.onTouched();
   }

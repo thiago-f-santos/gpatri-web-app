@@ -1,0 +1,27 @@
+@use 'variables' as v;
+
+.item-card {
+  display: flex;
+  padding: 8px 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: v.$border-radius-default;
+  background-color: #35383F;
+  color: v.$color-text-light;
+  font-family: v.$font-family-base;
+
+  h3, strong {
+    font-size: v.$font-size-base;
+    font-weight: v.$font-weight-bold;
+    margin: 0;
+  }
+
+  p {
+    font-size: v.$font-size-base;
+    font-weight: v.$font-weight-normal;
+    margin: 0;
+  }
+}

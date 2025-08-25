@@ -1,0 +1,26 @@
+<div class="modal-overlay" (click)="onClose()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>Editar Categoria</h2>
+        <form [formGroup]="editForm" (ngSubmit)="onSave()">
+        <app-input
+            formControlName="name"
+            label="Nome"
+            [backgroundColor]="'#1C1F27'"
+        ></app-input>
+
+        <app-select-input
+            formControlName="parentId"
+            label="Categoria Mãe"
+            [options]="categoryOptions"
+            [backgroundColor]="'#1C1F27'"
+            [isClearable]="true"
+        ></app-select-input>
+
+        <app-button
+            text="Editar"
+            type="submit"
+            [disabled]="editForm.invalid"
+        ></app-button>
+        </form>
+    </div>
+</div>

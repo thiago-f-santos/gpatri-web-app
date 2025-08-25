@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Item, Patrimony, PatrimonyService } from '../services/patrimony-service';
-import { RequestStateService } from '../services/request-state-service';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PatrimonyDisplay } from '../components/patrimony-display/patrimony-display';
+import { Observable } from 'rxjs';
+import { ItemPatrimony } from '../../../core/models/item-patrimony.model';
+import { Patrimony } from '../../../core/models/patrimony.model';
+import { HeaderService } from '../../../core/services/header-service';
+import { PatrimonyService } from '../../../core/services/patrimony-service';
+import { Button } from '../../../shared/components/button/button';
 import { ItemDisplay } from '../../../shared/components/item-display/item-display';
 import { SearchInput } from '../../../shared/components/search-input/search-input';
-import { Button } from '../../../shared/components/button/button';
-import { HeaderService } from '../../../core/services/header-service';
-import { FormsModule } from '@angular/forms';
+import { PatrimonyDisplay } from '../components/patrimony-display/patrimony-display';
+import { RequestStateService } from '../services/request-state-service';
 
 @Component({
   selector: 'app-search-results',
@@ -20,7 +22,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class SearchResults implements OnInit{
   patrimonies$!: Observable<Patrimony[]>;
-  requestItems$: Observable<Item[]>;
+  requestItems$: Observable<ItemPatrimony[]>;
   searchQuery: string = '';
 
   constructor(
@@ -42,11 +44,11 @@ export class SearchResults implements OnInit{
     });
   }
 
-  selectItem(item: Item): void {
+  selectItem(item: ItemPatrimony): void {
     this.requestStateService.addItem(item);
   }
   
-  removeItemFromRequest(item: Item): void {
+  removeItemFromRequest(item: ItemPatrimony): void {
     this.requestStateService.removeItem(item);
   }
 

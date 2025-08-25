@@ -1,0 +1,50 @@
+@use 'variables' as v;
+
+$color-modal-bg: #1C1F27;
+$color-overlay: rgba(0, 0, 0, 0.7);
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: $color-overlay;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    font-family: v.$font-family-base;
+}
+
+.modal-content {
+    background-color: $color-modal-bg;
+    border-radius: v.$border-radius-default;
+    padding: 22px;
+    width: 100%;
+    max-width: 346px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+
+    h2 {
+        font-size: 24px;
+        font-family: v.$font-family-secondary;
+        font-weight: v.$font-weight-bold;
+        color: v.$color-text-light;
+        margin: 0;
+        text-align: center;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-self: stretch;
+        align-items: stretch;
+        gap: 8px;
+        margin: 0;
+    }
+}

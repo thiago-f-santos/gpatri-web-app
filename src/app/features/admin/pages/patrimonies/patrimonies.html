@@ -1,0 +1,85 @@
+@if (isPatrimonyDeletionConfirmationOpen) {
+        <app-confirmation-message
+        titleText="Deleção de Patrimônio"
+        messageText="Tem certeza que deseja deletar o patrimônio '{{selectedPatrimony?.patrimonyName}}'?"
+        (confirm)="onConfirm()"
+        (cancel)="onCancel()">
+        </app-confirmation-message>
+    }
+
+@if (isManageItemsModalOpen && selectedPatrimony) {
+    <app-manage-items-modal
+    [patrimony]="selectedPatrimony"
+    (itemsChanged)="handleItemsChanged()"
+    (close)="onCancel()">
+    </app-manage-items-modal>
+}
+
+<div class="create-patrimony-section">
+    <h2>Criar Patrimônio</h2>
+    <form class="patrimony-form" [formGroup]="patrimonyForm" (ngSubmit)="createPatrimony()">
+        <app-input
+        formControlName="name"
+        [label]="'Nome'"
+        type="text"
+        [backgroundColor]="'#1C1F27'"
+        ></app-input>
+
+        <app-input
+        formControlName="description"
+        [label]="'Descrição'"
+        type="textarea"
+        [backgroundColor]="'#1C1F27'"
+        ></app-input>
+
+        <div class="radio-group" [class.bind]="'radio-group'">
+            <label>
+                <input type="radio" formControlName="type" value="Unitario" />
+                <span class="radio-label">Unitário</span>
+            </label>
+            <label>
+                <input type="radio" formControlName="type" value="Estoque" />
+                <span class="radio-label">Estoque</span>
+            </label>
+        </div>
+
+        <app-input
+        formControlName="estimatedPrice"
+        [label]="'Preço estimado'"
+        type="number"
+        [backgroundColor]="'#1C1F27'"
+        ></app-input>
+
+        <app-select-input
+        formControlName="category"
+        label="Categoria"
+        [options]="categories"
+        [backgroundColor]="'#1C1F27'">
+        </app-select-input>
+
+        <app-button 
+        [text]="'Criar'" 
+        type="submit" 
+        [disabled]="patrimonyForm.invalid"
+        ></app-button>
+    </form>
+</div>
+
+<div class="registered-patrimony-section">
+    <h2>Patrimônios Cadastrados</h2>
+    <div class="patrimony-list">
+        @if (isLoading) {
+            <p>Carregando patrimônios...</p>
+        } @else {
+            @for (patrimony of patrimonies; track patrimony.id) {
+                <app-patrimony-summary-card
+                [patrimony]="patrimony"
+                (delete)="deletePatrimony(patrimony)"
+                (edit)="manageItems(patrimony)">
+                </app-patrimony-summary-card>
+            } @empty {
+                <p>Nenhum patrimônio cadastrado.</p>
+            }
+        }
+    </div>
+</div>

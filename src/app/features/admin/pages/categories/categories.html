@@ -1,0 +1,61 @@
+@if (isConfirmationOpen && selectedCategory) {
+  <app-confirmation-message
+    titleText="Deleção de Categoria"
+    [messageText]="confirmationMessage"
+    (confirm)="confirmDeletion()"
+    (cancel)="cancelDeletion()"
+  ></app-confirmation-message>
+}
+
+@if (isEditModalOpen && selectedCategory) {
+  <app-edit-category-modal
+  [category]="selectedCategory"
+  [categoryOptions]="categoryOptions"
+  (categoryUpdated)="handleCategoryUpdated()"
+  (close)="onCloseEditModal()">
+  </app-edit-category-modal>
+}
+
+<div class="section create-category">
+  <h2>Criar Categoria</h2>
+  <form [formGroup]="categoryForm" (ngSubmit)="createCategory()">
+    <app-input
+      formControlName="name"
+      label="Nome"
+      [backgroundColor]="'#1C1F27'"
+    ></app-input>
+
+    <app-select-input
+      formControlName="parentId"
+      label="Categoria Mãe"
+      [isClearable]="true"
+      [options]="categoryOptions"
+      [backgroundColor]="'#1C1F27'"
+    ></app-select-input>
+
+    <app-button
+      text="Criar"
+      type="submit"
+      [disabled]="categoryForm.invalid"
+    ></app-button>
+  </form>
+</div>
+
+<div class="section existing-categories">
+  <h2>Categorias Existentes</h2>
+  <div class="list-container">
+    @if (isLoading) {
+      <p>Carregando categorias...</p>
+    } @else {
+      @for (category of categories; track category.id) {
+        <app-category-card
+          [category]="category"
+          (edit)="handleEditRequest(category)"
+          (delete)="handleDeleteRequest(category)"
+        ></app-category-card>
+      } @empty {
+        <p>Nenhuma categoria cadastrada.</p>
+      }
+    }
+  </div>
+</div>

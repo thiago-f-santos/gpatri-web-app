@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ItemDisplay } from '../../../../shared/components/item-display/item-display';
-import { LoanRequest, LoanStatus } from '../../../../shared/types/loan-request';
+import { LoanStatus } from '../../../../shared/types/loan-status';
+import { Loan } from '../../../../core/models/loan.model';
 
 @Component({
   selector: 'app-loan-display',
@@ -11,7 +12,7 @@ import { LoanRequest, LoanStatus } from '../../../../shared/types/loan-request';
   styleUrl: './loan-display.scss'
 })
 export class LoanDisplay {
-  @Input() loanRequest!: LoanRequest;
+  @Input() loanRequest!: Loan;
   @Input() showDeleteButton: boolean = false;
   @Output() delete = new EventEmitter<void>;
 

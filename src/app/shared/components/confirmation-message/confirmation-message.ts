@@ -19,7 +19,10 @@ export class ConfirmationMessage {
     this.confirm.emit();
   }
 
-  onCancel(): void {
+  onCancel(e?: Event): void {
+    if (e) {
+      e.stopPropagation();
+    }
     this.cancel.emit();
   }
 
