@@ -1,0 +1,17 @@
+<div class="select">
+    <select 
+        [id]="id"
+        class="select-element"
+        [value]="value" 
+        [disabled]="isDisabled"
+        (change)="onValueChange($event)"
+        required
+    >
+        <option value="" disabled selected hidden></option>
+        @for (option of options; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+        }
+    </select>
+    
+    <label class="label" [for]="id" [ngStyle]="{'background-color': backgroundColor}">{{label}}</label>
+</div>

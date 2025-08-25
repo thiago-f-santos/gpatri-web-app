@@ -1,0 +1,98 @@
+@use 'variables' as v;
+
+$font-size-label: 10px;
+$transition-speed: 0.2s;
+$label-y-offset: 20px;
+$color-error: #EF233C;
+
+.select {
+  position: relative;
+  font-family: v.$font-family-base;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-normal;
+}
+
+.select-element {
+  font-family: v.$font-family-base;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-normal;
+}
+
+.select .select-element {
+  box-sizing: border-box;
+  width: 100%;
+  height: v.$input-height-default;
+  padding: v.$spacing-base-unit;
+  border: 2px solid v.$color-border-default;
+  border-radius: v.$border-radius-default;
+  background-color: transparent;
+  color: v.$color-text-light;
+  cursor: pointer;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23FFF' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right v.$spacing-base-unit center;
+  padding-right: 30px;
+}
+
+.select .select-element:hover {
+  border-color: v.$color-border-hover;
+  transition: all $transition-speed ease-out;
+}
+
+.select .select-element:focus,
+.select .select-element:valid {
+  outline: none;
+  border-color: v.$color-primary;
+  color: v.$color-text-light;
+}
+
+.select .select-element:focus + .label,
+.select .select-element:valid + .label {
+  top: -5px;
+  left: 8px;
+  font-size: $font-size-label;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-primary;
+}
+
+.select .label {
+  position: absolute;
+  left: v.$spacing-base-unit;
+  top: $label-y-offset;
+  padding: 0 4px;
+  font-size: v.$font-size-base;
+  line-height: 1;
+  color: v.$color-text-light;
+  transition: all $transition-speed ease-out;
+  cursor: text;
+  pointer-events: none;
+}
+
+:host(.has-error) {
+  .select-element {
+    border-color: $color-error;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23EF233C' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  }
+
+  .select .select-element:focus,
+  .select .select-element:valid {
+    border-color: $color-error;
+  }
+
+  .select-element:focus + .label,
+  .select-element:valid + .label {
+    color: $color-error;
+  }
+}
+
+.select .select-element option {
+  font-family: v.$font-family-base;
+  font-size: v.$font-size-base;
+  color: v.$color-text-light;
+  background-color: v.$color-background-dark;
+}
