@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PatrimonyService } from '../../../../../../core/services/patrimony-service';
+import { Patrimony } from '../../../../../../core/models/patrimony.model';
+import { ItemPatrimonyService } from '../../../../../../core/services/item-patrimony-service';
 import { Button } from '../../../../../../shared/components/button/button';
+import { ConfirmationMessage } from '../../../../../../shared/components/confirmation-message/confirmation-message';
 import { InputComponent } from '../../../../../../shared/components/input/input';
 import { ItemDisplay } from '../../../../../../shared/components/item-display/item-display';
 import { SelectInput, SelectOption } from '../../../../../../shared/components/select-input/select-input';
-import { ConfirmationMessage } from '../../../../../../shared/components/confirmation-message/confirmation-message';
-import { Patrimony } from '../../../../../../core/models/patrimony.model';
+import { ItemPatrimony, ItemPatrimonyDto } from '../../../../../../core/models/item-patrimony.model';
 
 @Component({
   selector: 'app-manage-items-modal',
@@ -23,9 +24,10 @@ export class ManageItemsModal {
 
   itemForm: FormGroup;
   conditions: SelectOption[] = [
-    { value: 'Ótima', label: 'Ótima' },
-    { value: 'Boa', label: 'Boa' },
-    { value: 'Usada', label: 'Usada' },
+    { value: 'EXCELENTE', label: 'Excelente' },
+    { value: 'BOM', label: 'Bom' },
+    { value: 'REGULAR', label: 'Regular' },
+    { value: 'DANIFICADO', label: 'Danificado' },
   ];
 
   isConfirmationVisible = false;
@@ -33,11 +35,19 @@ export class ManageItemsModal {
 
   constructor(
     private fb: FormBuilder,
-    private patrimonyService: PatrimonyService
+    private itemPatrimonyService: ItemPatrimonyService
   ) {
     this.itemForm = this.fb.group({
       description: ['', Validators.required], 
       condition: ['', Validators.required],
+    });
+  }
+
+  ngOnInit(): void {
+    this.itemForm = this.fb.group({
+      condicaoDescricao: ['', Validators.required], 
+      condicaoProduto: ['', Validators.required],
+      quantidade: [1, [Validators.required, Validators.min(1)]],
     });
   }
 
@@ -47,11 +57,19 @@ export class ManageItemsModal {
       return;
     }
 
-    this.patrimonyService.addItemToPatrimony(this.patrimony.id, this.itemForm.value)
-      .subscribe(() => {
-        alert('Item criado com sucesso!');
-        this.itemForm.reset();
-        this.itemsChanged.emit();
+    const itemDto: ItemPatrimonyDto = {
+      ...this.itemForm.value,
+      idPatrimonio: this.patrimony.id
+    };
+
+    this.itemPatrimonyService.createItemPatrimony(itemDto)
+      .subscribe({
+        next: () => {
+          alert('Item criado com sucesso!');
+          this.itemForm.reset({ quantidade: 1 });
+          this.itemsChanged.emit();
+        },
+        error: (err) => console.error('Erro ao criar item', err)
       });
   }
 
@@ -63,14 +81,11 @@ export class ManageItemsModal {
   onConfirmDeletion(): void {
     if (!this.itemToDeleteId) return;
 
-    this.patrimonyService.deleteItemFromPatrimony(this.patrimony.id, this.itemToDeleteId)
-      .subscribe(success => {
-        if (success) {
-          this.itemsChanged.emit();
-        } else {
-          alert('Falha ao excluir o item.');
-        }
-        this.itemToDeleteId = null;
+    this.itemPatrimonyService.deleteItemPatrimony(this.itemToDeleteId)
+      .subscribe({
+        next: () => this.itemsChanged.emit(),
+        error: (err) => alert('Falha ao excluir o item.'),
+        complete: () => this.onCancelDeletion()
       });
   }
 
@@ -78,9 +93,12 @@ export class ManageItemsModal {
     this.isConfirmationVisible = false;
     this.itemToDeleteId = null;
   }
+  
+  getItemStatus(item: ItemPatrimony): 'available' | 'borrowed' {
+    return item.quantidade > 0 ? 'available' : 'borrowed';
+  }
 
   onClose(): void {
     this.close.emit();
   }
-
 }

@@ -1,1 +1,1 @@
-export type LoanStatus = 'pending' | 'approved' | 'denied' | 'returned';
+export type LoanStatus = 'EM_ESPERA' | 'APROVADO' | 'NEGADO' | 'DEVOLVIDO';

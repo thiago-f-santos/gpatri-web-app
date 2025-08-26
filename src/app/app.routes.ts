@@ -1,10 +1,13 @@
 import { Routes } from '@angular/router';
 import { Admin } from './features/admin/admin';
 import { ADMIN_ROUTES } from './features/admin/admin-routing';
+import { loginGuard } from './core/guards/login-guard';
+import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
     {
         path: 'login',
+        canActivate: [loginGuard],
         loadComponent: () => import('./features/auth/login/login').then(m => m.Login)
     },
     {
@@ -13,6 +16,7 @@ export const routes: Routes = [
     },
     {
         path: '',
+        canActivate: [authGuard],
         loadComponent: () => import('./core/layout/layout').then(m => m.Layout),
         children: [
             {
@@ -42,5 +46,4 @@ export const routes: Routes = [
             }
         ]
     },
-    
 ];

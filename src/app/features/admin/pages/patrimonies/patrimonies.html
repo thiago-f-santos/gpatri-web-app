@@ -1,11 +1,11 @@
 @if (isPatrimonyDeletionConfirmationOpen) {
-        <app-confirmation-message
-        titleText="Deleção de Patrimônio"
-        messageText="Tem certeza que deseja deletar o patrimônio '{{selectedPatrimony?.patrimonyName}}'?"
-        (confirm)="onConfirm()"
-        (cancel)="onCancel()">
-        </app-confirmation-message>
-    }
+    <app-confirmation-message
+    titleText="Deleção de Patrimônio"
+    messageText="Tem certeza que deseja deletar o patrimônio '{{selectedPatrimony?.nome}}'?"
+    (confirm)="onConfirm()"
+    (cancel)="onCancel()">
+    </app-confirmation-message>
+}
 
 @if (isManageItemsModalOpen && selectedPatrimony) {
     <app-manage-items-modal
@@ -19,14 +19,14 @@
     <h2>Criar Patrimônio</h2>
     <form class="patrimony-form" [formGroup]="patrimonyForm" (ngSubmit)="createPatrimony()">
         <app-input
-        formControlName="name"
+        formControlName="nome"
         [label]="'Nome'"
         type="text"
         [backgroundColor]="'#1C1F27'"
         ></app-input>
 
         <app-input
-        formControlName="description"
+        formControlName="descricao"
         [label]="'Descrição'"
         type="textarea"
         [backgroundColor]="'#1C1F27'"
@@ -34,24 +34,24 @@
 
         <div class="radio-group" [class.bind]="'radio-group'">
             <label>
-                <input type="radio" formControlName="type" value="Unitario" />
+                <input type="radio" formControlName="tipoControle" value="UNITARIO" />
                 <span class="radio-label">Unitário</span>
             </label>
             <label>
-                <input type="radio" formControlName="type" value="Estoque" />
+                <input type="radio" formControlName="tipoControle" value="ESTOQUE" />
                 <span class="radio-label">Estoque</span>
             </label>
         </div>
 
         <app-input
-        formControlName="estimatedPrice"
+        formControlName="precoEstimado"
         [label]="'Preço estimado'"
         type="number"
         [backgroundColor]="'#1C1F27'"
         ></app-input>
 
         <app-select-input
-        formControlName="category"
+        formControlName="idCategoria"
         label="Categoria"
         [options]="categories"
         [backgroundColor]="'#1C1F27'">

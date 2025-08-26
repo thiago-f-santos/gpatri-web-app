@@ -8,8 +8,8 @@
         @for (item of items; track item.id) {
             <app-item-display
                 [mainText]="item.id"
-                [secondaryText]="item.condition"
-                [status]="item.status"
+                [secondaryText]="item.condicaoProduto"
+                [status]="getItemStatus(item)"
                 [isSelectable]="true"
                 [isSelected]="isSelected(item)" 
                 (click)="!isSelected(item) && itemSelected.emit(item)">

@@ -1,8 +1,8 @@
 <div class="loan-card" (click)="onClick()">
   <div class="loan-details">
-    <p><strong>Solicitante</strong> {{ request.requester }}</p>
-    <p><strong>Empréstimo:</strong> {{ request.loanDate | date:'dd/MM/yyyy' }}</p>
-    <p><strong>Devolução:</strong> {{ request.returnDate | date:'dd/MM/yyyy' }}</p>
+    <p><strong>Solicitante:</strong> {{ request.idUsuario.substring(0, 8) }}</p>
+    <p><strong>Empréstimo:</strong> {{ request.dataEmprestimo | date:'dd/MM/yyyy' }}</p>
+    <p><strong>Devolução:</strong> {{ request.dataDevolucao | date:'dd/MM/yyyy' }}</p>
   </div>
   <div class="loan-actions">
     <button class="action-button approve-button" (click)="onApprove()">

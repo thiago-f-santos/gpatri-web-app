@@ -17,10 +17,10 @@ export class LoanDisplay {
   @Output() delete = new EventEmitter<void>;
 
   statusText: Record<LoanStatus, string> = {
-    'pending': 'Pendente',
-    'approved': 'Aprovado',
-    'denied': 'Negado',
-    'returned': 'Devolvido'
+    'EM_ESPERA': 'Pendente',
+    'APROVADO': 'Aprovado',
+    'NEGADO': 'Negado',
+    'DEVOLVIDO': 'Devolvido'
   };
 
   onDelete(): void {

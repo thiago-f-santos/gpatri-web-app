@@ -62,19 +62,19 @@ $color-delete-button: #017BA9;
     border-radius: v.$border-radius-default;
 }
 
-.tag-pending {
+.tag-em_espera {
   background-color: $color-status-pending;
 }
 
-.tag-approved {
+.tag-aprovado {
   background-color: $color-status-approved;
 }
 
-.tag-denied {
+.tag-negado {
   background-color: $color-status-denied;
 }
 
-.tag-returned {
+.tag-devolvido {
   background-color: $color-status-returned;
 }
 

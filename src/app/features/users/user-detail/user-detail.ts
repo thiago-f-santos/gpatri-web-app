@@ -40,7 +40,11 @@ export class UserDetail implements OnInit {
     );
 
     this.loans$ = userId$.pipe(
-      switchMap(id => this.loanService.getLoansByUserId(id))
+      switchMap(id => 
+        this.loanService.getLoans().pipe(
+          map(allLoans => allLoans.filter(loan => loan.idUsuario === id))
+        )
+      )
     );
 
     this.headerService.showBackButton();

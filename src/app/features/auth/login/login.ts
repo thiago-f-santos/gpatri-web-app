@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Button } from "../../../shared/components/button/button";
 import { InputComponent } from '../../../shared/components/input/input';
+import { AuthService } from '../../../core/services/auth-service';
+import { Router } from '@angular/router';
+import { LoginRequest } from '../../../core/models/auth.model';
 
 @Component({
   selector: 'app-login',
@@ -12,10 +15,14 @@ import { InputComponent } from '../../../shared/components/input/input';
   styleUrl: './login.scss'
 })
 export class Login implements OnInit{
-
   loginForm!: FormGroup;
+  loginError: string | null = null;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -27,10 +34,23 @@ export class Login implements OnInit{
   get f() { return this.loginForm.controls; }
 
   onSubmit(): void {
+    this.loginError = null;
     if (this.loginForm.valid) {
-      console.log('Formulário enviado!', this.loginForm.value);
+      const loginRequest: LoginRequest = {
+        email: this.loginForm.get('email')?.value,
+        senha: this.loginForm.get('password')?.value
+      }
+
+      this.authService.login(loginRequest).subscribe({
+        next: () => {
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          console.error('Erro no login:', err);
+          this.loginError = 'E-mail ou senha inválidos. Tente novamente.';
+        }
+      });
     } else {
-      console.log('Formulário inválido.');
       this.loginForm.markAllAsTouched();
     }
   }

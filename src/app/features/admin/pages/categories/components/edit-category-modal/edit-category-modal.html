@@ -3,13 +3,13 @@
         <h2>Editar Categoria</h2>
         <form [formGroup]="editForm" (ngSubmit)="onSave()">
         <app-input
-            formControlName="name"
+            formControlName="nome"
             label="Nome"
             [backgroundColor]="'#1C1F27'"
         ></app-input>
 
         <app-select-input
-            formControlName="parentId"
+            formControlName="idCategoriaMae"
             label="Categoria Mãe"
             [options]="categoryOptions"
             [backgroundColor]="'#1C1F27'"
@@ -17,7 +17,7 @@
         ></app-select-input>
 
         <app-button
-            text="Editar"
+            text="Salvar"
             type="submit"
             [disabled]="editForm.invalid"
         ></app-button>

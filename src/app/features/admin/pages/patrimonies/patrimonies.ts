@@ -8,7 +8,9 @@ import { PatrimonySummaryCard } from './components/patrimony-summary-card/patrim
 import { ConfirmationMessage } from '../../../../shared/components/confirmation-message/confirmation-message';
 import { SelectInput, SelectOption } from "../../../../shared/components/select-input/select-input";
 import { ManageItemsModal } from './components/manage-items-modal/manage-items-modal';
-import { Patrimony } from '../../../../core/models/patrimony.model';
+import { Patrimony, PatrimonyDto } from '../../../../core/models/patrimony.model';
+import { CategoryService } from '../../../../core/services/category-service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-patrimonies',
@@ -19,36 +21,40 @@ import { Patrimony } from '../../../../core/models/patrimony.model';
 })
 export class Patrimonies implements OnInit {
 
-  patrimonyForm: FormGroup;
-  categories: SelectOption[] = [
-    {value: 'Equipamentos de TI', label: 'Equipamentos de TI'},
-    {value: 'Periféricos', label: 'Periféricos'},
-    {value: 'Móveis', label: 'Móveis'},
-    {value: 'Veículos', label: 'Veículos'}
-  ]
+  patrimonyForm!: FormGroup;
+  categories: SelectOption[] = [];
   patrimonies: Patrimony[] = [];
   isLoading: boolean = false;
 
   isPatrimonyDeletionConfirmationOpen: boolean = false;
-  selectedPatrimony: Patrimony | null = null;
-
   isManageItemsModalOpen: boolean = false;
+  selectedPatrimony: Patrimony | null = null;
 
   constructor(
     private fb: FormBuilder,
-    private patrimonyService: PatrimonyService
-  ) {
-    this.patrimonyForm = this.fb.group({
-      name: ['', Validators.required],
-      description: [''],
-      type: ['Unitario', Validators.required],
-      estimatedPrice: [null],
-      category: ['', Validators.required]
-    });
-  }
+    private patrimonyService: PatrimonyService,
+    private categoryService: CategoryService
+  ) { }
 
   ngOnInit(): void {
+    this.patrimonyForm = this.fb.group({
+      nome: ['', Validators.required],
+      descricao: [''],
+      tipoControle: ['UNITARIO', Validators.required],
+      precoEstimado: [null],
+      idCategoria: ['', Validators.required]
+    });
+
     this.loadPatrimonies();
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    this.categoryService.getCategories().pipe(
+      map(apiCategories => 
+        apiCategories.map(cat => ({ value: cat.id, label: cat.nome }))
+      )
+    ).subscribe(options => this.categories = options);
   }
 
   loadPatrimonies(): void {
@@ -64,17 +70,16 @@ export class Patrimonies implements OnInit {
       this.patrimonyForm.markAllAsTouched();
       return;
     }
+    
+    const newPatrimonyData: PatrimonyDto = this.patrimonyForm.value;
 
-    const formValue = this.patrimonyForm.value;
-    const newPatrimonyData = {
-      patrimonyName: formValue.name,
-      categoryName: formValue.category
-    };
-
-    this.patrimonyService.createPatrimony(newPatrimonyData).subscribe(() => {
-      alert('Patrimônio criado com sucesso!');
-      this.loadPatrimonies();
-      this.patrimonyForm.reset({ type: 'Unitario' });
+    this.patrimonyService.createPatrimony(newPatrimonyData).subscribe({
+      next: () => {
+        alert('Patrimônio criado com sucesso!');
+        this.loadPatrimonies();
+        this.patrimonyForm.reset({ tipoControle: 'UNITARIO' });
+      },
+      error: (err) => console.error('Erro ao criar patrimônio:', err)
     });
   }
 
@@ -84,30 +89,18 @@ export class Patrimonies implements OnInit {
   }
 
   manageItems(patrimony: Patrimony): void {
-    this.isManageItemsModalOpen = true;
     this.selectedPatrimony = patrimony;
+    this.isManageItemsModalOpen = true;
   }
 
   onConfirm(): void {
-    if (this.isPatrimonyDeletionConfirmationOpen) {
-      if (this.selectedPatrimony) {
-        this.patrimonyService.deletePatrimony(this.selectedPatrimony?.id).subscribe(success => {
-          if (success) {
-            console.log("patrimonio deletado com sucesso"); 
-            this.loadPatrimonies();
-          } else {
-            console.log("erro ao deletar patrimonio");
-          }
-        });
-      }
-      this.isPatrimonyDeletionConfirmationOpen = false;
+    if (this.selectedPatrimony) {
+      this.patrimonyService.deletePatrimony(this.selectedPatrimony.id).subscribe({
+        next: () => this.loadPatrimonies(),
+        error: (err) => console.error("Erro ao deletar patrimonio", err),
+        complete: () => this.onCancel()
+      });
     }
-
-    if (this.isManageItemsModalOpen) {
-      this.isManageItemsModalOpen = false;
-    }
-
-    this.selectedPatrimony = null;
   }
 
   onCancel(): void {

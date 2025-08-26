@@ -20,13 +20,13 @@
   <h2>Criar Categoria</h2>
   <form [formGroup]="categoryForm" (ngSubmit)="createCategory()">
     <app-input
-      formControlName="name"
+      formControlName="nome"
       label="Nome"
       [backgroundColor]="'#1C1F27'"
     ></app-input>
 
     <app-select-input
-      formControlName="parentId"
+      formControlName="idCategoriaMae"
       label="Categoria Mãe"
       [isClearable]="true"
       [options]="categoryOptions"

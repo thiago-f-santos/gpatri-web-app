@@ -8,7 +8,7 @@
     <div class="section-items">
       <h3 class="section-title">Itens Solicitados:</h3>
       <div class="items-list">
-        @for (item of itemsRequested; track item.name) {
+        @for (item of itemsRequested; track item.itemPatrimonio.id) {
           <app-loan-item-display [item]="item"></app-loan-item-display>
         }
       </div>
@@ -16,12 +16,12 @@
     
     <div class="section-dates">
       <h3 class="section-title">Data Empréstimo:</h3>
-      <p>{{ loan.loanDate | date:'dd/MM/yyyy' }}</p>
+      <p>{{ loan.dataEmprestimo | date:'dd/MM/yyyy' }}</p>
     </div>
     
     <div class="section-dates">
       <h3 class="section-title">Data Devolução:</h3>
-      <p>{{ loan.returnDate | date:'dd/MM/yyyy' }}</p>
+      <p>{{ loan.dataDevolucao | date:'dd/MM/yyyy' }}</p>
     </div>
 
     <div class="modal-buttons">

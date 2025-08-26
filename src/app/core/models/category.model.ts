@@ -1,8 +1,8 @@
 export interface Category {
   id: string;
-  name: string;
-  parentCategoryName?: string;
-  parentId?: string;
+  nome: string;
+  idCategoriaMae?: string;
+  categoriaMaeNome?: string;
 }
 
-export type CategoryDto = Omit<Category, 'id'>;
+export type CategoryDto = Omit<Category, 'id' | 'categoriaMaeNome'>;

@@ -1,8 +1,8 @@
 <div class="category-card">
   <div class="category-details">
-    <h3>{{ category.name }}</h3>
-    @if (category.parentCategoryName) {
-      <p>Mãe: {{ category.parentCategoryName }}</p>
+    <h3>{{ category.nome }}</h3>
+    @if (category.categoriaMaeNome) {
+      <p>Mãe: {{ category.categoriaMaeNome }}</p>
     }
   </div>
   <div class="category-actions">

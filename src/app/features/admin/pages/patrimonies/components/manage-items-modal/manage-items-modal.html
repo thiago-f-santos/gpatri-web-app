@@ -13,35 +13,40 @@
             <h2>Novo item</h2>
             <form [formGroup]="itemForm" (ngSubmit)="createItem()">
                 <app-select-input
-                    formControlName="condition"
+                    formControlName="condicaoProduto"
                     [label]="'Condição'"
                     [options]="conditions"
                     [backgroundColor]="'#1C1F27'"
                 ></app-select-input>
 
                 <app-input
-                    formControlName="description"
+                    formControlName="condicaoDescricao"
                     [label]="'Descrição'"
                     type="textarea"
                     [backgroundColor]="'#1C1F27'"
                 ></app-input>
-
-                <app-button
-                    [text]="'Criar'"
-                    type="submit"
-                    [disabled]="itemForm.invalid"
-                ></app-button>
+                
+                @if (patrimony.tipoControle === 'ESTOQUE') {
+                    <app-input
+                    formControlName="quantidade"
+                    [label]="'Quantidade'"
+                    type="number"
+                    [backgroundColor]="'#1C1F27'"
+                    ></app-input>
+                }
+                
+                <app-button [text]="'Criar'" type="submit" [disabled]="itemForm.invalid"></app-button>
             </form>
         </section>
 
         <section class="list-section">
             <h2>Itens Registrados</h2>
             <div class="items-list">
-                @for (item of patrimony.items; track item.id) {
+                @for (item of patrimony.itensPatrimonio; track item.id) {
                     <app-item-display
-                        [mainText]="item.id"
-                        [secondaryText]="item.condition"
-                        [status]="item.status"
+                        [mainText]="item.nomePatrimonio"
+                        [secondaryText]="item.condicaoProduto"
+                        [status]="getItemStatus(item)"
                         [showDeleteButton]="true"
                         (delete)="deleteItem(item.id)"
                     ></app-item-display>

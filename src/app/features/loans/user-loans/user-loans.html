@@ -17,7 +17,7 @@
       } @else {
         <div class="loan-requests-list">
           @for (request of loanRequests; track request.id) {
-              @if (request.status === 'pending') {
+              @if (request.situacao === 'EM_ESPERA') {
                   <app-loan-display
                   [loanRequest]="request"
                   [showDeleteButton]="true"

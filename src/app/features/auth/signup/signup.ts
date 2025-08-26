@@ -4,6 +4,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { passwordMatchValidator } from '../../../shared/validators/password-match.validator';
 import { Button } from "../../../shared/components/button/button";
 import { InputComponent } from "../../../shared/components/input/input";
+import { UserService } from '../../../core/services/user-service';
+import { AuthService } from '../../../core/services/auth-service';
+import { Router } from '@angular/router';
+import { UserDto } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-signup',
@@ -13,10 +17,15 @@ import { InputComponent } from "../../../shared/components/input/input";
   styleUrl: './signup.scss'
 })
 export class Signup {
-
   signupForm!: FormGroup;
+  signupError: string | null = null;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.signupForm = this.fb.group({
@@ -31,12 +40,33 @@ export class Signup {
   }
 
   onSubmit(): void {
+    this.signupError = null;
     if (this.signupForm.valid) {
-      console.log('Formulário de cadastro enviado!', this.signupForm.value);
+      const { firstName, lastName, email, password } = this.signupForm.value;
+      const userDto: UserDto = {
+        nome: firstName,
+        sobrenome: lastName,
+        email: email,
+        senha: password
+      };
+
+      this.userService.createUser(userDto).subscribe({
+        next: () => {
+          this.authService.login({ email, senha: password }).subscribe({
+            next: () => this.router.navigate(['/']),
+            error: (loginErr) => {
+              console.error('Erro no login automático:', loginErr);
+              this.router.navigate(['/login']);
+            }
+          });
+        },
+        error: (err) => {
+          console.error('Erro no registro:', err);
+          this.signupError = 'Não foi possível realizar o cadastro. O e-mail pode já estar em uso.';
+        }
+      });
     } else {
-      console.log('Formulário de cadastro inválido.');
       this.signupForm.markAllAsTouched();
     }
   }
-
 }

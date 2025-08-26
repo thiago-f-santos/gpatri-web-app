@@ -6,7 +6,6 @@
 
     @if (requestItems$ | async; as items) {
     <div class="request-section">
-        
         <h2 class="request-title">Sua solicitação</h2>
         @if (items.length === 0) {
             <p class="request-subtitle">Sua solicitação ainda está vazia...</p>
@@ -15,7 +14,7 @@
             @for (item of items; track item.id) {
             <app-item-display
                 [mainText]="item.id"
-                [secondaryText]="item.condition"
+                [secondaryText]="item.condicaoProduto"
                 [showDeleteButton]="true" 
                 [isSelectable]="false"
                 (delete)="removeItemFromRequest(item)">>
@@ -28,19 +27,18 @@
                 (onClick)="confirmRequest()">
             </app-button>
         }
-        
     </div>
 
     <div class="found-items-section">
-        <h2 class="found-items-title">Itens encontrados para '{{ searchQuery }}'</h2>
+        <h2 class="found-items-title">Itens encontrados para '{{ previousSearch }}'</h2>
         
         @if (patrimonies$ | async; as patrimonies) {
         @if(patrimonies.length > 0) {
             @for (patrimony of patrimonies; track patrimony.id) {
             <app-patrimony-display
-                [patrimonyName]="patrimony.patrimonyName"
-                [categoryName]="patrimony.categoryName"
-                [items]="patrimony.items"
+                [patrimonyName]="patrimony.nome"
+                [categoryName]="patrimony.nomeCategoria"
+                [items]="patrimony.itensPatrimonio"
                 [selectedItems]="(requestItems$ | async) || []"
                 (itemSelected)="selectItem($event)"
             ></app-patrimony-display>

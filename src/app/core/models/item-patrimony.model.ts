@@ -1,8 +1,12 @@
+export type CondicaoProduto = 'EXCELENTE' | 'BOM' | 'REGULAR' | 'DANIFICADO' | 'EM_MANUTENCAO' | 'INUTILIZAVEL';
+
 export interface ItemPatrimony {
   id: string;
-  name: string;
-  condition: string;
-  status: 'available' | 'borrowed';
+  patrimonioId: string;
+  nomePatrimonio: string;
+  condicaoProduto: CondicaoProduto;
+  condicaoDescricao: string;
+  quantidade: number;
 }
 
-export type ItemPatrimonyDto = Omit<ItemPatrimony, 'id' | 'status'>;
+export type ItemPatrimonyDto = Omit<ItemPatrimony, 'id' | 'nomePatrimonio'>;

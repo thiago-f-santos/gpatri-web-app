@@ -6,8 +6,9 @@ import { SelectInput, SelectOption } from '../../../shared/components/select-inp
 import { Button } from '../../../shared/components/button/button';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../core/services/user-service';
-import { filter, Observable, switchMap } from 'rxjs';
-import { User } from '../../../core/models/user.model';
+import { filter, forkJoin, map, Observable, switchMap, tap } from 'rxjs';
+import { User, UserDto } from '../../../core/models/user.model';
+import { RoleService } from '../../../core/services/role-service';
 
 @Component({
   selector: 'app-edit-user',
@@ -19,61 +20,68 @@ import { User } from '../../../core/models/user.model';
 export class EditUser implements OnInit {
   userForm!: FormGroup;
   userId!: string;
-  
-  // Opções para o campo "Cargo" (role)
-  roleOptions: SelectOption[] = [
-    { value: 'Administração', label: 'Administração' },
-    { value: 'Desenvolvimento', label: 'Desenvolvimento' },
-    { value: 'Financeiro', label: 'Financeiro' },
-    { value: 'Estudante', label: 'Estudante' },
-  ];
+  roleOptions: SelectOption[] = [];
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private userService: UserService,
+    private roleService: RoleService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.userForm = this.fb.group({
-      name: ['', Validators.required],
-      lastName: ['', Validators.required],
+      nome: ['', Validators.required],
+      sobrenome: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      role: ['', Validators.required]
+      idCargo: ['', Validators.required]
+    });
+
+    this.roleService.getCargos().pipe(
+      map(roles => roles.map(role => ({ value: role.id, label: role.nome })))
+    ).subscribe(options => {
+      this.roleOptions = options;
     });
 
     this.route.paramMap.pipe(
-      switchMap(params => {
-        const id = params.get('id');
-        if (id) {
-          this.userId = id;
-          return this.userService.getUserById(id);
-        }
-        return new Observable<undefined>();
-      }),
+      tap(params => this.userId = params.get('id')!),
+      switchMap(params => this.userService.getUserById(params.get('id')!)),
       filter(user => !!user)
     ).subscribe(user => {
-      if (user) {
-        this.userForm.patchValue({
-          name: user.name,
-          lastName: user.lastName,
-          email: user.email,
-          role: user.role
-        });
-      }
+      this.userForm.patchValue({
+        nome: user.nome,
+        sobrenome: user.sobrenome,
+        email: user.email,
+        idCargo: user.idCargo
+      });
     });
   }
 
   onConfirm(): void {
-    if (this.userForm.valid) {
-      const updatedUser: User = {
-        id: this.userId,
-        ...this.userForm.value
+    if (this.userForm.valid && this.userId) {
+      const formValue = this.userForm.value;
+
+      const userUpdateDto: Partial<UserDto> = {
+        nome: formValue.nome,
+        sobrenome: formValue.sobrenome,
+        email: formValue.email
       };
       
-      this.userService.updateUser(updatedUser).subscribe(() => {
-        this.router.navigate(['/users', this.userId]);
+      const cargoUpdateDto = {
+        idCargo: formValue.idCargo
+      };
+
+      forkJoin({
+        userUpdate: this.userService.updateUser(this.userId, userUpdateDto),
+        roleUpdate: this.userService.assignRoleToUser(this.userId, cargoUpdateDto)
+      }).subscribe({
+        next: () => {
+          this.router.navigate(['/users', this.userId]);
+        },
+        error: (err) => {
+          console.error('Erro ao atualizar usuário:', err);
+        }
       });
     } else {
       this.userForm.markAllAsTouched();

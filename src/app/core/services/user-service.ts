@@ -1,64 +1,37 @@
-import { Injectable } from '@angular/core';
-import { User, UserDto } from '../models/user.model';
-import { delay, Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { User, UserDto, UserRoleDto } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private mockUsers: User[] = [
-    { id: 'uuid-user-1', name: 'Augusto', lastName: 'Cesar', email: 'augusto.cesar@email.com', role: 'Administração' },
-    { id: 'uuid-user-2', name: 'Beatriz', lastName: 'Almeida', email: 'beatriz.almeida@email.com', role: 'Desenvolvimento' },
-    { id: 'uuid-user-3', name: 'Carlos', lastName: 'Andrade', email: 'carlos.andrade@email.com', role: 'Financeiro' },
-    { id: 'uuid-user-4', name: 'Augusto', lastName: 'Silva', email: 'augusto.silva@email.com', role: 'Desenvolvimento' },
-  ];
-
-  constructor() { }
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = `${environment.apiUrl}/usuarios/api/v1/usuarios`;
 
   getUsers(): Observable<User[]> {
-    return of([...this.mockUsers]).pipe(delay(300));
+    return this.http.get<User[]>(this.apiUrl);
   }
 
-  findUsersByName(searchTerm: string): Observable<User[]> {
-    const lowerCaseTerm = searchTerm.toLowerCase().trim();
-    
-    if (!lowerCaseTerm) {
-      return of([]);
-    }
-
-    const results = this.mockUsers.filter(user => {
-      const fullName = `${user.name} ${user.lastName}`.toLowerCase();
-      return fullName.includes(lowerCaseTerm);
-    });
-
-    return of(results).pipe(delay(300));
+  getUserById(id: string): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
 
   createUser(userDto: UserDto): Observable<User> {
-    const newUser: User = {
-      id: `uuid-user-${Math.random().toString(36).substring(2, 9)}`,
-      ...userDto
-    };
-    this.mockUsers.push(newUser);
-    return of(newUser).pipe(delay(300));
+    return this.http.post<User>(this.apiUrl, userDto);
   }
   
-  updateUser(updatedUser: User): Observable<User> {
-    const index = this.mockUsers.findIndex(u => u.id === updatedUser.id);
-    if (index !== -1) {
-      this.mockUsers[index] = updatedUser;
-    }
-    return of(updatedUser).pipe(delay(300));
+  updateUser(id: string, userDto: Partial<UserDto>): Observable<User> {
+    return this.http.patch<User>(`${this.apiUrl}/${id}`, userDto);
   }
   
-  deleteUser(userId: string): Observable<boolean> {
-    const initialLength = this.mockUsers.length;
-    this.mockUsers = this.mockUsers.filter(u => u.id !== userId);
-    return of(this.mockUsers.length < initialLength).pipe(delay(300));
+  deleteUser(userId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${userId}`);
   }
 
-  getUserById(id: string): Observable<User | undefined> {
-    const user = this.mockUsers.find(u => u.id === id);
-    return of(user).pipe(delay(300));
+  assignRoleToUser(userId: string, roleDto: UserRoleDto): Observable<User> {
+    return this.http.patch<User>(`${this.apiUrl}/${userId}/cargo`, roleDto);
   }
 }

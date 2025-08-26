@@ -5,7 +5,7 @@ import { InputComponent } from '../../../../../../shared/components/input/input'
 import { SelectInput, SelectOption } from '../../../../../../shared/components/select-input/select-input';
 import { Button } from '../../../../../../shared/components/button/button';
 import { CategoryService } from '../../../../../../core/services/category-service';
-import { Category } from '../../../../../../core/models/category.model';
+import { Category, CategoryDto } from '../../../../../../core/models/category.model';
 
 @Component({
   selector: 'app-edit-category-modal',
@@ -29,8 +29,8 @@ export class EditCategoryModal implements OnInit {
 
   ngOnInit(): void {
     this.editForm = this.fb.group({
-      name: [this.category.name, Validators.required],
-      parentId: [this.category.parentId || '']
+      nome: [this.category.nome, Validators.required],
+      idCategoriaMae: [this.category.idCategoriaMae || '']
     });
   }
 
@@ -40,17 +40,18 @@ export class EditCategoryModal implements OnInit {
       return;
     }
 
-    const formValue = this.editForm.value;
-    const updatedCategory: Category = {
-      ...this.category,
-      name: formValue.name,
-      parentId: formValue.parentId || undefined,
+    const categoryDto: Partial<CategoryDto> = {
+      nome: this.editForm.value.nome,
+      idCategoriaMae: this.editForm.value.idCategoriaMae || null
     };
 
-    this.categoryService.updateCategory(updatedCategory).subscribe(() => {
-      alert('Categoria atualizada com sucesso!');
-      this.categoryUpdated.emit();
-      this.onClose();
+    this.categoryService.updateCategory(this.category.id, categoryDto).subscribe({
+        next: () => {
+          alert('Categoria atualizada com sucesso!');
+          this.categoryUpdated.emit();
+          this.onClose();
+        },
+        error: (err) => console.error("Erro ao atualizar categoria", err)
     });
   }
 

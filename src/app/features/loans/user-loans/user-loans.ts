@@ -26,25 +26,26 @@ export class UserLoans implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    this.loans$ = this.loanService.getLoans();
+    this.loadLoans();
     this.headerService.showBackButton();
   }
+  
+  private loadLoans(): void {
+    this.loans$ = this.loanService.getLoans();
+  }
 
-  deleteRequest(Loan: Loan): void {
+  deleteRequest(loan: Loan): void {
     this.isConfirmMessageOpen = true;
-    this.selectedLoan = Loan;
+    this.selectedLoan = loan;
   }
 
   confirmDeletion(): void {
-    if (!this.selectedLoan) {
-      console.log("Não há empréstimo selecionado para ser deletado.")
-      return;
-    }
+    if (!this.selectedLoan) return;
 
-    this.loanService.deleteLoan(this.selectedLoan).subscribe({
+    this.loanService.deleteLoan(this.selectedLoan.id).subscribe({
       next: () => {
         console.log('Solicitação deletada com sucesso!');
-        this.loans$ = this.loanService.getLoans();
+        this.loadLoans();
         this.closeModal();
       },
       error: (err) => {

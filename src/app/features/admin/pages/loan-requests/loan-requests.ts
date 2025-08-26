@@ -29,7 +29,7 @@ export class LoanRequests {
   loadPendingRequests(): void {
     this.isLoading = true;
     this.loanService.getLoans().pipe(
-      map(loans => loans.filter(loan => loan.status === 'pending'))
+      map(loans => loans.filter(loan => loan.situacao === 'EM_ESPERA'))
     ).subscribe(data => {
       this.pendingRequests = data;
       this.isLoading = false;
@@ -37,19 +37,15 @@ export class LoanRequests {
   }
 
   handleApproveRequest(request: Loan): void {
-    if (confirm('Tem certeza que deseja aprovar esta solicitação?')) {
-      this.loanService.approveLoan(request.id).subscribe(() => {
-        this.loadPendingRequests();
-      });
-    }
+    this.loanService.approveLoan(request.id).subscribe(() => {
+      this.loadPendingRequests();
+    });
   }
 
   handleDenyRequest(request: Loan): void {
-    if (confirm('Tem certeza que deseja negar esta solicitação?')) {
-      this.loanService.denyLoan(request.id).subscribe(() => {
-        this.loadPendingRequests();
-      });
-    }
+    this.loanService.denyLoan(request.id).subscribe(() => {
+      this.loadPendingRequests();
+    });
   }
 
   openDetailsModal(loan: Loan): void {

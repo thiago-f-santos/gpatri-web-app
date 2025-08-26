@@ -3,14 +3,14 @@
         <h2>Editar usuário</h2>
         <form [formGroup]="userForm" (ngSubmit)="onConfirm()">
             <app-input
-            formControlName="name"
+            formControlName="nome"
             label="Nome"
             type="text"
             [backgroundColor]="'#1C1F27'"
             ></app-input>
 
             <app-input
-            formControlName="lastName"
+            formControlName="Sobrenome"
             label="Sobrenome"
             type="text"
             [backgroundColor]="'#1C1F27'"
@@ -24,7 +24,7 @@
             ></app-input>
 
             <app-select-input
-            formControlName="role"
+            formControlName="idCargo"
             label="Cargo"
             [options]="roleOptions"
             [backgroundColor]="'#1C1F27'"

@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Button } from '../../../../../../shared/components/button/button';
-import { LoanItem, LoanItemDisplay } from '../loan-item-display/loan-item-display';
+import { ItemLoan } from '../../../../../../core/models/item-loan.model';
 import { Loan } from '../../../../../../core/models/loan.model';
 import { LoanService } from '../../../../../../core/services/loan-service';
+import { UserService } from '../../../../../../core/services/user-service';
+import { Button } from '../../../../../../shared/components/button/button';
+import { LoanItemDisplay } from '../loan-item-display/loan-item-display';
 
 @Component({
   selector: 'app-loan-details-modal',
@@ -18,30 +20,32 @@ export class LoanDetailsModal {
   @Output() loanUpdated = new EventEmitter<void>();
 
   requesterName = '';
-  itemsRequested: LoanItem[] = [];
+  itemsRequested: ItemLoan[] = [];
 
-  constructor(private loanService: LoanService) { }
+  constructor(
+    private loanService: LoanService,
+    private userService: UserService,
+  ) { }
 
   ngOnInit(): void {
-    this.requesterName = this.loan.requester.name;
-    this.itemsRequested = this.loan.items.map(item => ({
-      name: item.name,
-      quantity: 1,
-      condition: item.condition
-    }));
+    this.userService.getUserById(this.loan.idUsuario).subscribe(user => {
+      this.requesterName = `${user.nome} ${user.sobrenome}`;
+    });
+
+    this.itemsRequested = this.loan.itensEmprestimo;
   }
 
   onApprove(): void {
     this.loanService.approveLoan(this.loan.id).subscribe(() => {
       this.loanUpdated.emit();
-      this.close.emit();
+      this.onClose();
     });
   }
 
   onDeny(): void {
     this.loanService.denyLoan(this.loan.id).subscribe(() => {
       this.loanUpdated.emit();
-      this.close.emit();
+      this.onClose();
     });
   }
 

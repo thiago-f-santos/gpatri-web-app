@@ -1,9 +1,19 @@
 export interface User {
   id: string;
-  name: string;
-  lastName: string;
+  nome: string;
+  sobrenome: string;
   email: string;
-  role: string;
+  cargo?: string;
+  idCargo?: string;
 }
 
-export type UserDto = Omit<User, 'id'>;
+export interface UserDto {
+  nome: string;
+  sobrenome: string;
+  email: string;
+  senha?: string;
+}
+
+export interface UserRoleDto {
+  idCargo: string;
+}

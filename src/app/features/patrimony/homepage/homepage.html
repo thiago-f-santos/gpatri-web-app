@@ -10,11 +10,11 @@
         <div class="request-items-list">
         @for (item of items; track item.id) {
           <app-item-display
-            [mainText]="item.id"
-            [secondaryText]="item.condition"
-            [showDeleteButton]="true" 
+            [mainText]="item.nomePatrimonio"
+            [secondaryText]="item.condicaoProduto"
+            [showDeleteButton]="true"
             [isSelectable]="false"
-            (delete)="removeItemFromRequest(item)">>
+            (delete)="removeItemFromRequest(item)">
           </app-item-display>
         }
         </div>
@@ -32,9 +32,9 @@
       @if (patrimonies$ | async; as patrimonies) {
         @for (patrimony of patrimonies; track patrimony.id) {
           <app-patrimony-display
-            [patrimonyName]="patrimony.patrimonyName"
-            [categoryName]="patrimony.categoryName"
-            [items]="patrimony.items"
+            [patrimonyName]="patrimony.nome"
+            [categoryName]="patrimony.nomeCategoria"
+            [items]="patrimony.itensPatrimonio"
             [selectedItems]="items"
             (itemSelected)="selectItem($event)"
           ></app-patrimony-display>
@@ -43,7 +43,5 @@
         <p class="request-subtitle">Carregando itens...</p>
       }
   </div>
-  } @else {
-    <!-- TO DO: implementar página de carregamento -->
   }
 </div>

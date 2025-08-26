@@ -4,14 +4,14 @@
     @if (user$ | async; as user) {
       <div class="user-details">
         <div class="user-data">
-          <p><strong>Nome:</strong> {{user.name}}</p>
-          <p><strong>Sobrenome:</strong> {{user.lastName}}</p>
+          <p><strong>Nome:</strong> {{user.nome}}</p>
+          <p><strong>Sobrenome:</strong> {{user.sobrenome}}</p>
           <p><strong>E-mail:</strong> {{user.email}}</p>
-          <p><strong>Cargo:</strong> {{user.role}}</p>
+          <p><strong>Cargo:</strong> {{user.cargo || 'Não atribuído'}}</p>
         </div>
         <app-button
-        text="Editar"
-        (onClick)="onEditClick(user)">
+          text="Editar"
+          (onClick)="onEditClick(user)">
         </app-button>
       </div>
     } @else {

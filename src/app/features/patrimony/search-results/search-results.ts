@@ -25,6 +25,8 @@ export class SearchResults implements OnInit{
   requestItems$: Observable<ItemPatrimony[]>;
   searchQuery: string = '';
 
+  previousSearch: string = '';
+
   constructor(
     private patrimonyService: PatrimonyService,
     private requestStateService: RequestStateService,
@@ -36,12 +38,11 @@ export class SearchResults implements OnInit{
   }
 
   ngOnInit(): void {
-    this.patrimonies$ = this.patrimonyService.getPatrimonies();
-    this.headerService.showBackButton();
     this.activatedRoute.queryParamMap.subscribe(params => {
-      this.searchQuery = params.get('search') || '';
-      console.log(this.searchQuery);
+      this.previousSearch = params.get('search') || '';
+      this.patrimonies$ = this.patrimonyService.getPatrimoniesByName(this.previousSearch);
     });
+    this.headerService.showBackButton();
   }
 
   selectItem(item: ItemPatrimony): void {

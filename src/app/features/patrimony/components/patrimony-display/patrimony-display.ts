@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ItemPatrimony } from '../../../../core/models/item-patrimony.model';
 import { ItemDisplay } from '../../../../shared/components/item-display/item-display';
 
 export interface Item {
@@ -19,13 +20,17 @@ export interface Item {
 export class PatrimonyDisplay {
   @Input() patrimonyName!: string;
   @Input() categoryName!: string;
-  @Input() items: Item[] = [];
+  @Input() items: ItemPatrimony[] = [];
 
-  @Input() selectedItems: Item[] = [];
+  @Input() selectedItems: ItemPatrimony[] = [];
 
-  @Output() itemSelected = new EventEmitter<Item>();
+  @Output() itemSelected = new EventEmitter<ItemPatrimony>();
 
-  isSelected(item: Item): boolean {
+  isSelected(item: ItemPatrimony): boolean {
     return this.selectedItems.some(selected => selected.id === item.id);
+  }
+
+  getItemStatus(item: ItemPatrimony): 'available' | 'borrowed' {
+    return item.quantidade >= 1 ? 'available' : 'borrowed';
   }
 }

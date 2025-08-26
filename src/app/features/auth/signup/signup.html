@@ -84,6 +84,10 @@
         }
       </div>
 
+      @if (signupError) {
+        <p class="error-message">{{ signupError }}</p>
+      }
+
       <app-button
         text="Registrar"
         [disabled]="signupForm.invalid"
