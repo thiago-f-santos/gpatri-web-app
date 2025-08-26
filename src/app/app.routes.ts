@@ -12,10 +12,6 @@ export const routes: Routes = [
         loadComponent: () => import('./features/auth/signup/signup').then(m => m.Signup)
     },
     {
-        path: 'users/:id',
-        loadComponent: () => import('./features/users/user-detail/user-detail').then(m => m.UserDetail)
-    },
-    {
         path: '',
         loadComponent: () => import('./core/layout/layout').then(m => m.Layout),
         children: [
@@ -30,6 +26,14 @@ export const routes: Routes = [
             {
                 path: 'emprestimos',
                 loadComponent: () => import('./features/loans/user-loans/user-loans').then(m => m.UserLoans)
+            },
+            {
+                path: 'users/:id',
+                loadComponent: () => import('./features/users/user-detail/user-detail').then(m => m.UserDetail)
+            },
+            {
+                path: 'users/:id/edit',
+                loadComponent: () => import('./features/users/edit-user/edit-user').then(m => m.EditUser)
             },
             {
                 path: 'admin',

@@ -23,7 +23,7 @@ export class LoanDetailsModal {
   constructor(private loanService: LoanService) { }
 
   ngOnInit(): void {
-    this.requesterName = this.loan.requester;
+    this.requesterName = this.loan.requester.name;
     this.itemsRequested = this.loan.items.map(item => ({
       name: item.name,
       quantity: 1,

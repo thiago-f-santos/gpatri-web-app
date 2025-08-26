@@ -1,13 +1,8 @@
 <div class="user-card">
-  <div class="user-info">
-    <div class="initial-container">
-      <span>{{ user.name.charAt(0).toUpperCase() }}</span>
-    </div>
-    <div class="user-details">
-      <h3>{{ user.name }} {{ user.lastName }}</h3>
-      <p>{{ user.email }}</p>
-      <p>{{ user.role }}</p>
-    </div>
+  <div class="user-details">
+    <h3>{{ user.name }} {{ user.lastName }}</h3>
+    <p>{{ user.email }}</p>
+    <p>{{ user.role }}</p>
   </div>
   <div class="user-actions">
     <button class="action-button view-button" (click)="onView()">

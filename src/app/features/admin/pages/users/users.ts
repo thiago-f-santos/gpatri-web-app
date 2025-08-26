@@ -1,16 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { User } from '../../../../core/models/user.model';
 import { UserService } from '../../../../core/services/user-service';
 import { UserCard } from './user-card/user-card';
-import { SearchInput } from '../../../../shared/components/search-input/search-input';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, UserCard, SearchInput],
+  imports: [CommonModule, UserCard],
   templateUrl: './users.html',
   styleUrl: './users.scss'
 })

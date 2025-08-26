@@ -1,1 +1,41 @@
-<p>user-detail works!</p>
+<div class="user-details-container">
+  <div class="user-section">
+    <h1 class="page-title">Informações de Usuário</h1>
+    @if (user$ | async; as user) {
+      <div class="user-details">
+        <div class="user-data">
+          <p><strong>Nome:</strong> {{user.name}}</p>
+          <p><strong>Sobrenome:</strong> {{user.lastName}}</p>
+          <p><strong>E-mail:</strong> {{user.email}}</p>
+          <p><strong>Cargo:</strong> {{user.role}}</p>
+        </div>
+        <app-button
+        text="Editar"
+        (onClick)="onEditClick(user)">
+        </app-button>
+      </div>
+    } @else {
+      <p class="loading-text">Carregando usuário...</p>
+    }
+    
+  </div>
+
+  <div class="loans-request-section">
+    <h1 class="page-title">Últimas solicitações</h1>
+    @if (loans$ | async; as loanRequests) {
+      @if (loanRequests.length === 0) {
+        <p class="no-requests-text">Você ainda não tem solicitações...</p>
+      } @else {
+        <div class="loan-requests-list">
+          @for (request of loanRequests; track request.id) {
+            <app-loan-display
+            [loanRequest]="request">
+            </app-loan-display>
+          }
+        </div>
+      }
+    } @else {
+      <p class="loading-text">Carregando solicitações...</p>
+    }
+  </div>
+</div>

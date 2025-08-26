@@ -19,27 +19,6 @@ $card-background-color: #35383F;
   color: v.$color-text-light;
 }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.initial-container {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background-color: #1C1F27;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  font-family: v.$font-family-secondary;
-  font-weight: v.$font-weight-bold;
-  font-size: 24px;
-}
-
 .user-details {
   display: flex;
   flex-direction: column;
