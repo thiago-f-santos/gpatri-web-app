@@ -2,7 +2,7 @@
   <div class="signup-form-wrapper">
     <h1 class="title">Registre-se para continuar!</h1>
 
-    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="signupForm">
       
       <div class="form-field">
         <app-input
@@ -96,7 +96,7 @@
     </form>
 
     <div class="login-link">
-      <a href="/login">Já possuo uma conta!</a>
+      <a routerLink="/login">Já possuo uma conta!</a>
     </div>
   </div>
 </div>

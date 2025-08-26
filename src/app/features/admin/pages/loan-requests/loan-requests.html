@@ -13,7 +13,7 @@
   </div>
   <div class="requests-list">
     @if (isLoading) {
-      <p>Carregando solicitações...</p>
+      <p class="subtitle">Carregando solicitações...</p>
     } @else {
       @for (request of pendingRequests; track request.id) {
         <app-loan-request-card

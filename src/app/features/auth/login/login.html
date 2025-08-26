@@ -1,7 +1,7 @@
 <div class="login-container">
   <div class="login-form-wrapper">
     <img src="logo.png" alt="Logo Numbers" class="logo">
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="loginForm">
       <div class="form-field">
         <app-input
           label="E-mail"
@@ -46,7 +46,7 @@
     </form>
 
     <div class="signup-link">
-      <a href="/signup">Não tem conta? <strong>Registre-se</strong></a>
+      <a routerLink="/signup">Não tem conta? <strong>Registre-se</strong></a>
     </div>
   </div>
 </div>

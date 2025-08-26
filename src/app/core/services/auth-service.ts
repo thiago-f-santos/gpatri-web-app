@@ -2,9 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { LoginRequest, LoginResponse } from '../models/auth.model';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, switchMap, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+import { UserService } from './user-service';
 
 interface DecodedToken {
   userId: string;
@@ -26,7 +27,9 @@ export class AuthService {
   private currentUserIdSubject = new BehaviorSubject<string | null>(null);
   public currentUserId$ = this.currentUserIdSubject.asObservable();
 
-  constructor() {
+  constructor(
+    private userService: UserService
+  ) {
     this.loadUserIdFromToken();
   }
 
@@ -34,6 +37,8 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
         localStorage.setItem(this.TOKEN_KEY, response.token);
+        const decodedToken: DecodedToken = jwtDecode(response.token);
+        this.currentUserIdSubject.next(decodedToken.userId);
         this.isAuthenticatedSubject.next(true);
       })
     );
@@ -42,6 +47,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     this.isAuthenticatedSubject.next(false);
+    this.currentUserIdSubject.next(null);
     this.router.navigate(['/login']);
   }
 

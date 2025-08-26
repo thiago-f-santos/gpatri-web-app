@@ -8,7 +8,7 @@
         @for (item of items; track item.id) {
             <app-item-display
                 [mainText]="item.id"
-                [secondaryText]="item.condicaoProduto"
+                [secondaryText]="conditions.get(item.condicaoProduto)"
                 [status]="getItemStatus(item)"
                 [isSelectable]="true"
                 [isSelected]="isSelected(item)" 

@@ -26,6 +26,13 @@ export class PatrimonyDisplay {
 
   @Output() itemSelected = new EventEmitter<ItemPatrimony>();
 
+  conditions: Map<string, string> = new Map([
+    ['EXCELENTE', 'Excelente'],
+    ['BOM', 'Bom'],
+    ['REGULAR', 'Regular'],
+    ['DANIFICADO', 'Danificado']
+  ]);
+
   isSelected(item: ItemPatrimony): boolean {
     return this.selectedItems.some(selected => selected.id === item.id);
   }

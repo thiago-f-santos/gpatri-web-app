@@ -6,6 +6,7 @@ import { LoanService } from '../../../core/services/loan-service';
 import { ConfirmationMessage } from '../../../shared/components/confirmation-message/confirmation-message';
 import { HeaderService } from '../../../core/services/header-service';
 import { Loan } from '../../../core/models/loan.model';
+import { AuthService } from '../../../core/services/auth-service';
 
 @Component({
   selector: 'app-user-loans',
@@ -22,6 +23,7 @@ export class UserLoans implements OnInit{
 
   constructor(
     private loanService: LoanService,
+    private authService: AuthService,
     private headerService: HeaderService
   ) {}
 
@@ -31,7 +33,12 @@ export class UserLoans implements OnInit{
   }
   
   private loadLoans(): void {
-    this.loans$ = this.loanService.getLoans();
+    const userId = this.authService.currentUserId;
+    if (userId) {
+      this.loans$ = this.loanService.getLoansByUserId(userId);
+    } else {
+      console.error("Não foi possível obter o ID do usuário para navegação.");
+    }
   }
 
   deleteRequest(loan: Loan): void {

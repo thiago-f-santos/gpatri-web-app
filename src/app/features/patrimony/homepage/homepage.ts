@@ -14,13 +14,6 @@ import { RequestStateService } from '../services/request-state-service';
 import { LoanService } from '../../../core/services/loan-service';
 import { LoanDto } from '../../../core/models/loan.model';
 
-export interface Item {
-  id: string;
-  name: string;
-  condition: string;
-  status: 'available' | 'borrowed';
-}
-
 @Component({
   selector: 'app-homepage',
   standalone: true,

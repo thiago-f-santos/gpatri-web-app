@@ -45,7 +45,7 @@
   <h2>Categorias Existentes</h2>
   <div class="list-container">
     @if (isLoading) {
-      <p>Carregando categorias...</p>
+      <p class="subtitle">Carregando categorias...</p>
     } @else {
       @for (category of categories; track category.id) {
         <app-category-card
@@ -54,7 +54,7 @@
           (delete)="handleDeleteRequest(category)"
         ></app-category-card>
       } @empty {
-        <p>Nenhuma categoria cadastrada.</p>
+        <p class="subtitle">Nenhuma categoria cadastrada.</p>
       }
     }
   </div>

@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { passwordMatchValidator } from '../../../shared/validators/password-match.validator';
+import { Router, RouterLink } from '@angular/router';
+import { UserDto } from '../../../core/models/user.model';
+import { AuthService } from '../../../core/services/auth-service';
+import { UserService } from '../../../core/services/user-service';
 import { Button } from "../../../shared/components/button/button";
 import { InputComponent } from "../../../shared/components/input/input";
-import { UserService } from '../../../core/services/user-service';
-import { AuthService } from '../../../core/services/auth-service';
-import { Router } from '@angular/router';
-import { UserDto } from '../../../core/models/user.model';
+import { passwordMatchValidator } from '../../../shared/validators/password-match.validator';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, Button, InputComponent],
+  imports: [CommonModule, ReactiveFormsModule, Button, InputComponent, RouterLink],
   templateUrl: './signup.html',
   styleUrl: './signup.scss'
 })
@@ -52,7 +52,7 @@ export class Signup {
 
       this.userService.createUser(userDto).subscribe({
         next: () => {
-          this.authService.login({ email, senha: password }).subscribe({
+          this.authService.login({ email: email, senha: password }).subscribe({
             next: () => this.router.navigate(['/']),
             error: (loginErr) => {
               console.error('Erro no login automático:', loginErr);

@@ -24,6 +24,10 @@ export class LoanService {
     return this.http.get<Loan>(`${this.apiUrl}/${id}`);
   }
 
+  getLoansByUserId(userId: String): Observable<Loan[]> {
+    return this.http.get<Loan[]>(`${this.apiUrl}/user/${userId}`);
+  }
+
   createLoan(loanDto: LoanDto): Observable<Loan> {
     return this.http.post<Loan>(this.apiUrl, loanDto);
   }

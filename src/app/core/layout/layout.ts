@@ -40,7 +40,6 @@ export class Layout {
   onYourInfosClick() {
     const userId = this.authService.currentUserId;
     if (userId) {
-      console.log("cu de viado")
       this.router.navigate(['/users', userId]);
     } else {
       console.error("Não foi possível obter o ID do usuário para navegação.");

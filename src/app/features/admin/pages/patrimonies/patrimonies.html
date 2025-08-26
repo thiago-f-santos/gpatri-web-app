@@ -69,7 +69,7 @@
     <h2>Patrimônios Cadastrados</h2>
     <div class="patrimony-list">
         @if (isLoading) {
-            <p>Carregando patrimônios...</p>
+            <p class="subtitle">Carregando patrimônios...</p>
         } @else {
             @for (patrimony of patrimonies; track patrimony.id) {
                 <app-patrimony-summary-card
@@ -78,7 +78,7 @@
                 (edit)="manageItems(patrimony)">
                 </app-patrimony-summary-card>
             } @empty {
-                <p>Nenhum patrimônio cadastrado.</p>
+                <p class="subtitle">Nenhum patrimônio cadastrado.</p>
             }
         }
     </div>
