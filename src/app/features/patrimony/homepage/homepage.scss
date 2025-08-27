@@ -91,3 +91,23 @@ $card-background-color: #1C1F27;
   color: v.$color-text-light;
   margin: 0;
 }
+
+.request-item-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  app-item-display {
+    flex-grow: 1;
+  }
+}
+
+.quantity-input {
+  width: 60px;
+  padding: 8px;
+  text-align: center;
+  border: 1px solid v.$color-border-default;
+  background-color: v.$color-background-dark;
+  color: v.$color-text-light;
+  border-radius: v.$border-radius-default;
+}

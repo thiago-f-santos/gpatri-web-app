@@ -1,47 +1,57 @@
 <div class="homepage-container">
   <app-search-input (search)="onSearch($event)"></app-search-input>
 
-  @if (requestItems$ | async; as items) {
-  <div class="request-section">
-    <h2 class="request-title">Sua solicitação</h2>
-      @if (items.length === 0) {
-        <p class="request-subtitle">Sua solicitação ainda está vazia...</p>
-      } @else {
-        <div class="request-items-list">
-        @for (item of items; track item.id) {
-          <app-item-display
-            [mainText]="item.nomePatrimonio"
-            [secondaryText]="item.condicaoProduto"
-            [showDeleteButton]="true"
-            [isSelectable]="false"
-            (delete)="removeItemFromRequest(item)">
-          </app-item-display>
+  @if (viewState$ | async; as state) {
+
+    <div class="request-section">
+      <h2 class="request-title">Sua solicitação</h2>
+        @if (state.requestItems.length === 0) {
+          <p class="request-subtitle">Sua solicitação ainda está vazia...</p>
+        } @else {
+          <div class="request-items-list">
+            @for (reqItem of state.requestItems; track reqItem.item.id) {
+              <div class="request-item-row">
+                <app-item-display
+                  [mainText]="reqItem.item.nomePatrimonio"
+                  [secondaryText]="reqItem.item.condicaoProduto"
+                  [showDeleteButton]="true"
+                  (delete)="removeItemFromRequest(reqItem.item)">
+                </app-item-display>
+                
+                @if (reqItem.tipoControle === 'ESTOQUE') {
+                  <input 
+                    type="number" 
+                    class="quantity-input"
+                    [value]="reqItem.quantity"
+                    (change)="onQuantityChange(reqItem.item, $event)"
+                    min="1" />
+                }
+              </div>
+            }
+          </div>
+          <app-button
+            text="Confirmar"
+            (onClick)="confirmRequest()">
+          </app-button>
         }
-        </div>
+    </div>
 
-        <app-button
-          text="Confirmar"
-          (onClick)="confirmRequest()">
-        </app-button>
-      }
-    
-  </div>
-
-  <div class="available-items-section">
-    <h2 class="available-items-title">Itens disponíveis</h2>
-      @if (patrimonies$ | async; as patrimonies) {
-        @for (patrimony of patrimonies; track patrimony.id) {
+    <div class="available-items-section">
+      <h2 class="available-items-title">Itens disponíveis</h2>
+        @for (patrimony of state.patrimonies; track patrimony.id) {
           <app-patrimony-display
             [patrimonyName]="patrimony.nome"
             [categoryName]="patrimony.nomeCategoria"
             [items]="patrimony.itensPatrimonio"
-            [selectedItems]="items"
-            (itemSelected)="selectItem($event)"
-          ></app-patrimony-display>
+            [selectedItems]="state.selectedItems"
+            (itemSelected)="selectItem($event, patrimony)">
+          </app-patrimony-display>
+        } @empty {
+          <p class="request-subtitle">Nenhum item disponível no momento.</p>
         }
-      } @else {
-        <p class="request-subtitle">Carregando itens...</p>
-      }
-  </div>
+    </div>
+
+  } @else {
+    <p class="request-subtitle">Carregando dados da página...</p>
   }
 </div>

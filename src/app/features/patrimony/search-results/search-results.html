@@ -1,56 +1,60 @@
 <div class="search-container">
-    <app-search-input 
+  <app-search-input 
     [(ngModel)]="searchQuery"
     (search)="onSearch($event)">
-    </app-search-input>
+  </app-search-input>
 
-    @if (requestItems$ | async; as items) {
+  @if (viewState$ | async; as state) {
     <div class="request-section">
-        <h2 class="request-title">Sua solicitação</h2>
-        @if (items.length === 0) {
-            <p class="request-subtitle">Sua solicitação ainda está vazia...</p>
-        } @else {
-            <div class="request-items-list">
-            @for (item of items; track item.id) {
-            <app-item-display
-                [mainText]="item.id"
-                [secondaryText]="item.condicaoProduto"
-                [showDeleteButton]="true" 
-                [isSelectable]="false"
-                (delete)="removeItemFromRequest(item)">>
-            </app-item-display>
-            }
+      <h2 class="request-title">Sua solicitação</h2>
+      @if (state.requestItems.length === 0) {
+        <p class="request-subtitle">Sua solicitação ainda está vazia...</p>
+      } @else {
+        <div class="request-items-list">
+          @for (reqItem of state.requestItems; track reqItem.item.id) {
+            <div class="request-item-row">
+              <app-item-display
+                [mainText]="reqItem.item.nomePatrimonio"
+                [secondaryText]="reqItem.item.condicaoProduto"
+                [showDeleteButton]="true"
+                (delete)="removeItemFromRequest(reqItem.item)">
+              </app-item-display>
+              
+              @if (reqItem.tipoControle === 'ESTOQUE') {
+                <input 
+                  type="number" 
+                  class="quantity-input"
+                  [value]="reqItem.quantity"
+                  (change)="onQuantityChange(reqItem.item, $event)"
+                  min="1" />
+              }
             </div>
-            
-            <app-button
-                text="Confirmar"
-                (onClick)="confirmRequest()">
-            </app-button>
-        }
+          }
+        </div>
+        
+        <app-button
+          text="Confirmar"
+          (onClick)="confirmRequest()">
+        </app-button>
+      }
     </div>
 
     <div class="found-items-section">
-        <h2 class="found-items-title">Itens encontrados para '{{ previousSearch }}'</h2>
-        
-        @if (patrimonies$ | async; as patrimonies) {
-        @if(patrimonies.length > 0) {
-            @for (patrimony of patrimonies; track patrimony.id) {
-            <app-patrimony-display
-                [patrimonyName]="patrimony.nome"
-                [categoryName]="patrimony.nomeCategoria"
-                [items]="patrimony.itensPatrimonio"
-                [selectedItems]="(requestItems$ | async) || []"
-                (itemSelected)="selectItem($event)"
-            ></app-patrimony-display>
-            }
-        } @else {
-            <p class="request-subtitle">Nenhum item encontrado.</p>
-        }
-        } @else {
-        <p class="request-subtitle">Buscando itens...</p>
-        }
+      <h2 class="found-items-title">Itens encontrados para '{{ previousSearch }}'</h2>
+      
+      @for (patrimony of state.patrimonies; track patrimony.id) {
+        <app-patrimony-display
+          [patrimonyName]="patrimony.nome"
+          [categoryName]="patrimony.nomeCategoria"
+          [items]="patrimony.itensPatrimonio"
+          [selectedItems]="state.selectedItems"
+          (itemSelected)="selectItem($event, patrimony)">
+        </app-patrimony-display>
+      } @empty {
+        <p class="request-subtitle">Nenhum item encontrado para esta busca.</p>
+      }
     </div>
-    } @else {
-        <p class="request-subtitle">Carregando sua solicitação...</p>
-    }
+  } @else {
+    <p class="request-subtitle">Buscando itens...</p>
+  }
 </div>

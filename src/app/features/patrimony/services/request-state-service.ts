@@ -1,27 +1,50 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ItemPatrimony } from '../../../core/models/item-patrimony.model';
+import { Patrimony } from '../../../core/models/patrimony.model';
+
+export interface RequestItem {
+  item: ItemPatrimony;
+  quantity: number;
+  tipoControle: 'UNITARIO' | 'ESTOQUE';
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class RequestStateService {
-  private readonly requestItemsSource = new BehaviorSubject<ItemPatrimony[]>([]);
-  public readonly requestItems$: Observable<ItemPatrimony[]> = this.requestItemsSource.asObservable();
+  private readonly requestItemsSource = new BehaviorSubject<RequestItem[]>([]);
+  public readonly requestItems$: Observable<RequestItem[]> = this.requestItemsSource.asObservable();
 
   constructor() { }
 
-  addItem(item: ItemPatrimony): void {
+  addItem(item: ItemPatrimony, patrimony: Patrimony): void {
     const currentItems = this.requestItemsSource.getValue();
-    if (!currentItems.some(reqItem => reqItem.id === item.id)) {
-      this.requestItemsSource.next([...currentItems, item]);
+    if (!currentItems.some(reqItem => reqItem.item.id === item.id)) {
+      const newItem: RequestItem = {
+        item: item,
+        quantity: 1,
+        tipoControle: patrimony.tipoControle
+      };
+      this.requestItemsSource.next([...currentItems, newItem]);
     }
   }
 
   removeItem(itemToRemove: ItemPatrimony): void {
     const currentItems = this.requestItemsSource.getValue();
-    const newItems = currentItems.filter(item => item.id !== itemToRemove.id);
+    const newItems = currentItems.filter(reqItem => reqItem.item.id !== itemToRemove.id);
     this.requestItemsSource.next(newItems);
+  }
+
+  updateItemQuantity(itemId: string, newQuantity: number): void {
+    const currentItems = this.requestItemsSource.getValue();
+    const updatedItems = currentItems.map(reqItem => {
+      if (reqItem.item.id === itemId) {
+        return { ...reqItem, quantity: Math.max(1, newQuantity) };
+      }
+      return reqItem;
+    });
+    this.requestItemsSource.next(updatedItems);
   }
 
   clearItems(): void {
