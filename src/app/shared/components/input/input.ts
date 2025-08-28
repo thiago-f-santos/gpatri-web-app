@@ -26,6 +26,9 @@ export class InputComponent implements ControlValueAccessor, OnInit{
   @Input() type: 'text' | 'email' | 'password' | 'number' | 'textarea' = 'text';
   @Input() backgroundColor: string = '#03060F';
   @Input() parentError: string | null = null;
+
+  @Input() min: number | null = null;
+  @Input() max: number | null = null;
   
   value: string = '';
   isDisabled: boolean = false;

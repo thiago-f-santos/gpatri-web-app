@@ -14,6 +14,7 @@ import { PatrimonyDisplay } from '../components/patrimony-display/patrimony-disp
 import { RequestItem, RequestStateService } from '../services/request-state-service';
 import { LoanDto } from '../../../core/models/loan.model';
 import { LoanService } from '../../../core/services/loan-service';
+import { InputComponent } from '../../../shared/components/input/input';
 
 interface SearchResultsViewState {
   requestItems: RequestItem[];
@@ -24,7 +25,7 @@ interface SearchResultsViewState {
 @Component({
   selector: 'app-search-results',
   standalone: true,
-  imports: [CommonModule, FormsModule, PatrimonyDisplay, ItemDisplay, SearchInput, Button],
+  imports: [CommonModule, FormsModule, PatrimonyDisplay, ItemDisplay, SearchInput, Button, InputComponent],
   templateUrl: './search-results.html',
   styleUrl: './search-results.scss'
 })
@@ -72,10 +73,8 @@ export class SearchResults implements OnInit{
     this.requestStateService.removeItem(item);
   }
 
-  onQuantityChange(item: ItemPatrimony, event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const quantity = parseInt(input.value, 10);
-    this.requestStateService.updateItemQuantity(item.id, quantity);
+  onQuantityChange(item: ItemPatrimony, newQuantity: number): void {
+    this.requestStateService.updateItemQuantity(item, newQuantity);
   }
 
   confirmRequest(): void {

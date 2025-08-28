@@ -1,18 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { combineLatest, map, Observable, take } from 'rxjs';
 import { ItemPatrimony } from '../../../core/models/item-patrimony.model';
+import { LoanDto } from '../../../core/models/loan.model';
 import { Patrimony } from '../../../core/models/patrimony.model';
 import { HeaderService } from '../../../core/services/header-service';
+import { LoanService } from '../../../core/services/loan-service';
 import { PatrimonyService } from '../../../core/services/patrimony-service';
 import { Button } from '../../../shared/components/button/button';
+import { InputComponent } from '../../../shared/components/input/input';
 import { ItemDisplay } from '../../../shared/components/item-display/item-display';
 import { SearchInput } from '../../../shared/components/search-input/search-input';
 import { PatrimonyDisplay } from '../components/patrimony-display/patrimony-display';
 import { RequestItem, RequestStateService } from '../services/request-state-service';
-import { LoanService } from '../../../core/services/loan-service';
-import { LoanDto } from '../../../core/models/loan.model';
 
 interface HomepageViewState {
   patrimonies: Patrimony[];
@@ -23,7 +25,7 @@ interface HomepageViewState {
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [CommonModule, SearchInput, PatrimonyDisplay, ItemDisplay, Button],
+  imports: [CommonModule, FormsModule, SearchInput, PatrimonyDisplay, ItemDisplay, Button, InputComponent],
   templateUrl: './homepage.html',
   styleUrl: './homepage.scss'
 })
@@ -62,10 +64,8 @@ export class Homepage implements OnInit{
     this.requestStateService.removeItem(itemToRemove);
   }
 
-  onQuantityChange(item: ItemPatrimony, event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const quantity = parseInt(input.value, 10);
-    this.requestStateService.updateItemQuantity(item.id, quantity);
+  onQuantityChange(item: ItemPatrimony, newQuantity: number): void {
+    this.requestStateService.updateItemQuantity(item, newQuantity);
   }
 
   confirmRequest(): void {

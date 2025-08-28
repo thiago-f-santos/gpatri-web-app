@@ -36,17 +36,19 @@ export class RequestStateService {
     this.requestItemsSource.next(newItems);
   }
 
-  updateItemQuantity(itemId: string, newQuantity: number): void {
+  updateItemQuantity(itemToUpdate: ItemPatrimony, newQuantity: number): void {
     const currentItems = this.requestItemsSource.getValue();
     const updatedItems = currentItems.map(reqItem => {
-      if (reqItem.item.id === itemId) {
-        return { ...reqItem, quantity: Math.max(1, newQuantity) };
+      if (reqItem.item.id === itemToUpdate.id) {
+        const quantityMin = Math.max(1, newQuantity);
+        const clampedQuantity = Math.min(quantityMin, itemToUpdate.quantidade);
+        return { ...reqItem, quantity: clampedQuantity };
       }
       return reqItem;
     });
     this.requestItemsSource.next(updatedItems);
   }
-
+  
   clearItems(): void {
     this.requestItemsSource.next([]);
   }

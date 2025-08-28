@@ -21,12 +21,16 @@
               </app-item-display>
               
               @if (reqItem.tipoControle === 'ESTOQUE') {
-                <input 
-                  type="number" 
+                <app-input
                   class="quantity-input"
-                  [value]="reqItem.quantity"
-                  (change)="onQuantityChange(reqItem.item, $event)"
-                  min="1" />
+                  type="number"
+                  backgroundColor="#1C1F27"
+                  [label]="'Qtd.'"
+                  [(ngModel)]="reqItem.quantity"
+                  (ngModelChange)="onQuantityChange(reqItem.item, reqItem.quantity)"
+                  [max]="reqItem.item.quantidade"
+                  [min]="1">
+                </app-input>
               }
             </div>
           }

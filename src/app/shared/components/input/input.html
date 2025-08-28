@@ -18,6 +18,8 @@
             [disabled]="isDisabled"
             placeholder=" "
             (input)="onValueChange($event)" 
+            [min]="min"
+            [max]="max"
         />
     }
     <label class="label" [for]="id" [ngStyle] = "{'background-color': backgroundColor}"> {{label}} </label>
