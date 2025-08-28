@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ItemPatrimony } from '../../../core/models/item-patrimony.model';
 import { Patrimony } from '../../../core/models/patrimony.model';
+import { toInputDateString } from '../../../shared/utils/date.utils';
 
 export interface RequestItem {
   item: ItemPatrimony;
@@ -16,7 +17,21 @@ export class RequestStateService {
   private readonly requestItemsSource = new BehaviorSubject<RequestItem[]>([]);
   public readonly requestItems$: Observable<RequestItem[]> = this.requestItemsSource.asObservable();
 
+  private readonly returnDateSource = new BehaviorSubject<string>(this.getDefaultReturnDate());
+  public readonly returnDate$: Observable<string> = this.returnDateSource.asObservable();
+
+
   constructor() { }
+
+  private getDefaultReturnDate(): string {
+    return toInputDateString(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
+  }
+
+  updateReturnDate(newDate: string): void {
+    if (newDate) {
+      this.returnDateSource.next(newDate);
+    }
+  }
 
   addItem(item: ItemPatrimony, patrimony: Patrimony): void {
     const currentItems = this.requestItemsSource.getValue();
@@ -49,7 +64,8 @@ export class RequestStateService {
     this.requestItemsSource.next(updatedItems);
   }
   
-  clearItems(): void {
+  clearRequest(): void {
     this.requestItemsSource.next([]);
+    this.returnDateSource.next(this.getDefaultReturnDate());
   }
 }

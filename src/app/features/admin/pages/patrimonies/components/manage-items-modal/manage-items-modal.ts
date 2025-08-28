@@ -9,11 +9,12 @@ import { InputComponent } from '../../../../../../shared/components/input/input'
 import { ItemDisplay } from '../../../../../../shared/components/item-display/item-display';
 import { SelectInput, SelectOption } from '../../../../../../shared/components/select-input/select-input';
 import { ItemPatrimony, ItemPatrimonyDto } from '../../../../../../core/models/item-patrimony.model';
+import { ConditionDisplayPipe } from '../../../../../../shared/pipes/condition-display-pipe';
 
 @Component({
   selector: 'app-manage-items-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputComponent, SelectInput, Button, ItemDisplay, ConfirmationMessage],
+  imports: [CommonModule, ReactiveFormsModule, InputComponent, SelectInput, Button, ItemDisplay, ConfirmationMessage, ConditionDisplayPipe],
   templateUrl: './manage-items-modal.html',
   styleUrl: './manage-items-modal.scss'
 })

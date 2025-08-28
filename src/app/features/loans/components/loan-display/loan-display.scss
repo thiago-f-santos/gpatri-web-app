@@ -28,6 +28,12 @@ $color-delete-button: #017BA9;
   align-items: center;
 }
 
+.card-infos {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
 .card-title {
   font-family: v.$font-family-secondary;
   font-size: v.$font-size-base;
@@ -38,6 +44,14 @@ $color-delete-button: #017BA9;
   strong {
     font-weight: v.$font-weight-bold;
   }
+}
+
+.card-text {
+  font-family: v.$font-family-secondary;
+  font-size: 12px;
+  font-weight: v.$font-weight-light;
+  color: v.$color-text-light;
+  margin: 0;
 }
 
 .card-actions {

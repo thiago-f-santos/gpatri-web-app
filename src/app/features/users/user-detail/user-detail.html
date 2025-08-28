@@ -4,6 +4,7 @@
     @if (user$ | async; as user) {
       <div class="user-details">
         <div class="user-data">
+          <p><strong>ID:</strong> {{user.id}}</p>
           <p><strong>Nome:</strong> {{user.nome}}</p>
           <p><strong>Sobrenome:</strong> {{user.sobrenome}}</p>
           <p><strong>E-mail:</strong> {{user.email}}</p>

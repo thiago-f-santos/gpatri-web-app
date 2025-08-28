@@ -1,8 +1,17 @@
 <div class="item-card" [class.is-selectable]="isSelectable" [class.is-selected]="isSelected">
   <div class="item-content">
-    <p class="main-text">{{ mainText }}</p>
+    <div class="first-row">
+      <p class="main-text">{{ mainText }}</p>
+      
+    </div>
     @if (secondaryText) {
         <p class="secondary-text">{{ secondaryText }}</p>
+    }
+    @if (availableItems) {
+        <p class="secondary-text">{{ availableItems }} und. disponíveis</p>
+    }
+    @if (requestQuantity) {
+        <p class="secondary-text">Quantidade: {{ requestQuantity }}</p>
     }
   </div>
 

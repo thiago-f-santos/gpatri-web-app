@@ -8,8 +8,9 @@
         @for (item of items; track item.id) {
             <app-item-display
                 [mainText]="item.nomePatrimonio"
-                [secondaryText]="conditions.get(item.condicaoProduto)"
+                [secondaryText]="item.condicaoProduto | conditionDisplay"
                 [status]="getItemStatus(item)"
+                [availableItems]="patrimonyControlType === 'ESTOQUE' ? item.quantidade : null"
                 [isSelectable]="getItemStatus(item) === 'available'"
                 [isSelected]="isSelected(item)"
                 (click)="!isSelected(item) && (getItemStatus(item) === 'available') && itemSelected.emit(item)">

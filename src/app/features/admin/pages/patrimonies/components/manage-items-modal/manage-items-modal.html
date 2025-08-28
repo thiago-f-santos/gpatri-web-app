@@ -45,7 +45,8 @@
                 @for (item of patrimony.itensPatrimonio; track item.id) {
                     <app-item-display
                         [mainText]="item.nomePatrimonio"
-                        [secondaryText]="item.condicaoProduto"
+                        [secondaryText]="item.condicaoProduto | conditionDisplay"
+                        [availableItems]="patrimony.tipoControle === 'ESTOQUE' ? item.quantidade : null"
                         [status]="getItemStatus(item)"
                         [showDeleteButton]="true"
                         (delete)="deleteItem(item.id)"

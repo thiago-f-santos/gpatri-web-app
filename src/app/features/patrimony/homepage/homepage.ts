@@ -15,17 +15,19 @@ import { ItemDisplay } from '../../../shared/components/item-display/item-displa
 import { SearchInput } from '../../../shared/components/search-input/search-input';
 import { PatrimonyDisplay } from '../components/patrimony-display/patrimony-display';
 import { RequestItem, RequestStateService } from '../services/request-state-service';
+import { ConditionDisplayPipe } from '../../../shared/pipes/condition-display-pipe';
 
 interface HomepageViewState {
   patrimonies: Patrimony[];
   requestItems: RequestItem[];
   selectedItems: ItemPatrimony[];
+  returnDate: string;
 }
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchInput, PatrimonyDisplay, ItemDisplay, Button, InputComponent],
+  imports: [CommonModule, FormsModule, SearchInput, PatrimonyDisplay, ItemDisplay, Button, InputComponent, ConditionDisplayPipe],
   templateUrl: './homepage.html',
   styleUrl: './homepage.scss'
 })
@@ -43,14 +45,14 @@ export class Homepage implements OnInit{
   ngOnInit(): void {
     const patrimonies$ = this.patrimonyService.getAvailablePatrimonies();
     const requestItems$ = this.requestStateService.requestItems$;
-    const selectedItems$ = requestItems$.pipe(
-      map(requestItems => requestItems.map(reqItem => reqItem.item))
-    );
+    const selectedItems$ = requestItems$.pipe(map(requestItems => requestItems.map(reqItem => reqItem.item)));
+    const returnDate$ = this.requestStateService.returnDate$;
 
     this.viewState$ = combineLatest({
       patrimonies: patrimonies$,
       requestItems: requestItems$,
-      selectedItems: selectedItems$
+      selectedItems: selectedItems$,
+      returnDate: returnDate$
     });
 
     this.headerService.showMenuButton();
@@ -68,13 +70,21 @@ export class Homepage implements OnInit{
     this.requestStateService.updateItemQuantity(item, newQuantity);
   }
 
+  onDateChange(newDate: string): void {
+    this.requestStateService.updateReturnDate(newDate);
+  }
+
   confirmRequest(): void {
-    this.requestStateService.requestItems$.pipe(take(1)).subscribe(items => {
+    combineLatest([
+      this.requestStateService.requestItems$,
+      this.requestStateService.returnDate$
+    ]).pipe(take(1)).subscribe(([items, returnDate]) => {
+      
       if (items.length === 0) return;
 
       const loanDto: LoanDto = {
         dataEmprestimo: new Date().toISOString(),
-        dataDevolucao: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        dataDevolucao: new Date(returnDate + "T00:00:00").toISOString(),
         itensEmprestimo: items.map(reqItem => ({
           idItemPatrimonio: reqItem.item.id,
           quantidade: reqItem.quantity
@@ -83,7 +93,7 @@ export class Homepage implements OnInit{
 
       this.loanService.createLoan(loanDto).subscribe({
         next: () => {
-          this.requestStateService.clearItems();
+          this.requestStateService.clearRequest(); 
           this.router.navigate(['/emprestimos']);
         },
         error: (err) => console.error('Erro ao criar empréstimo:', err)

@@ -23,7 +23,7 @@ export class InputComponent implements ControlValueAccessor, OnInit{
   constructor(private injector: Injector) { }
 
   @Input() label!: string;
-  @Input() type: 'text' | 'email' | 'password' | 'number' | 'textarea' = 'text';
+  @Input() type: 'text' | 'email' | 'password' | 'number' | 'textarea' | 'date' = 'text';
   @Input() backgroundColor: string = '#03060F';
   @Input() parentError: string | null = null;
 

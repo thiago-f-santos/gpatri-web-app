@@ -88,3 +88,7 @@ $color-error: #EF233C;
     color: $color-error;
   }
 }
+
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}

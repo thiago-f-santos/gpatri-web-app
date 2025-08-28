@@ -3,11 +3,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ItemDisplay } from '../../../../shared/components/item-display/item-display';
 import { LoanStatus } from '../../../../shared/types/loan-status';
 import { Loan } from '../../../../core/models/loan.model';
+import { ConditionDisplayPipe } from '../../../../shared/pipes/condition-display-pipe';
 
 @Component({
   selector: 'app-loan-display',
   standalone: true,
-  imports: [CommonModule, ItemDisplay],
+  imports: [CommonModule, ItemDisplay, ConditionDisplayPipe],
   templateUrl: './loan-display.html',
   styleUrl: './loan-display.scss'
 })

@@ -17,6 +17,9 @@ export class ItemDisplay {
   @Input() showDeleteButton: boolean = false;
   @Input() isSelectable: boolean = false;
   @Input() isSelected: boolean = false;
+
+  @Input() availableItems?: number | null = null;
+  @Input() requestQuantity?: number | null = null;
   
   @Output() delete = new EventEmitter<void>();
 

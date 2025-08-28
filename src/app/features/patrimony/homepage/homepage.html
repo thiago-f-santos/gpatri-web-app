@@ -12,7 +12,7 @@
               <div class="request-item-row">
                 <app-item-display
                   [mainText]="reqItem.item.nomePatrimonio"
-                  [secondaryText]="reqItem.item.condicaoProduto"
+                  [secondaryText]="reqItem.item.condicaoProduto | conditionDisplay "
                   [showDeleteButton]="true"
                   (delete)="removeItemFromRequest(reqItem.item)">
                 </app-item-display>
@@ -32,6 +32,15 @@
               </div>
             }
           </div>
+
+          <app-input
+            type="date"
+            label="Data de devolução"
+            backgroundColor="#1C1F27"
+            [ngModel]="state.returnDate"
+            (ngModelChange)="onDateChange($event)">
+          </app-input>
+            
           <app-button
             text="Confirmar"
             (onClick)="confirmRequest()">
@@ -45,6 +54,7 @@
           <app-patrimony-display
             [patrimonyName]="patrimony.nome"
             [categoryName]="patrimony.nomeCategoria"
+            [patrimonyControlType]="patrimony.tipoControle"
             [items]="patrimony.itensPatrimonio"
             [selectedItems]="state.selectedItems"
             (itemSelected)="selectItem($event, patrimony)">

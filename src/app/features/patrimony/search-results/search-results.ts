@@ -4,35 +4,38 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, map, Observable, switchMap, take } from 'rxjs';
 import { ItemPatrimony } from '../../../core/models/item-patrimony.model';
+import { LoanDto } from '../../../core/models/loan.model';
 import { Patrimony } from '../../../core/models/patrimony.model';
 import { HeaderService } from '../../../core/services/header-service';
+import { LoanService } from '../../../core/services/loan-service';
 import { PatrimonyService } from '../../../core/services/patrimony-service';
 import { Button } from '../../../shared/components/button/button';
+import { InputComponent } from '../../../shared/components/input/input';
 import { ItemDisplay } from '../../../shared/components/item-display/item-display';
 import { SearchInput } from '../../../shared/components/search-input/search-input';
 import { PatrimonyDisplay } from '../components/patrimony-display/patrimony-display';
 import { RequestItem, RequestStateService } from '../services/request-state-service';
-import { LoanDto } from '../../../core/models/loan.model';
-import { LoanService } from '../../../core/services/loan-service';
-import { InputComponent } from '../../../shared/components/input/input';
+import { ConditionDisplayPipe } from '../../../shared/pipes/condition-display-pipe';
 
 interface SearchResultsViewState {
+  patrimonies: Patrimony[];
   requestItems: RequestItem[];
   selectedItems: ItemPatrimony[];
-  patrimonies: Patrimony[];
+  returnDate: string;
 }
+
 
 @Component({
   selector: 'app-search-results',
   standalone: true,
-  imports: [CommonModule, FormsModule, PatrimonyDisplay, ItemDisplay, SearchInput, Button, InputComponent],
+  imports: [CommonModule, FormsModule, PatrimonyDisplay, ItemDisplay, SearchInput, Button, InputComponent, ConditionDisplayPipe],
   templateUrl: './search-results.html',
   styleUrl: './search-results.scss'
 })
 export class SearchResults implements OnInit{
   viewState$!: Observable<SearchResultsViewState>;
-  searchQuery: string = '';
 
+  searchQuery: string = '';
   previousSearch: string = '';
 
   constructor(
@@ -46,20 +49,20 @@ export class SearchResults implements OnInit{
 
   ngOnInit(): void {
     const patrimonies$ = this.activatedRoute.queryParamMap.pipe(
-      switchMap(params => {
+      switchMap(params => { 
         this.previousSearch = params.get('search') || '';
         return this.patrimonyService.getPatrimoniesByName(this.previousSearch);
       })
     );
     const requestItems$ = this.requestStateService.requestItems$;
-    const selectedItems$ = requestItems$.pipe(
-      map(requestItems => requestItems.map(reqItem => reqItem.item))
-    );
+    const selectedItems$ = requestItems$.pipe(map(requestItems => requestItems.map(reqItem => reqItem.item)));
+    const returnDate$ = this.requestStateService.returnDate$;
 
     this.viewState$ = combineLatest({
       patrimonies: patrimonies$,
       requestItems: requestItems$,
-      selectedItems: selectedItems$
+      selectedItems: selectedItems$,
+      returnDate: returnDate$
     });
 
     this.headerService.showBackButton();
@@ -77,13 +80,21 @@ export class SearchResults implements OnInit{
     this.requestStateService.updateItemQuantity(item, newQuantity);
   }
 
+  onDateChange(newDate: string): void {
+    this.requestStateService.updateReturnDate(newDate);
+  }
+
   confirmRequest(): void {
-    this.requestStateService.requestItems$.pipe(take(1)).subscribe(items => {
+    combineLatest([
+      this.requestStateService.requestItems$,
+      this.requestStateService.returnDate$
+    ]).pipe(take(1)).subscribe(([items, returnDate]) => {
+      
       if (items.length === 0) return;
 
       const loanDto: LoanDto = {
         dataEmprestimo: new Date().toISOString(),
-        dataDevolucao: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        dataDevolucao: new Date(returnDate + "T00:00:00").toISOString(),
         itensEmprestimo: items.map(reqItem => ({
           idItemPatrimonio: reqItem.item.id,
           quantidade: reqItem.quantity
@@ -92,7 +103,7 @@ export class SearchResults implements OnInit{
 
       this.loanService.createLoan(loanDto).subscribe({
         next: () => {
-          this.requestStateService.clearItems();
+          this.requestStateService.clearRequest(); 
           this.router.navigate(['/emprestimos']);
         },
         error: (err) => console.error('Erro ao criar empréstimo:', err)
