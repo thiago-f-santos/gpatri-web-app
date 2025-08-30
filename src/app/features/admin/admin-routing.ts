@@ -3,6 +3,7 @@ import { Patrimonies } from './pages/patrimonies/patrimonies';
 import { Categories } from './pages/categories/categories';
 import { LoanRequests } from './pages/loan-requests/loan-requests';
 import { Users } from './pages/users/users';
+import { Roles } from './pages/roles/roles';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -25,5 +26,9 @@ export const ADMIN_ROUTES: Routes = [
   {
     path: 'usuarios',
     component: Users
+  },
+  {
+    path: 'cargos',
+    component: Roles
   }
 ];

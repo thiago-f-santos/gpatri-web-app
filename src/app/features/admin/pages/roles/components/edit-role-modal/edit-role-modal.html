@@ -1,0 +1,34 @@
+<div class="modal-overlay" (click)="onClose()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>Editar Cargo</h2>
+        <form [formGroup]="editForm" (ngSubmit)="onSave()">
+            <app-input
+                formControlName="nome"
+                label="Nome"
+                [backgroundColor]="'#1C1F27'"
+            ></app-input>
+
+            <app-select-input
+                label="Permissões"
+                [options]="availablePermissions"
+                (change)="addPermission($event)"
+                [backgroundColor]="'#1C1F27'"
+            ></app-select-input>
+
+            <div class="permissions-container">
+                @for (permissionCtrl of permissoesFormArray.controls; track permissionCtrl; let i = $index) {
+                    <div class="permission-tag">
+                        <span>{{ permissionCtrl.value }}</span>
+                        <button type="button" class="remove-tag-btn" (click)="removePermission(i)">X</button>
+                    </div>
+                }
+            </div>
+
+            <app-button
+                text="Salvar"
+                type="submit"
+                [disabled]="editForm.invalid"
+            ></app-button>
+        </form>
+    </div>
+</div>

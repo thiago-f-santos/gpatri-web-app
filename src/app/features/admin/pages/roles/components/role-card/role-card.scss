@@ -1,0 +1,39 @@
+/* Estilos similares ao category-card.scss, adaptados para 'role' */
+@use 'variables' as v;
+
+:host { display: block; }
+
+.role-card {
+  display: flex;
+  padding: 12px 18px;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: v.$border-radius-default;
+  background: #35383F;
+  color: v.$color-text-light;
+}
+
+.role-details {
+  h3 { font-size: v.$font-size-base; font-weight: v.$font-weight-bold; margin: 0; }
+  p { font-size: v.$font-size-small; color: v.$color-border-default; margin: 0; }
+}
+
+.role-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-button {
+  width: 48px;
+  height: 48px;
+  border: none;
+  cursor: pointer;
+  border-radius: v.$border-radius-default;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.2s;
+  
+  &.edit-button { background-color: #017BA9; &:hover { background-color: #005879; } }
+  &.delete-button { background-color: #4F5157; &:hover { background-color: #3e4044; } }
+}

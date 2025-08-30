@@ -1,0 +1,68 @@
+@if (isConfirmationOpen && selectedRole) {
+  <app-confirmation-message
+    titleText="Deleção de Cargo"
+    messageText="Tem certeza que deseja apagar o cargo '{{selectedRole.nome}}'?"
+    (confirm)="confirmDeletion()"
+    (cancel)="cancelDeletion()"
+  ></app-confirmation-message>
+}
+
+@if (isEditModalOpen && selectedRole) {
+  <app-edit-role-modal
+    [role]="selectedRole"
+    (roleUpdated)="handleRoleUpdated()"
+    (close)="onCloseEditModal()">
+  </app-edit-role-modal>
+}
+
+<div class="section create-role">
+  <h2>Criar Cargo</h2>
+  <form [formGroup]="roleForm" (ngSubmit)="createRole()">
+    <app-input
+      formControlName="nome"
+      label="Nome"
+      [backgroundColor]="'#1C1F27'"
+    ></app-input>
+
+    <app-select-input
+      label="Permissões"
+      [options]="availablePermissions"
+      (change)="addPermission($event)"
+      [backgroundColor]="'#1C1F27'"
+    ></app-select-input>
+
+    <div class="permissions-container">
+      @for (permissionCtrl of permissoesFormArray.controls; track permissionCtrl; let i = $index) {
+        <div class="permission-tag">
+          <span>{{ permissionCtrl.value }}</span>
+          <button type="button" class="remove-tag-btn" (click)="removePermission(i)">X</button>
+        </div>
+      }
+    </div>
+
+    <app-button
+      text="Criar"
+      type="submit"
+      [disabled]="roleForm.invalid"
+    ></app-button>
+  </form>
+</div>
+
+<div class="section existing-roles">
+  <h2>Cargos Existentes</h2>
+  <div class="list-container">
+    @if (isLoading) {
+      <p>Carregando cargos...</p>
+    } @else {
+      @for (role of roles; track role.id) {
+        <app-role-card
+          [role]="role"
+          (delete)="handleDeleteRequest(role)"
+          (edit)="handleEditRequest(role)">
+        </app-role-card>
+      } @empty {
+        <p>Nenhum cargo cadastrado.</p>
+      }
+    }
+  </div>
+</div>

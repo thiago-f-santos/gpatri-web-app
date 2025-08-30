@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, getLocaleNumberFormat } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from "@angular/router";
 import { HeaderService } from '../../core/services/header-service';
@@ -15,7 +15,8 @@ export class Admin implements OnInit {
     { label: 'Patrimônio', path: 'patrimonios' },
     { label: 'Categorias', path: 'categorias' },
     { label: 'Solicitações', path: 'solicitacoes' },
-    { label: 'Usuários', path: 'usuarios' }
+    { label: 'Usuários', path: 'usuarios' },
+    { label: 'Cargos', path: 'cargos' }
   ];
 
   constructor(

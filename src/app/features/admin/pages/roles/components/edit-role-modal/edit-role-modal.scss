@@ -1,0 +1,32 @@
+@use 'variables' as v;
+
+.modal-overlay { /* ... */ }
+.modal-content { /* ... */ }
+
+.permissions-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 8px;
+  min-height: 30px;
+}
+
+.permission-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background-color: v.$color-primary;
+  color: v.$color-text-dark;
+  border-radius: v.$border-radius-small;
+  font-size: 12px;
+  font-weight: v.$font-weight-bold;
+}
+
+.remove-tag-btn {
+  background: none;
+  border: none;
+  color: v.$color-text-dark;
+  cursor: pointer;
+  font-weight: bold;
+}

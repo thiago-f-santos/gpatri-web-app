@@ -1,0 +1,12 @@
+<div class="role-card">
+  <div class="role-details">
+    <h3>{{ role.nome }}</h3>
+    <p>{{ role.permissoes.length }} permissões</p>
+  </div>
+  <div class="role-actions">
+    <button class="action-button edit-button" (click)="onEdit()">
+      </button>
+    <button class="action-button delete-button" (click)="onDelete()">
+      </button>
+  </div>
+</div>
