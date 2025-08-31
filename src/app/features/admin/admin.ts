@@ -15,6 +15,7 @@ export class Admin implements OnInit {
     { label: 'Patrimônio', path: 'patrimonios' },
     { label: 'Categorias', path: 'categorias' },
     { label: 'Solicitações', path: 'solicitacoes' },
+    { label: 'Empréstimos', path: 'emprestimos' },
     { label: 'Usuários', path: 'usuarios' },
     { label: 'Cargos', path: 'cargos' }
   ];

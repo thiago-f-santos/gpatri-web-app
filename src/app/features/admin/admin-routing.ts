@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
-import { Patrimonies } from './pages/patrimonies/patrimonies';
 import { Categories } from './pages/categories/categories';
 import { LoanRequests } from './pages/loan-requests/loan-requests';
-import { Users } from './pages/users/users';
+import { Loans } from './pages/loans/loans';
+import { Patrimonies } from './pages/patrimonies/patrimonies';
 import { Roles } from './pages/roles/roles';
+import { Users } from './pages/users/users';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -22,6 +23,10 @@ export const ADMIN_ROUTES: Routes = [
   {
     path: 'solicitacoes',
     component: LoanRequests
+  },
+  {
+    path: 'emprestimos',
+    component: Loans
   },
   {
     path: 'usuarios',
