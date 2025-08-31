@@ -1,7 +1,7 @@
 @if (isConfirmationOpen && selectedRole) {
   <app-confirmation-message
     titleText="Deleção de Cargo"
-    messageText="Tem certeza que deseja apagar o cargo '{{selectedRole.nome}}'?"
+    [messageText]="`Tem certeza que deseja apagar o cargo ${selectedRole.nome}?`"
     (confirm)="confirmDeletion()"
     (cancel)="cancelDeletion()"
   ></app-confirmation-message>
@@ -23,23 +23,27 @@
       label="Nome"
       [backgroundColor]="'#1C1F27'"
     ></app-input>
-
-    <app-select-input
-      label="Permissões"
-      [options]="availablePermissions"
-      (change)="addPermission($event)"
-      [backgroundColor]="'#1C1F27'"
-    ></app-select-input>
-
-    <div class="permissions-container">
-      @for (permissionCtrl of permissoesFormArray.controls; track permissionCtrl; let i = $index) {
-        <div class="permission-tag">
-          <span>{{ permissionCtrl.value }}</span>
-          <button type="button" class="remove-tag-btn" (click)="removePermission(i)">X</button>
+    <div class="permissions-grid">
+      @for (group of permissionGroups; track group.name) {
+        <div class="permission-group">
+          <h3 class="group-title">{{ group.name }}</h3>
+          <div class="group-items">
+            @for (permission of group.permissions; track permission) {
+              <label class="custom-checkbox-label">
+                <input 
+                  type="checkbox"
+                  [value]="permission"
+                  [checked]="isPermissionSelected(permission)"
+                  (change)="onPermissionChange(permission, $event)"
+                />
+                <span class="custom-checkbox"></span>
+                {{ permission | titlecase | replaceUnderscore }}
+              </label>
+            }
+          </div>
         </div>
       }
     </div>
-
     <app-button
       text="Criar"
       type="submit"
@@ -57,8 +61,8 @@
       @for (role of roles; track role.id) {
         <app-role-card
           [role]="role"
-          (delete)="handleDeleteRequest(role)"
-          (edit)="handleEditRequest(role)">
+          (edit)="handleEditRequest(role)"
+          (delete)="handleDeleteRequest(role)">
         </app-role-card>
       } @empty {
         <p>Nenhum cargo cadastrado.</p>

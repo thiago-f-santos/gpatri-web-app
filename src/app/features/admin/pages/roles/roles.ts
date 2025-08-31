@@ -1,21 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormArray, FormControl } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Role, RoleDto } from '../../../../core/models/role.model';
 import { RoleService } from '../../../../core/services/role-service';
 import { Button } from '../../../../shared/components/button/button';
 import { ConfirmationMessage } from '../../../../shared/components/confirmation-message/confirmation-message';
 import { InputComponent } from '../../../../shared/components/input/input';
-import { SelectInput, SelectOption } from '../../../../shared/components/select-input/select-input';
-import { ALL_PERMISSIONS } from '../../../../shared/enums/permissions';
+import { Permission, PERMISSION_GROUPS } from '../../../../shared/enums/permissions';
+import { ReplaceUnderscorePipe } from '../../../../shared/pipes/replace-underscore-pipe';
+import { EditRoleModal } from './components/edit-role-modal/edit-role-modal';
 import { RoleCard } from './components/role-card/role-card';
-import { EditRoleModal } from './components/edit-role-modal/edit-role-modal'; 
 
 @Component({
   selector: 'app-roles',
   standalone: true,
-  // Adicionar o EditRoleModal aos imports quando ele for criado
-  imports: [CommonModule, ReactiveFormsModule, InputComponent, SelectInput, Button, RoleCard, ConfirmationMessage, EditRoleModal],
+  imports: [CommonModule, ReactiveFormsModule, InputComponent, Button, RoleCard, ConfirmationMessage, EditRoleModal, ReplaceUnderscorePipe],
   templateUrl: './roles.html',
   styleUrl: './roles.scss'
 })
@@ -26,32 +25,23 @@ export class Roles implements OnInit {
   isConfirmationOpen = false;
   selectedRole: Role | null = null;
   isEditModalOpen = false;
-  // isEditModalOpen = false; // Descomentar quando o modal de edição for criado
 
-  private readonly fb = inject(FormBuilder);
+  permissionGroups = PERMISSION_GROUPS;
+
+  private readonly fb = inject(NonNullableFormBuilder);
   private readonly roleService = inject(RoleService);
 
   constructor() {
     this.roleForm = this.fb.group({
       nome: ['', Validators.required],
-      // 'permissoes' será um FormArray para lidar com múltiplos valores
-      permissoes: this.fb.array([], Validators.required)
+      permissoes: this.fb.array<Permission>([], Validators.required)
     });
   }
   
-  // Getter para facilitar o acesso ao FormArray no template
-  get permissoesFormArray(): FormArray {
-    return this.roleForm.get('permissoes') as FormArray;
+  get permissoesFormArray(): FormArray<FormControl<Permission>> {
+    return this.roleForm.get('permissoes') as FormArray<FormControl<Permission>>;
   }
   
-  // Getter que calcula as permissões ainda não selecionadas
-  get availablePermissions(): SelectOption[] {
-    const selected = this.permissoesFormArray.value;
-    return ALL_PERMISSIONS
-      .filter(p => !selected.includes(p))
-      .map(p => ({ value: p, label: p }));
-  }
-
   ngOnInit(): void {
     this.loadRoles();
   }
@@ -63,19 +53,23 @@ export class Roles implements OnInit {
       this.isLoading = false;
     });
   }
+  
+  onPermissionChange(permission: Permission, event: Event): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    const formArray = this.permissoesFormArray;
 
-  addPermission(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    const permission = select.value;
-    if (permission && !this.permissoesFormArray.value.includes(permission)) {
-      this.permissoesFormArray.push(new FormControl(permission));
+    if (isChecked) {
+      formArray.push(this.fb.control(permission));
+    } else {
+      const index = formArray.controls.findIndex(control => control.value === permission);
+      if (index !== -1) {
+        formArray.removeAt(index);
+      }
     }
-    // Reseta o select para o placeholder
-    select.value = '';
   }
 
-  removePermission(index: number): void {
-    this.permissoesFormArray.removeAt(index);
+  isPermissionSelected(permission: Permission): boolean {
+    return this.permissoesFormArray.value.includes(permission);
   }
 
   createRole(): void {
@@ -83,7 +77,11 @@ export class Roles implements OnInit {
       this.roleForm.markAllAsTouched();
       return;
     }
-    this.roleService.createCargo(this.roleForm.value as RoleDto).subscribe({
+    const newRoleDto: RoleDto = {
+      nome: this.roleForm.value.nome,
+      permissoes: this.permissoesFormArray.value
+    };
+    this.roleService.createCargo(newRoleDto).subscribe({
       next: () => {
         alert('Cargo criado com sucesso!');
         this.loadRoles();
@@ -115,13 +113,14 @@ export class Roles implements OnInit {
     this.selectedRole = null;
   }
   
-   handleEditRequest(role: Role): void {
+  handleEditRequest(role: Role): void {
     this.selectedRole = role;
     this.isEditModalOpen = true;
   }
 
   handleRoleUpdated(): void {
     this.loadRoles();
+    this.onCloseEditModal();
   }
 
   onCloseEditModal(): void {

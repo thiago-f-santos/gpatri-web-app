@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Role, RoleDto } from '../../../../../../core/models/role.model';
 import { RoleService } from '../../../../../../core/services/role-service';
 import { Button } from '../../../../../../shared/components/button/button';
 import { InputComponent } from '../../../../../../shared/components/input/input';
-import { SelectInput, SelectOption } from '../../../../../../shared/components/select-input/select-input';
-import { ALL_PERMISSIONS } from '../../../../../../shared/enums/permissions';
+import { Permission, PERMISSION_GROUPS } from '../../../../../../shared/enums/permissions';
+import { ReplaceUnderscorePipe } from '../../../../../../shared/pipes/replace-underscore-pipe';
 
 @Component({
   selector: 'app-edit-role-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputComponent, SelectInput, Button],
+  imports: [CommonModule, ReactiveFormsModule, InputComponent, Button, ReplaceUnderscorePipe],
   templateUrl: './edit-role-modal.html',
   styleUrl: './edit-role-modal.scss'
 })
@@ -21,43 +21,42 @@ export class EditRoleModal implements OnInit {
   @Output() roleUpdated = new EventEmitter<void>();
 
   editForm!: FormGroup;
+  permissionGroups = PERMISSION_GROUPS;
 
-  private readonly fb = inject(FormBuilder);
+  private readonly fb = inject(NonNullableFormBuilder);
   private readonly roleService = inject(RoleService);
 
   ngOnInit(): void {
+    const permissionControls = this.role.permissoes.map((p: Permission) => this.fb.control(p));
+
     this.editForm = this.fb.group({
       nome: [this.role.nome, Validators.required],
-      permissoes: this.fb.array(
-        // Popula o FormArray inicial com as permissões que o cargo já possui
-        this.role.permissoes.map(p => new FormControl(p)),
-        Validators.required
-      )
+      permissoes: this.fb.array(permissionControls, Validators.required)
     });
   }
 
-  get permissoesFormArray(): FormArray {
-    return this.editForm.get('permissoes') as FormArray;
+  get permissoesFormArray(): FormArray<FormControl<Permission>> {
+    return this.editForm.get('permissoes') as FormArray<FormControl<Permission>>;
   }
+  
+  onPermissionChange(permission: Permission, event: Event): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    const formArray = this.permissoesFormArray;
 
-  get availablePermissions(): SelectOption[] {
-    const selected = this.permissoesFormArray.value;
-    return ALL_PERMISSIONS
-      .filter(p => !selected.includes(p))
-      .map(p => ({ value: p, label: p }));
-  }
-
-  addPermission(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    const permission = select.value;
-    if (permission && !this.permissoesFormArray.value.includes(permission)) {
-      this.permissoesFormArray.push(new FormControl(permission));
+    if (isChecked) {
+      if (!formArray.value.includes(permission)) {
+        formArray.push(this.fb.control(permission));
+      }
+    } else {
+      const index = formArray.controls.findIndex(control => control.value === permission);
+      if (index !== -1) {
+        formArray.removeAt(index);
+      }
     }
-    select.value = '';
   }
 
-  removePermission(index: number): void {
-    this.permissoesFormArray.removeAt(index);
+  isPermissionSelected(permission: Permission): boolean {
+    return this.permissoesFormArray.value.includes(permission);
   }
 
   onSave(): void {
@@ -66,7 +65,12 @@ export class EditRoleModal implements OnInit {
       return;
     }
 
-    this.roleService.updateCargo(this.role.id, this.editForm.value as RoleDto).subscribe({
+    const updatedRoleDto: RoleDto = {
+      ...this.editForm.value,
+      permissoes: this.permissoesFormArray.value
+    };
+
+    this.roleService.updateCargo(this.role.id, updatedRoleDto).subscribe({
       next: () => {
         alert('Cargo atualizado com sucesso!');
         this.roleUpdated.emit();

@@ -1,32 +1,139 @@
 @use 'variables' as v;
 
-.modal-overlay { /* ... */ }
-.modal-content { /* ... */ }
+$color-modal-bg: #22252e;
+$color-overlay: rgba(0, 0, 0, 0.7);
 
-.permissions-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding-top: 8px;
-  min-height: 30px;
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: $color-overlay;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    font-family: v.$font-family-base;
+}
+.modal-content {
+    background-color: $color-modal-bg;
+    border-radius: v.$border-radius-default;
+    padding: 22px;
+    width: 100%;
+    max-width: 346px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+
+    h2 {
+        font-size: 24px;
+        font-family: v.$font-family-secondary;
+        font-weight: v.$font-weight-bold;
+        color: v.$color-text-light;
+        margin: 0;
+        text-align: center;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-self: stretch;
+        align-items: stretch;
+        gap: 8px;
+        margin: 0;
+    }
 }
 
-.permission-tag {
+.permissions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  border: 1px solid v.$color-border-default;
+  padding: 16px;
+  border-radius: v.$border-radius-default;
+  max-height: 350px;
+  overflow-y: auto;
+  background-color: #35383F;
+}
+
+.permission-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.group-title {
+  font-size: 14px;
+  font-weight: v.$font-weight-bold;
+  color: v.$color-primary;
+  margin: 0 0 8px 0;
+  border-bottom: 1px solid v.$color-border-default;
+  padding-bottom: 8px;
+}
+
+.group-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.custom-checkbox-label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 8px;
-  background-color: v.$color-primary;
-  color: v.$color-text-dark;
-  border-radius: v.$border-radius-small;
-  font-size: 12px;
-  font-weight: v.$font-weight-bold;
-}
-
-.remove-tag-btn {
-  background: none;
-  border: none;
-  color: v.$color-text-dark;
+  gap: 10px;
+  font-size: 14px;
+  color: v.$color-text-light;
   cursor: pointer;
-  font-weight: bold;
+  user-select: none;
+  transition: color 0.2s;
+
+  &:hover {
+    color: v.$color-primary;
+  }
+  
+  input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  .custom-checkbox {
+    height: 20px;
+    width: 20px;
+    background-color: transparent;
+    border-radius: 4px;
+    border: 2px solid v.$color-border-default;
+    display: inline-block;
+    position: relative;
+    flex-shrink: 0;
+    transition: background-color 0.2s, border-color 0.2s;
+
+    &:after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 6px;
+      top: 2px;
+      width: 5px;
+      height: 10px;
+      border: solid v.$color-text-dark;
+      border-width: 0 3px 3px 0;
+      transform: rotate(45deg);
+    }
+  }
+
+  input[type="checkbox"]:checked ~ .custom-checkbox {
+    background-color: v.$color-primary;
+    border-color: v.$color-primary;
+  }
+
+  input[type="checkbox"]:checked ~ .custom-checkbox:after {
+    display: block;
+  }
 }
