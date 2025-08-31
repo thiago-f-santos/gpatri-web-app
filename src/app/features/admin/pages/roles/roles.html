@@ -56,7 +56,7 @@
   <h2>Cargos Existentes</h2>
   <div class="list-container">
     @if (isLoading) {
-      <p>Carregando cargos...</p>
+      <p class="info-text">Carregando cargos...</p>
     } @else {
       @for (role of roles; track role.id) {
         <app-role-card
@@ -65,7 +65,7 @@
           (delete)="handleDeleteRequest(role)">
         </app-role-card>
       } @empty {
-        <p>Nenhum cargo cadastrado.</p>
+        <p class="info-text">Nenhum cargo cadastrado.</p>
       }
     }
   </div>
