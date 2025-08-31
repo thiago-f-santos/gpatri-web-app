@@ -1,6 +1,6 @@
 @use 'variables' as v;
 
-$color-modal-bg: #22252e;
+$color-modal-bg: #1C1F27;
 $color-overlay: rgba(0, 0, 0, 0.7);
 
 .modal-overlay {
@@ -16,6 +16,7 @@ $color-overlay: rgba(0, 0, 0, 0.7);
     z-index: 1000;
     font-family: v.$font-family-base;
 }
+
 .modal-content {
     background-color: $color-modal-bg;
     border-radius: v.$border-radius-default;
@@ -52,7 +53,7 @@ $color-overlay: rgba(0, 0, 0, 0.7);
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  border: 1px solid v.$color-border-default;
+  border: 2px solid v.$color-border-default;
   padding: 16px;
   border-radius: v.$border-radius-default;
   max-height: 350px;
