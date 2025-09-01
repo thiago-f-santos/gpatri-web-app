@@ -1,0 +1,73 @@
+@if (isConfirmationOpen() && selectedLoan(); as loan) {
+  <app-confirmation-message
+    titleText="Devolução de empréstimo"
+    [messageText]="'Certeza que deseja sinalizar o empréstimo #' + loan.id.substring(0, 8) + ' como devolvido?'"
+    (confirm)="confirmReturn()"
+    (cancel)="cancelReturn()">
+  </app-confirmation-message>
+}
+
+@if (isViewModalOpen() && selectedLoan(); as loan) {
+  <app-loan-view-modal 
+  [loan]="loan" (close)="closeModal()">
+  </app-loan-view-modal>
+}
+
+<div class="loans-list-container">
+  <div class="section">
+    <div class="header">
+      <div class="header-text">
+        <h2>Empréstimos</h2>
+        <p class="info-text">Clique para ver detalhes</p>
+      </div>
+      <app-select-input
+        label="Filtrar por"
+        [options]="filterOptions"
+        [(ngModel)]="selectedFilter"
+        [backgroundColor]="'#1C1F27'">
+      </app-select-input>
+    </div>
+
+    <div class="loans-list">
+      @if (isLoading()) {
+        <p class="info-text">Carregando empréstimos...</p>
+      } @else {
+        @for (loan of filteredLoans(); track loan.id) {
+          <div class="loan-card" (click)="openViewModal(loan)">
+            <div class="card-header">
+                <div class="text-container">
+                    <h3 class="card-title"><strong>Solicitação</strong> #{{ loan.id.substring(0, 8) }}</h3>
+                    <p class="return-date">Devolução: {{ loan.dataDevolucao | date:'dd/MM/yyyy' }}</p>
+                </div>
+              
+              @if (isOverdue(loan)) {
+                <span class="status-tag overdue" [style.backgroundColor]="loan | overdueColor">Atrasado</span>
+              } @else {
+                <span class="status-tag" [ngClass]="loan.situacao.toLowerCase()">{{ loan.situacao | titlecase }}</span>
+              }
+            </div>
+
+            <div class="items-list">
+              @for (item of loan.itensEmprestimo; track item.itemPatrimonio.id) {
+                <app-item-display
+                [mainText]="item.itemPatrimonio.nomePatrimonio"
+                [secondaryText]="item.itemPatrimonio.condicaoProduto | conditionDisplay"
+                [requestQuantity]="item.quantidade">
+                </app-item-display>
+              }
+            </div>
+
+            @if (loan.situacao === 'APROVADO' || isOverdue(loan)) {
+              <app-button
+                text="Devolver"
+                (onClick)="onReturnClick(loan)">
+              </app-button>
+            }
+          </div>
+        } @empty {
+          <p class="info-text">Nenhum empréstimo encontrado para este filtro.</p>
+        }
+      }
+    </div>
+  </div>
+</div>

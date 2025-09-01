@@ -17,7 +17,7 @@ export class Button {
   @Input() width: string = '100%';
   @Input() disabled: boolean = false;
 
-  @Output() onClick = new EventEmitter<void>();
+  @Output() onClick = new EventEmitter<MouseEvent>();
 
   @HostBinding('style')
   get dynamicStyle() {
@@ -27,8 +27,9 @@ export class Button {
     };
   }
 
-  onButtonClick(): void {
+  onButtonClick(event: MouseEvent): void {
     if (!this.disabled) {
+      event.stopPropagation();
       this.onClick.emit();
     }
   }

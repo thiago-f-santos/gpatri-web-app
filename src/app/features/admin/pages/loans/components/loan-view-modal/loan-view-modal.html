@@ -1,0 +1,35 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="section-text">
+      <h3 class="section-title">Solicitante:</h3>
+      <p>{{ requesterName }}</p>
+    </div>
+
+    @if (evaluatorName) {
+      <div class="section-text">
+        <h3 class="section-title">{{ evaluatorName[0] }}:</h3>
+        <p>{{ evaluatorName[1] }}</p>
+      </div>
+    }
+    
+    <div class="section-items">
+      <h3 class="section-title">Itens Solicitados:</h3>
+      <div class="items-list">
+        @for (item of loan.itensEmprestimo; track item.itemPatrimonio.id) {
+          <app-loan-item-display [item]="item"></app-loan-item-display>
+        }
+      </div>
+    </div>
+    
+    <div class="section-dates">
+      <h3 class="section-title">Data Empréstimo:</h3>
+      <p>{{ loan.dataEmprestimo | date:'dd/MM/yyyy' }}</p>
+    </div>
+    
+    <div class="section-dates">
+      <h3 class="section-title">Data Devolução:</h3>
+      <p>{{ loan.dataDevolucao | date:'dd/MM/yyyy' }}</p>
+    </div>
+
+    </div>
+</div>
