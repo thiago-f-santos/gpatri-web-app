@@ -2,6 +2,7 @@
 
 @if (showMenu) {
     <app-menu-modal
+    [showAdminArea]="isAdmin"
     (closeModal)="toggleMenu()"
     (loansClick)="onLoansClick()"
     (adminAreaClick)="onAdminClick()">

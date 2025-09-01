@@ -9,6 +9,7 @@ import { UserService } from '../../../core/services/user-service';
 import { filter, forkJoin, map, Observable, switchMap, tap } from 'rxjs';
 import { User, UserDto } from '../../../core/models/user.model';
 import { RoleService } from '../../../core/services/role-service';
+import { AuthService } from '../../../core/services/auth-service';
 
 @Component({
   selector: 'app-edit-user',
@@ -21,13 +22,16 @@ export class EditUser implements OnInit {
   userForm!: FormGroup;
   userId!: string;
   roleOptions: SelectOption[] = [];
+  
+  private originalEmail: string = '';
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private userService: UserService,
     private roleService: RoleService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -35,57 +39,84 @@ export class EditUser implements OnInit {
       nome: ['', Validators.required],
       sobrenome: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      idCargo: ['', Validators.required]
-    });
-
-    this.roleService.getCargos().pipe(
-      map(roles => roles.map(role => ({ value: role.id, label: role.nome })))
-    ).subscribe(options => {
-      this.roleOptions = options;
+      idCargo: [{value: '', disabled: true}]
     });
 
     this.route.paramMap.pipe(
-      tap(params => this.userId = params.get('id')!),
-      switchMap(params => this.userService.getUserById(params.get('id')!)),
-      filter(user => !!user)
-    ).subscribe(user => {
-      this.userForm.patchValue({
+      switchMap(params => {
+        this.userId = params.get('id')!;
+        
+        return forkJoin({
+          user: this.userService.getUserById(this.userId),
+        });
+      })
+    ).subscribe(({ user }) => {
+      
+      this.originalEmail = user.email;
+
+      this.userForm.setValue({
         nome: user.nome,
         sobrenome: user.sobrenome,
         email: user.email,
-        idCargo: user.idCargo
+        idCargo: user.idCargo || ''
       });
+
+      this.userForm.setValidators([Validators.required]);
+      this.userForm.get('email')?.addValidators(Validators.email);
+
+      if (this.canAssignRole) {
+        this.roleService.getCargos().pipe(
+          map(roles => roles.map(role => ({ value: role.id, label: role.nome })))
+        ).subscribe(options => {
+          this.roleOptions = options;
+          this.userForm.get('idCargo')?.enable();
+        });
+      }
     });
   }
 
   onConfirm(): void {
-    if (this.userForm.valid && this.userId) {
-      const formValue = this.userForm.value;
-
-      const userUpdateDto: Partial<UserDto> = {
-        nome: formValue.nome,
-        sobrenome: formValue.sobrenome,
-        email: formValue.email
-      };
-      
-      const cargoUpdateDto = {
-        idCargo: formValue.idCargo
-      };
-
-      forkJoin({
-        userUpdate: this.userService.updateUser(this.userId, userUpdateDto),
-        roleUpdate: this.userService.assignRoleToUser(this.userId, cargoUpdateDto)
-      }).subscribe({
-        next: () => {
-          this.router.navigate(['/users', this.userId]);
-        },
-        error: (err) => {
-          console.error('Erro ao atualizar usuário:', err);
-        }
-      });
-    } else {
+    if (this.userForm.invalid || !this.userId) {
       this.userForm.markAllAsTouched();
+      return;
     }
-  }
+    
+    const formValue = this.userForm.getRawValue();
 
+    const userUpdateDto: Partial<UserDto> = {
+      nome: formValue.nome,
+      sobrenome: formValue.sobrenome,
+      email: formValue.email
+    };
+    
+    const isCurrentUser = this.userId === this.authService.currentUserId;
+    const emailHasChanged = formValue.email !== this.originalEmail;
+    
+    const updateObservables: any = {
+      userUpdate: this.userService.updateUser(this.userId, userUpdateDto)
+    };
+
+    if (this.userForm.get('idCargo')?.enabled) {
+      updateObservables.roleUpdate = this.userService.assignRoleToUser(this.userId, { idCargo: formValue.idCargo });
+    }
+
+    forkJoin(updateObservables).subscribe({
+      next: () => {
+        if (isCurrentUser && emailHasChanged) {
+          alert('Seu e-mail foi alterado. Por favor, faça login novamente.');
+          this.authService.logout();
+        } else {
+          this.router.navigate(['/users', this.userId]);
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar usuário:', err);
+        alert('Ocorreu um erro ao atualizar o usuário.');
+      }
+    });
+  }
+  
+  get canAssignRole(): boolean {
+    return this.authService.hasPermission('CARGO_ATRIBUIR');
+  }
 }

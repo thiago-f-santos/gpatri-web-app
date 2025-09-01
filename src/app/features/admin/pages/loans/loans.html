@@ -1,7 +1,7 @@
 @if (isConfirmationOpen() && selectedLoan(); as loan) {
   <app-confirmation-message
     titleText="Devolução de empréstimo"
-    [messageText]="'Certeza que deseja sinalizar o empréstimo #' + loan.id.substring(0, 8) + ' como devolvido?'"
+    [messageText]="'Certeza que deseja sinalizar o empréstimo \'' + loan.id + '\' como devolvido?'"
     (confirm)="confirmReturn()"
     (cancel)="cancelReturn()">
   </app-confirmation-message>

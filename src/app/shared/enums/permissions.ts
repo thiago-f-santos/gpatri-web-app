@@ -1,4 +1,5 @@
 export const ALL_PERMISSIONS = [
+  'ACESSO_ADMIN',
   'USUARIO_CADASTRAR', 'USUARIO_EDITAR', 'USUARIO_EXCLUIR', 'USUARIO_LISTAR',
   'CARGO_CADASTRAR', 'CARGO_EDITAR', 'CARGO_EXCLUIR', 'CARGO_LISTAR', 'CARGO_ATRIBUIR',
   'EMPRESTIMO_SOLICITAR', 'EMPRESTIMO_EDITAR', 'EMPRESTIMO_EXCLUIR', 'EMPRESTIMO_LISTAR',
@@ -12,24 +13,28 @@ export type Permission = typeof ALL_PERMISSIONS[number];
 
 export const PERMISSION_GROUPS = [
   { 
-    name: 'Usuários', 
-    permissions: ALL_PERMISSIONS.filter(p => p.startsWith('USUARIO_')) 
+    name: 'Administrador', 
+    permissions: ALL_PERMISSIONS.filter(p => p.includes("ADMIN")) 
   },
   { 
-    name: 'Cargos', 
-    permissions: ALL_PERMISSIONS.filter(p => p.startsWith('CARGO_')) 
+    name: 'Usuários', 
+    permissions: ALL_PERMISSIONS.filter(p => p.startsWith('USUARIO_')) 
   },
   { 
     name: 'Empréstimos', 
     permissions: ALL_PERMISSIONS.filter(p => p.startsWith('EMPRESTIMO_')) 
   },
   { 
-    name: 'Itens de Patrimônio', 
-    permissions: ALL_PERMISSIONS.filter(p => p.startsWith('ITEM_PATRIMONIO_')) 
+    name: 'Cargos', 
+    permissions: ALL_PERMISSIONS.filter(p => p.startsWith('CARGO_')) 
   },
   { 
     name: 'Patrimônio', 
     permissions: ALL_PERMISSIONS.filter(p => p.startsWith('PATRIMONIO_')) 
+  },
+    { 
+    name: 'Itens de Patrimônio', 
+    permissions: ALL_PERMISSIONS.filter(p => p.startsWith('ITEM_PATRIMONIO_')) 
   },
   { 
     name: 'Categorias', 

@@ -3,6 +3,7 @@ import { Admin } from './features/admin/admin';
 import { ADMIN_ROUTES } from './features/admin/admin-routing';
 import { loginGuard } from './core/guards/login-guard';
 import { authGuard } from './core/guards/auth-guard';
+import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
     {
@@ -41,6 +42,7 @@ export const routes: Routes = [
             },
             {
                 path: 'admin',
+                canActivate: [adminGuard],
                 component: Admin,
                 children: ADMIN_ROUTES
             }

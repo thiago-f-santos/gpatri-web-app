@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { LoginRequest, LoginResponse } from '../models/auth.model';
-import { BehaviorSubject, map, Observable, switchMap, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
-import { UserService } from './user-service';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { Permission } from '../../shared/enums/permissions';
+import { LoginRequest, LoginResponse } from '../models/auth.model';
 
 interface DecodedToken {
   userId: string;
+  permissoes: Permission[]; 
 }
 
 @Injectable({
@@ -27,9 +28,10 @@ export class AuthService {
   private currentUserIdSubject = new BehaviorSubject<string | null>(null);
   public currentUserId$ = this.currentUserIdSubject.asObservable();
 
-  constructor(
-    private userService: UserService
-  ) {
+  private currentUserPermissionsSubject = new BehaviorSubject<Permission[]>([]);
+  public currentUserPermissions$ = this.currentUserPermissionsSubject.asObservable();
+
+  constructor() {
     this.loadUserIdFromToken();
   }
 
@@ -37,9 +39,8 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
         localStorage.setItem(this.TOKEN_KEY, response.token);
-        const decodedToken: DecodedToken = jwtDecode(response.token);
-        this.currentUserIdSubject.next(decodedToken.userId);
         this.isAuthenticatedSubject.next(true);
+        this.loadUserIdFromToken();
       })
     );
   }
@@ -48,6 +49,7 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     this.isAuthenticatedSubject.next(false);
     this.currentUserIdSubject.next(null);
+    this.currentUserPermissionsSubject.next([]);
     this.router.navigate(['/login']);
   }
 
@@ -65,11 +67,17 @@ export class AuthService {
       try {
         const decodedToken: DecodedToken = jwtDecode(token);
         this.currentUserIdSubject.next(decodedToken.userId);
+        this.currentUserPermissionsSubject.next(decodedToken.permissoes || []);
       } catch (error) {
         console.error("Token inválido ou expirado", error);
         this.logout();
       }
     }
+  }
+
+  public hasPermission(permission: Permission): boolean {
+    const currentPermissions = this.currentUserPermissionsSubject.getValue();
+    return currentPermissions.includes(permission);
   }
 
   public get isAuthenticated(): boolean {

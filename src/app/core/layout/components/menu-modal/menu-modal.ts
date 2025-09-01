@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-menu-modal',
@@ -8,6 +8,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: './menu-modal.scss'
 })
 export class MenuModal {
+  @Input() showAdminArea: boolean = false;
+
   @Output() adminAreaClick = new EventEmitter<void>();
   @Output() loansClick = new EventEmitter<void>();
   @Output() closeModal = new EventEmitter<void>();

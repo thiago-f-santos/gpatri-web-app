@@ -49,4 +49,8 @@ export class Layout {
   onLogoutClick() {
     this.authService.logout();
   }
+
+  get isAdmin(): boolean {
+    return this.authService.hasPermission('ACESSO_ADMIN');
+  }
 }
