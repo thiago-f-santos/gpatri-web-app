@@ -1,59 +1,97 @@
-# GpatriApp
+# 📦 gPatri — Front-end para Gerenciamento de Patrimônios
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.4.
+gPatri-web-app é o front-end de um sistema de gerenciamento de patrimônios escolares, desenvolvido para atender às demandas do núcleo **NumbERS**.  
+Este projeto foi criado utilizando o framework **Angular** e integra-se com uma API back-end REST, também disponível no GitHub.
 
-## Development server
+⚠️ **Atenção:** Este software ainda **não está em estágio final de produção**. Está em desenvolvimento ativo e sujeito a mudanças. No entanto, se desejar utilizá-lo em produção por conta própria, veja instruções mais abaixo.
 
-To start a local development server, run:
+---
+
+## 🔗 Projeto relacionado
+
+Este projeto depende do back-end para funcionar corretamente. Você pode acessá-lo aqui:  
+👉 [gPatri (API)](https://github.com/thiago-f-santos/gPatri.git)  
+
+---
+
+## 🚀 Como iniciar o projeto
+
+Para iniciar o projeto em modo de desenvolvimento, siga os passos abaixo:
+
+### 1. Pré-requisitos
+
+- [Node.js](https://nodejs.org/) (versão recomendada: LTS)
+- [Angular CLI](https://angular.io/cli) instalado globalmente  
+  ```bash
+  npm install -g @angular/cli
+  ```
+
+### 2. Clone o repositório
+
+```bash
+git clone https://github.com/thiago-f-santos/gpatri-web-app.git
+cd gpatri-web-app
+```
+
+### 3. Instale as dependências
+
+```bash
+npm install
+```
+
+### 4. Configure o ambiente
+
+Edite o arquivo `src/environments/environment.ts` e defina a URL da API utilizada no desenvolvimento:
+
+```ts
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:3000' // Altere para a URL da sua API, se necessário
+};
+```
+
+### 5. Rode o servidor de desenvolvimento
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Depois disso, acesse http://localhost:4200 no seu navegador.
+A aplicação será recarregada automaticamente sempre que você salvar alterações nos arquivos-fonte.
 
-## Code scaffolding
+## 🏁 Utilização em Produção
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Embora o projeto **ainda não esteja em estágio final de produção**, você pode utilizá-lo por sua conta e risco.  
+Para isso, siga os passos abaixo:
 
-```bash
-ng generate component component-name
+### 1. Configure o ambiente de produção
+
+Edite o arquivo `src/environments/environment.prod.ts` e insira a URL da sua API no campo `apiUrl`:
+
+```ts
+export const environment = {
+  production: true,
+  apiUrl: 'https://sua-api-em-producao.com'
+};
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### 2. Gere o build de produção
 
 ```bash
-ng generate --help
+ng build --configuration=production
 ```
 
-## Building
+Os arquivos finais serão gerados na pasta `dist/`, prontos para serem hospedados.
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+## 📌 Observações
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- Este projeto está em **desenvolvimento ativo** e ainda **não está em estágio final de produção**.
+- Funcionalidades estão sujeitas a mudanças.
+- Contribuições são bem-vindas! Sinta-se à vontade para abrir uma *issue* ou enviar um *pull request*.
+- Caso encontre problemas ou deseje sugerir melhorias, nos avise por aqui no repositório.
 
-## Running unit tests
+---
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**Desenvolvido por [Thiago Ferreira](https://github.com/thiago-f-santos)**
