@@ -66,7 +66,7 @@ private allLoans = signal<Loan[]>([]);
   }
   
   isOverdue(loan: Loan): boolean {
-    return loan.situacao !== 'DEVOLVIDO' && new Date(loan.dataDevolucao) < new Date();
+    return loan.situacao !== 'DEVOLVIDO' && loan.situacao !== 'NEGADO' && new Date(loan.dataDevolucao) < new Date();
   }
 
   onReturnClick(loan: Loan): void {
