@@ -1,22 +1,23 @@
-<app-header (menuClick)="toggleMenu()" (userConfigClick)="toggleUserConfig()"></app-header>
 
-@if (showMenu) {
+<div class="layout-container">
+  @if (showMenu) {
     <app-menu-modal
     [showAdminArea]="isAdmin"
     (closeModal)="toggleMenu()"
     (loansClick)="onLoansClick()"
     (adminAreaClick)="onAdminClick()">
     </app-menu-modal>
-}
-
-@if (showUserConfig) {
-    <app-user-modal
-    (yourInfosClick)="onYourInfosClick()"
-    (logoutClick)="onLogoutClick()"
-    (closeModal)="toggleUserConfig()">
-    </app-user-modal>
-}
-
-<main class="main">
+  }
+  @if (showUserConfig) {
+      <app-user-modal
+      (yourInfosClick)="onYourInfosClick()"
+      (logoutClick)="onLogoutClick()"
+      (closeModal)="toggleUserConfig()">
+      </app-user-modal>
+  }
+  <app-header (menuClick)="toggleMenu()" (userConfigClick)="toggleUserConfig()"></app-header>
+  <main class="main-content">
     <router-outlet></router-outlet>
-</main>
+  </main>
+  <app-notification></app-notification>
+</div>

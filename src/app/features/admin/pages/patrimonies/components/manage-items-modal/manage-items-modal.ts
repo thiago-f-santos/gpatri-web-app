@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Patrimony } from '../../../../../../core/models/patrimony.model';
 import { ItemPatrimonyService } from '../../../../../../core/services/item-patrimony-service';
@@ -10,6 +10,7 @@ import { ItemDisplay } from '../../../../../../shared/components/item-display/it
 import { SelectInput, SelectOption } from '../../../../../../shared/components/select-input/select-input';
 import { ItemPatrimony, ItemPatrimonyDto } from '../../../../../../core/models/item-patrimony.model';
 import { ConditionDisplayPipe } from '../../../../../../shared/pipes/condition-display-pipe';
+import { NotificationService } from '../../../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-manage-items-modal',
@@ -18,7 +19,7 @@ import { ConditionDisplayPipe } from '../../../../../../shared/pipes/condition-d
   templateUrl: './manage-items-modal.html',
   styleUrl: './manage-items-modal.scss'
 })
-export class ManageItemsModal {
+export class ManageItemsModal implements OnInit {
   @Input() patrimony!: Patrimony;
   @Output() close = new EventEmitter<void>();
   @Output() itemsChanged = new EventEmitter<void>();
@@ -34,23 +35,19 @@ export class ManageItemsModal {
   isConfirmationVisible = false;
   itemToDeleteId: string | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private itemPatrimonyService: ItemPatrimonyService
-  ) {
-    this.itemForm = this.fb.group({
-      description: ['', Validators.required], 
-      condition: ['', Validators.required],
-    });
-  }
+  private readonly fb = inject(FormBuilder);
+  private readonly itemPatrimonyService = inject(ItemPatrimonyService);
+  private readonly notificationService = inject(NotificationService);
 
-  ngOnInit(): void {
+  constructor() {
     this.itemForm = this.fb.group({
       condicaoDescricao: ['', Validators.required], 
       condicaoProduto: ['', Validators.required],
       quantidade: [1, [Validators.required, Validators.min(1)]],
     });
   }
+
+  ngOnInit(): void {}
 
   createItem(): void {
     if (this.itemForm.invalid) {
@@ -66,11 +63,14 @@ export class ManageItemsModal {
     this.itemPatrimonyService.createItemPatrimony(itemDto)
       .subscribe({
         next: () => {
-          alert('Item criado com sucesso!');
+          this.notificationService.showSuccess('Item criado com sucesso!');
           this.itemForm.reset({ quantidade: 1 });
           this.itemsChanged.emit();
         },
-        error: (err) => console.error('Erro ao criar item', err)
+        error: (err) => {
+          this.notificationService.showError('Erro ao criar item.');
+          console.error('Erro ao criar item', err);
+        }
       });
   }
 
@@ -84,8 +84,14 @@ export class ManageItemsModal {
 
     this.itemPatrimonyService.deleteItemPatrimony(this.itemToDeleteId)
       .subscribe({
-        next: () => this.itemsChanged.emit(),
-        error: (err) => alert('Falha ao excluir o item.'),
+        next: () => {
+          this.notificationService.showSuccess('Item deletado com sucesso!');
+          this.itemsChanged.emit();
+        },
+        error: (err) => {
+          this.notificationService.showError('Falha ao excluir o item.');
+          console.error('Falha ao excluir o item.', err);
+        },
         complete: () => this.onCancelDeletion()
       });
   }

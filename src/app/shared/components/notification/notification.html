@@ -1,0 +1,7 @@
+<div *ngIf="notification" class="notification-container" [@fadeInOut]>
+  <div [ngClass]="notificationClass" class="notification-content">
+    <p>{{ notification.message }}</p>
+    <button (click)="close()">&#x2715;</button>
+    <div class="timer-bar"></div>
+  </div>
+</div>

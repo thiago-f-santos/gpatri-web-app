@@ -1,0 +1,76 @@
+@use 'variables' as v;
+
+.notification-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  width: 100%;
+  max-width: 400px;
+  pointer-events: none;
+}
+
+.notification-content {
+  padding: 16px;
+  border-radius: v.$border-radius-default;
+  color: v.$color-text-light;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  pointer-events: all;
+  position: relative;
+  overflow: hidden;
+
+  p {
+    margin: 0;
+    font-family: v.$font-family-base;
+    font-weight: v.$font-weight-bold;
+  }
+
+  button {
+    background: transparent;
+    border: none;
+    color: v.$color-text-light;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+  }
+}
+
+.timer-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 5px;
+  width: 100%;
+}
+
+.notification-success {
+  background-color: #01b0f1;
+
+  .timer-bar {
+    background-color: darken(#01b0f1, 20%);
+    animation: shrink 3s linear forwards;
+  }
+}
+
+.notification-error {
+  background-color: #ef233c;
+
+  .timer-bar {
+    background-color: darken(#ef233c, 20%);
+    animation: shrink 5s linear forwards;
+  }
+}
+
+@keyframes shrink {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}

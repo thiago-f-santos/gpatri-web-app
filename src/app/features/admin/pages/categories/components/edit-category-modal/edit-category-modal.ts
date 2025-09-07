@@ -6,6 +6,7 @@ import { SelectInput, SelectOption } from '../../../../../../shared/components/s
 import { Button } from '../../../../../../shared/components/button/button';
 import { CategoryService } from '../../../../../../core/services/category-service';
 import { Category, CategoryDto } from '../../../../../../core/models/category.model';
+import { NotificationService } from '../../../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-edit-category-modal',
@@ -24,7 +25,8 @@ export class EditCategoryModal implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private categoryService: CategoryService 
+    private categoryService: CategoryService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -47,11 +49,14 @@ export class EditCategoryModal implements OnInit {
 
     this.categoryService.updateCategory(this.category.id, categoryDto).subscribe({
         next: () => {
-          alert('Categoria atualizada com sucesso!');
+          this.notificationService.showSuccess('Categoria atualizada com sucesso!');
           this.categoryUpdated.emit();
           this.onClose();
         },
-        error: (err) => console.error("Erro ao atualizar categoria", err)
+        error: (err) => {
+          this.notificationService.showError('Erro ao atualizar categoria.');
+          console.error("Erro ao atualizar categoria", err);
+        }
     });
   }
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Loan } from '../../../../core/models/loan.model';
 import { LoanService } from '../../../../core/services/loan-service';
@@ -10,6 +10,7 @@ import { SelectInput, SelectOption } from '../../../../shared/components/select-
 import { OverdueColorPipe } from './pipes/overdue-color-pipe';
 import { ConditionDisplayPipe } from '../../../../shared/pipes/condition-display-pipe';
 import { LoanViewModal } from './components/loan-view-modal/loan-view-modal';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-loans',
@@ -40,9 +41,8 @@ private allLoans = signal<Loan[]>([]);
     return [];
   });
 
-  constructor(
-    private loanService: LoanService
-  ) { }
+  private readonly loanService = inject(LoanService);
+  private readonly notificationService = inject(NotificationService);
   
   filterOptions: SelectOption[] = [
     { value: 'ALL', label: 'Todos' },
@@ -80,12 +80,12 @@ private allLoans = signal<Loan[]>([]);
 
     this.loanService.returnLoan(loanToReturn.id).subscribe({
       next: () => {
-        alert('Empréstimo devolvido com sucesso!');
+        this.notificationService.showSuccess('Empréstimo devolvido com sucesso!');
         this.loadLoans();
         this.closeModal();
       },
       error: (err) => {
-        alert('Erro ao devolver o empréstimo.');
+        this.notificationService.showError('Erro ao devolver o empréstimo.');
         console.error(err);
         this.closeModal();
       }

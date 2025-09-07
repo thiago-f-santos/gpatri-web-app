@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { LoanRequestCard } from './components/loan-request-card/loan-request-card';
 import { map } from 'rxjs';
 import { LoanDetailsModal } from './components/loan-details-modal/loan-details-modal';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-loan-requests',
@@ -20,7 +21,7 @@ export class LoanRequests {
   isModalOpen = false;
   selectedLoan: Loan | null = null;
 
-  constructor(private loanService: LoanService) { }
+  constructor(private loanService: LoanService, private notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.loadPendingRequests();
@@ -37,15 +38,29 @@ export class LoanRequests {
   }
 
   handleApproveRequest(request: Loan): void {
-    this.loanService.approveLoan(request.id).subscribe(() => {
-      this.loadPendingRequests();
-    });
+    this.loanService.approveLoan(request.id).subscribe(({
+      next: () => {
+        this.notificationService.showSuccess('Solicitação aprovada com sucesso!');
+        this.loadPendingRequests();
+      },
+      error: (err) => {
+        this.notificationService.showError('Erro ao aprovar a solicitação.');
+        console.error(err);
+      }
+    }));
   }
 
   handleDenyRequest(request: Loan): void {
-    this.loanService.denyLoan(request.id).subscribe(() => {
-      this.loadPendingRequests();
-    });
+    this.loanService.denyLoan(request.id).subscribe(({
+      next: () => {
+        this.notificationService.showSuccess('Solicitação negada com sucesso!');
+        this.loadPendingRequests();
+      },
+      error: (err) => {
+        this.notificationService.showError('Erro ao negar a solicitação.');
+        console.error(err);
+      }
+    }));
   }
 
   openDetailsModal(loan: Loan): void {

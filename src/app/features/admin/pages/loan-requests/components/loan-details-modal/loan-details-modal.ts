@@ -6,6 +6,7 @@ import { LoanService } from '../../../../../../core/services/loan-service';
 import { UserService } from '../../../../../../core/services/user-service';
 import { Button } from '../../../../../../shared/components/button/button';
 import { LoanItemDisplay } from '../loan-item-display/loan-item-display';
+import { NotificationService } from '../../../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-loan-details-modal',
@@ -25,6 +26,7 @@ export class LoanDetailsModal {
   constructor(
     private loanService: LoanService,
     private userService: UserService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -36,17 +38,31 @@ export class LoanDetailsModal {
   }
 
   onApprove(): void {
-    this.loanService.approveLoan(this.loan.id).subscribe(() => {
-      this.loanUpdated.emit();
-      this.onClose();
-    });
+    this.loanService.approveLoan(this.loan.id).subscribe(({
+      next: () => {
+        this.notificationService.showSuccess('Solicitação aprovada com sucesso!');
+        this.loanUpdated.emit();
+        this.onClose();
+      },
+      error: (err) => {
+        this.notificationService.showError('Erro ao aprovar a solicitação.');
+        console.error(err);
+      }
+    }));
   }
 
   onDeny(): void {
-    this.loanService.denyLoan(this.loan.id).subscribe(() => {
-      this.loanUpdated.emit();
-      this.onClose();
-    });
+    this.loanService.denyLoan(this.loan.id).subscribe(({
+      next: () => {
+        this.notificationService.showSuccess('Solicitação negada com sucesso!');
+        this.loanUpdated.emit();
+        this.onClose();
+      },
+      error: (err) => {
+        this.notificationService.showError('Erro ao negar a solicitação.');
+        console.error(err);
+      }
+    }));
   }
 
   onClose(): void {

@@ -4,11 +4,12 @@ import { Header } from "./components/header/header";
 import { MenuModal } from './components/menu-modal/menu-modal';
 import { UserModal } from './components/user-modal/user-modal';
 import { AuthService } from '../services/auth-service';
+import { NotificationComponent } from '../../shared/components/notification/notification';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, Header, MenuModal, UserModal],
+  imports: [RouterOutlet, Header, MenuModal, UserModal, NotificationComponent],
   templateUrl: './layout.html',
   styleUrl: './layout.scss'
 })

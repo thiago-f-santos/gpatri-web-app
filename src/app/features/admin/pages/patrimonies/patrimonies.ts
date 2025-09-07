@@ -1,5 +1,5 @@
 import { CommonModule, NgStyle } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputComponent } from '../../../../shared/components/input/input';
 import { Button } from '../../../../shared/components/button/button';
@@ -11,6 +11,7 @@ import { ManageItemsModal } from './components/manage-items-modal/manage-items-m
 import { Patrimony, PatrimonyDto } from '../../../../core/models/patrimony.model';
 import { CategoryService } from '../../../../core/services/category-service';
 import { map } from 'rxjs';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-patrimonies',
@@ -30,11 +31,10 @@ export class Patrimonies implements OnInit {
   isManageItemsModalOpen: boolean = false;
   selectedPatrimony: Patrimony | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private patrimonyService: PatrimonyService,
-    private categoryService: CategoryService
-  ) { }
+  private readonly fb = inject(FormBuilder);
+  private readonly patrimonyService = inject(PatrimonyService);
+  private readonly categoryService = inject(CategoryService);
+  private readonly notificationService = inject(NotificationService);
 
   ngOnInit(): void {
     this.patrimonyForm = this.fb.group({
@@ -75,11 +75,14 @@ export class Patrimonies implements OnInit {
 
     this.patrimonyService.createPatrimony(newPatrimonyData).subscribe({
       next: () => {
-        alert('Patrimônio criado com sucesso!');
+        this.notificationService.showSuccess('Patrimônio criado com sucesso!');
         this.loadPatrimonies();
         this.patrimonyForm.reset({ tipoControle: 'UNITARIO' });
       },
-      error: (err) => console.error('Erro ao criar patrimônio:', err)
+      error: (err) => {
+        this.notificationService.showError('Erro ao criar patrimônio.');
+        console.error('Erro ao criar patrimônio:', err);
+      }
     });
   }
 
@@ -96,8 +99,14 @@ export class Patrimonies implements OnInit {
   onConfirm(): void {
     if (this.selectedPatrimony) {
       this.patrimonyService.deletePatrimony(this.selectedPatrimony.id).subscribe({
-        next: () => this.loadPatrimonies(),
-        error: (err) => console.error("Erro ao deletar patrimonio", err),
+        next: () => {
+          this.notificationService.showSuccess('Patrimônio deletado com sucesso!');
+          this.loadPatrimonies();
+        },
+        error: (err) => {
+          this.notificationService.showError('Erro ao deletar patrimônio.');
+          console.error("Erro ao deletar patrimonio", err);
+        },
         complete: () => this.onCancel()
       });
     }

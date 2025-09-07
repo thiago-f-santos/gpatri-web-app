@@ -9,6 +9,7 @@ import { InputComponent } from '../../../../shared/components/input/input';
 import { SelectInput, SelectOption } from '../../../../shared/components/select-input/select-input';
 import { CategoryCard } from './components/category-card/category-card';
 import { EditCategoryModal } from './components/edit-category-modal/edit-category-modal';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-categories',
@@ -28,7 +29,8 @@ export class Categories implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -62,11 +64,14 @@ export class Categories implements OnInit {
 
     this.categoryService.createCategory(categoryDto).subscribe({
       next: () => {
-        alert('Categoria criada com sucesso!');
+        this.notificationService.showSuccess('Categoria criada com sucesso!');
         this.loadCategories();
         this.categoryForm.reset();
       },
-      error: (err) => console.error("Erro ao criar categoria", err)
+      error: (err) => {
+        this.notificationService.showError('Erro ao criar categoria.');
+        console.error("Erro ao criar categoria", err);
+      }
     });
   }
 
@@ -84,12 +89,12 @@ export class Categories implements OnInit {
     
     this.categoryService.deleteCategory(this.selectedCategory.id).subscribe({
       next: () => {
-        alert('Categoria deletada com sucesso!');
+        this.notificationService.showSuccess('Categoria deletada com sucesso!');
         this.loadCategories();
         this.cancelDeletion();
       },
       error: (err) => {
-        alert('Falha ao deletar categoria.');
+        this.notificationService.showError('Falha ao deletar categoria.');
         console.error(err);
         this.cancelDeletion();
       }

@@ -7,6 +7,7 @@ import { Button } from '../../../../../../shared/components/button/button';
 import { InputComponent } from '../../../../../../shared/components/input/input';
 import { Permission, PERMISSION_GROUPS } from '../../../../../../shared/enums/permissions';
 import { ReplaceUnderscorePipe } from '../../../../../../shared/pipes/replace-underscore-pipe';
+import { NotificationService } from '../../../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-edit-role-modal',
@@ -25,6 +26,7 @@ export class EditRoleModal implements OnInit {
 
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly roleService = inject(RoleService);
+  private readonly notificationService = inject(NotificationService);
 
   ngOnInit(): void {
     const permissionControls = this.role.permissoes.map((p: Permission) => this.fb.control(p));
@@ -72,11 +74,14 @@ export class EditRoleModal implements OnInit {
 
     this.roleService.updateCargo(this.role.id, updatedRoleDto).subscribe({
       next: () => {
-        alert('Cargo atualizado com sucesso!');
+        this.notificationService.showSuccess('Cargo atualizado com sucesso!');
         this.roleUpdated.emit();
         this.onClose();
       },
-      error: (err) => console.error("Erro ao atualizar cargo", err)
+      error: (err) => {
+        this.notificationService.showError('Erro ao atualizar cargo.');
+        console.error("Erro ao atualizar cargo", err);
+      }
     });
   }
 

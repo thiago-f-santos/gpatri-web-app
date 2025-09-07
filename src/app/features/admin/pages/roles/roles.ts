@@ -10,6 +10,7 @@ import { Permission, PERMISSION_GROUPS } from '../../../../shared/enums/permissi
 import { ReplaceUnderscorePipe } from '../../../../shared/pipes/replace-underscore-pipe';
 import { EditRoleModal } from './components/edit-role-modal/edit-role-modal';
 import { RoleCard } from './components/role-card/role-card';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-roles',
@@ -30,6 +31,7 @@ export class Roles implements OnInit {
 
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly roleService = inject(RoleService);
+  private readonly notificationService = inject(NotificationService);
 
   constructor() {
     this.roleForm = this.fb.group({
@@ -83,12 +85,15 @@ export class Roles implements OnInit {
     };
     this.roleService.createCargo(newRoleDto).subscribe({
       next: () => {
-        alert('Cargo criado com sucesso!');
+        this.notificationService.showSuccess('Cargo criado com sucesso!');
         this.loadRoles();
         this.roleForm.reset();
         this.permissoesFormArray.clear();
       },
-      error: (err) => console.error("Erro ao criar cargo", err)
+      error: (err) => {
+        this.notificationService.showError('Erro ao criar cargo.');
+        console.error("Erro ao criar cargo", err);
+      }
     });
   }
 
@@ -101,10 +106,15 @@ export class Roles implements OnInit {
     if (!this.selectedRole) return;
     this.roleService.deleteCargo(this.selectedRole.id).subscribe({
       next: () => {
+        this.notificationService.showSuccess('Cargo deletado com sucesso!');
         this.loadRoles();
         this.cancelDeletion();
       },
-      error: () => alert('Falha ao deletar cargo.')
+      error: (err) => {
+        this.notificationService.showError('Falha ao deletar cargo.');
+        console.error(err);
+        this.cancelDeletion();
+      }
     });
   }
   
