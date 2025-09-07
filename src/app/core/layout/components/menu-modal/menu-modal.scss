@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'variables' as v;
 
 $card-background-color: #1C1F27;
@@ -45,6 +46,6 @@ $color-overlay: rgba(0, 0, 0, 0.7);
   transition: background-color 0.2s ease-in-out;
 
   &:hover {
-    background-color: lighten($card-background-color, 5%);
+    background-color: color.adjust($card-background-color, $lightness: 5%);
   }
 }

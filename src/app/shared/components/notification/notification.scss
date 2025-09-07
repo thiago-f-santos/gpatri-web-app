@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'variables' as v;
 
 .notification-container {
@@ -52,7 +53,7 @@
   background-color: #01b0f1;
 
   .timer-bar {
-    background-color: darken(#01b0f1, 20%);
+    background-color: color.adjust(#01b0f1, $lightness: -20%);
     animation: shrink 3s linear forwards;
   }
 }
@@ -61,7 +62,7 @@
   background-color: #ef233c;
 
   .timer-bar {
-    background-color: darken(#ef233c, 20%);
+    background-color: color.adjust(#ef233c, $lightness: -20%);
     animation: shrink 5s linear forwards;
   }
 }

@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'variables' as v;
 
 $font-size: 12px;
@@ -24,7 +25,7 @@ $color-delete-button: #4F5157;
     &.is-selected {
         opacity: 0.5;
         cursor: not-allowed;
-        background-color: darken($background-color-light, 10%);
+        background-color: color.adjust($background-color-light, $lightness: -10%);
     }
 }
 
@@ -99,6 +100,6 @@ $color-delete-button: #4F5157;
     }
 
     &:hover {
-        background-color: darken($color-delete-button, 10%);
+        background-color: color.adjust($color-delete-button, $lightness: -10%);
     }
 }

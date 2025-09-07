@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'variables' as v;
 
 $card-background-color: #35383F;
@@ -113,7 +114,7 @@ $color-delete-button: #017BA9;
   }
 
   &:hover {
-    background-color: darken($color-delete-button, 10%);
+    background-color: color.adjust($color-delete-button, $lightness:  10%);
   }
 
   transition: background-color 0.2s ease-in-out;
