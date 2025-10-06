@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, combineLatest, map, Observable, of, switchMap, take } from 'rxjs';
+import { catchError, combineLatest, map, Observable, of, switchMap, take, BehaviorSubject } from 'rxjs';
 import { ItemPatrimony } from '../../../core/models/item-patrimony.model';
 import { LoanDto } from '../../../core/models/loan.model';
 import { Patrimony } from '../../../core/models/patrimony.model';
@@ -17,9 +17,11 @@ import { SearchInput } from '../../../shared/components/search-input/search-inpu
 import { ConditionDisplayPipe } from '../../../shared/pipes/condition-display-pipe';
 import { PatrimonyDisplay } from '../components/patrimony-display/patrimony-display';
 import { RequestItem, RequestStateService } from '../services/request-state-service';
+import { Page } from '../../../core/models/page.model';
+import { Pagination } from '../../../shared/components/pagination/pagination';
 
 interface SearchResultsViewState {
-  patrimonies: Patrimony[];
+  patrimonyPage: Page<Patrimony>;
   requestItems: RequestItem[];
   selectedItems: ItemPatrimony[];
   returnDate: string;
@@ -37,12 +39,15 @@ interface SearchResultsViewState {
     Button,
     InputComponent,
     ConditionDisplayPipe,
+    Pagination,
   ],
   templateUrl: './search-results.html',
   styleUrl: './search-results.scss',
 })
 export class SearchResults implements OnInit {
   viewState$!: Observable<SearchResultsViewState>;
+  private page$ = new BehaviorSubject<number>(0);
+  pageSize = 5;
 
   searchQuery: string = '';
   previousSearch: string = '';
@@ -61,26 +66,35 @@ export class SearchResults implements OnInit {
     const patrimonies$ = this.activatedRoute.queryParamMap.pipe(
       switchMap((params) => {
         this.previousSearch = params.get('search') || '';
-        return this.patrimonyService.getPatrimoniesByName(this.previousSearch).pipe(
-          catchError(() => {
-            this.notificationService.showError('Não foi possível realizar a busca.');
-            return of([]);
-          })
+        return this.page$.pipe(
+          switchMap((page) =>
+            this.patrimonyService.getPatrimoniesByName(this.previousSearch, page, this.pageSize).pipe(
+              catchError(() => {
+                this.notificationService.showError('Não foi possível realizar a busca.');
+                return of({ content: [], page: { size: 5, number: 0, totalElements: 0, totalPages: 0 } });
+              })
+            )
+          )
         );
       })
     );
+
     const requestItems$ = this.requestStateService.requestItems$;
     const selectedItems$ = requestItems$.pipe(map((requestItems) => requestItems.map((reqItem) => reqItem.item)));
     const returnDate$ = this.requestStateService.returnDate$;
 
     this.viewState$ = combineLatest({
-      patrimonies: patrimonies$,
+      patrimonyPage: patrimonies$,
       requestItems: requestItems$,
       selectedItems: selectedItems$,
       returnDate: returnDate$,
     });
 
     this.headerService.showBackButton();
+  }
+
+  onPageChange(page: number): void {
+    this.page$.next(page);
   }
 
   selectItem(item: ItemPatrimony, patrimony: Patrimony): void {
@@ -132,6 +146,8 @@ export class SearchResults implements OnInit {
   }
 
   onSearch(query: string): void {
-    this.router.navigate(['/results'], { queryParams: { search: query } }).then(() => window.location.reload());
+    this.router.navigate(['/results'], { queryParams: { search: query } }).then(() => {
+      this.page$.next(0);
+    });
   }
 }

@@ -1,49 +1,54 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Loan } from '../../../../core/models/loan.model';
 import { LoanService } from '../../../../core/services/loan-service';
 import { Button } from '../../../../shared/components/button/button';
 import { ConfirmationMessage } from '../../../../shared/components/confirmation-message/confirmation-message';
-import { ItemDisplay } from "../../../../shared/components/item-display/item-display";
+import { ItemDisplay } from '../../../../shared/components/item-display/item-display';
 import { SelectInput, SelectOption } from '../../../../shared/components/select-input/select-input';
 import { OverdueColorPipe } from './pipes/overdue-color-pipe';
 import { ConditionDisplayPipe } from '../../../../shared/pipes/condition-display-pipe';
 import { LoanViewModal } from './components/loan-view-modal/loan-view-modal';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { Pagination } from '../../../../shared/components/pagination/pagination';
+import { LoanStatus } from '../../../../shared/types/loan-status';
 
 @Component({
   selector: 'app-loans',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConfirmationMessage, SelectInput, OverdueColorPipe, ItemDisplay, Button, ItemDisplay, ConditionDisplayPipe, LoanViewModal],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ConfirmationMessage,
+    SelectInput,
+    OverdueColorPipe,
+    ItemDisplay,
+    Button,
+    ItemDisplay,
+    ConditionDisplayPipe,
+    LoanViewModal,
+    Pagination,
+  ],
   templateUrl: './loans.html',
-  styleUrl: './loans.scss'
+  styleUrl: './loans.scss',
 })
 export class Loans implements OnInit {
-private allLoans = signal<Loan[]>([]);
+  public loans = signal<Loan[]>([]);
   public isLoading = signal(true);
   public selectedFilter = signal<'ALL' | 'APPROVED' | 'RETURNED' | 'OVERDUE' | 'DENIED'>('ALL');
+
+  public currentPage = signal(0);
+  public totalPages = signal(0);
+  public pageSize = 5;
 
   public isConfirmationOpen = signal(false);
   public isViewModalOpen = signal(false);
   public selectedLoan = signal<Loan | null>(null);
 
-  public filteredLoans = computed(() => {
-    const loans = this.allLoans();
-    const filter = this.selectedFilter();
-    
-    if (filter === 'ALL') return loans;
-    if (filter === 'APPROVED') return loans.filter(l => l.situacao === 'APROVADO');
-    if (filter === 'DENIED') return loans.filter(l => l.situacao === 'NEGADO');
-    if (filter === 'RETURNED') return loans.filter(l => l.situacao === 'DEVOLVIDO');
-    if (filter === 'OVERDUE') return loans.filter(l => this.isOverdue(l));
-    
-    return [];
-  });
-
   private readonly loanService = inject(LoanService);
   private readonly notificationService = inject(NotificationService);
-  
+
   filterOptions: SelectOption[] = [
     { value: 'ALL', label: 'Todos' },
     { value: 'APPROVED', label: 'Aprovados' },
@@ -58,13 +63,42 @@ private allLoans = signal<Loan[]>([]);
 
   loadLoans(): void {
     this.isLoading.set(true);
-    this.loanService.getLoans().subscribe(data => {
-      const nonPendingLoans = data.filter(loan => loan.situacao !== 'EM_ESPERA');
-      this.allLoans.set(nonPendingLoans);
+    const filter = this.selectedFilter();
+
+    let status: LoanStatus | undefined;
+    const statusMap: { [key: string]: LoanStatus } = {
+      APPROVED: 'APROVADO',
+      DENIED: 'NEGADO',
+      RETURNED: 'DEVOLVIDO',
+    };
+
+    if (filter in statusMap) {
+      status = statusMap[filter];
+    }
+
+    this.loanService.getLoans(this.currentPage(), this.pageSize, status).subscribe((data) => {
+      let loansData = data.content.filter((loan) => loan.situacao !== 'EM_ESPERA');
+
+      if (filter === 'OVERDUE') {
+        loansData = loansData.filter((l) => this.isOverdue(l));
+      }
+
+      this.loans.set(loansData);
+      this.totalPages.set(data.page.totalPages);
       this.isLoading.set(false);
     });
   }
-  
+
+  onFilterChange(): void {
+    this.currentPage.set(0);
+    this.loadLoans();
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage.set(page);
+    this.loadLoans();
+  }
+
   isOverdue(loan: Loan): boolean {
     return loan.situacao !== 'DEVOLVIDO' && loan.situacao !== 'NEGADO' && new Date(loan.dataDevolucao) < new Date();
   }
@@ -88,7 +122,7 @@ private allLoans = signal<Loan[]>([]);
         this.notificationService.showError('Erro ao devolver o empréstimo.');
         console.error(err);
         this.closeModal();
-      }
+      },
     });
   }
 

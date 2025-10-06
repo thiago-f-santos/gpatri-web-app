@@ -2,8 +2,8 @@
   <h2>Usuários</h2>
 
   <div class="user-list">
-    @if (users$ | async; as userList) {
-      @for (user of userList; track user.id) {
+    @if (users$ | async; as userPage) {
+      @for (user of userPage.content; track user.id) {
         <app-user-card
           [user]="user"
           (view)="onView(user)">
@@ -11,6 +11,11 @@
       } @empty {
         <p class="subtitle">Nenhum usuário cadastrado.</p>
       }
+      <app-pagination
+        [currentPage]="userPage.page.number"
+        [totalPages]="userPage.page.totalPages"
+        (pageChange)="onPageChange($event)">
+      </app-pagination>
     } @else {
       <p class="subtitle">Carregando usuários...</p>
     }

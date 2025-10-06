@@ -8,18 +8,23 @@ import { LoanService } from '../../../core/services/loan-service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { ConfirmationMessage } from '../../../shared/components/confirmation-message/confirmation-message';
 import { LoanDisplay } from '../components/loan-display/loan-display';
+import { Page } from '../../../core/models/page.model';
+import { Pagination } from '../../../shared/components/pagination/pagination';
 
 @Component({
   selector: 'app-user-loans',
   standalone: true,
-  imports: [CommonModule, LoanDisplay, ConfirmationMessage],
+  imports: [CommonModule, LoanDisplay, ConfirmationMessage, Pagination],
   templateUrl: './user-loans.html',
   styleUrl: './user-loans.scss',
 })
 export class UserLoans implements OnInit {
-  loans$!: Observable<Loan[]>;
+  loans$!: Observable<Page<Loan>>;
   isConfirmMessageOpen: boolean = false;
   selectedLoan: Loan | null = null;
+
+  currentPage = 0;
+  pageSize = 5;
 
   constructor(
     private loanService: LoanService,
@@ -36,15 +41,20 @@ export class UserLoans implements OnInit {
   private loadLoans(): void {
     const userId = this.authService.currentUserId;
     if (userId) {
-      this.loans$ = this.loanService.getLoansByUserId(userId).pipe(
+      this.loans$ = this.loanService.getLoansByUserId(userId, this.currentPage, this.pageSize).pipe(
         catchError(() => {
           this.notificationService.showError('Não foi possível carregar as solicitações.');
-          return of([]);
+          return of({ content: [], page: { size: 5, number: 0, totalElements: 0, totalPages: 0 } });
         })
       );
     } else {
       this.notificationService.showError('Não foi possível obter o ID do usuário para navegação.');
     }
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadLoans();
   }
 
   deleteRequest(loan: Loan): void {

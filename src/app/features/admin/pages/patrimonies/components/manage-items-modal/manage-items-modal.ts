@@ -11,13 +11,23 @@ import { SelectInput, SelectOption } from '../../../../../../shared/components/s
 import { ItemPatrimony, ItemPatrimonyDto } from '../../../../../../core/models/item-patrimony.model';
 import { ConditionDisplayPipe } from '../../../../../../shared/pipes/condition-display-pipe';
 import { NotificationService } from '../../../../../../core/services/notification.service';
+import { PatrimonyService } from '../../../../../../core/services/patrimony-service';
 
 @Component({
   selector: 'app-manage-items-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputComponent, SelectInput, Button, ItemDisplay, ConfirmationMessage, ConditionDisplayPipe],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    InputComponent,
+    SelectInput,
+    Button,
+    ItemDisplay,
+    ConfirmationMessage,
+    ConditionDisplayPipe,
+  ],
   templateUrl: './manage-items-modal.html',
-  styleUrl: './manage-items-modal.scss'
+  styleUrl: './manage-items-modal.scss',
 })
 export class ManageItemsModal implements OnInit {
   @Input() patrimony!: Patrimony;
@@ -38,16 +48,29 @@ export class ManageItemsModal implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly itemPatrimonyService = inject(ItemPatrimonyService);
   private readonly notificationService = inject(NotificationService);
+  private readonly patrimonyService = inject(PatrimonyService);
 
   constructor() {
     this.itemForm = this.fb.group({
-      condicaoDescricao: ['', Validators.required], 
+      condicaoDescricao: ['', Validators.required],
       condicaoProduto: ['', Validators.required],
       quantidade: [1, [Validators.required, Validators.min(1)]],
     });
   }
 
   ngOnInit(): void {}
+
+  private refreshPatrimony(): void {
+    this.patrimonyService.getPatrimonyById(this.patrimony.id).subscribe({
+      next: (updatedPatrimony) => {
+        this.patrimony = updatedPatrimony;
+      },
+      error: (err) => {
+        this.notificationService.showError('Erro ao atualizar a lista de itens.');
+        console.error('Erro ao buscar patrimônio atualizado', err);
+      },
+    });
+  }
 
   createItem(): void {
     if (this.itemForm.invalid) {
@@ -57,21 +80,21 @@ export class ManageItemsModal implements OnInit {
 
     const itemDto: ItemPatrimonyDto = {
       ...this.itemForm.value,
-      idPatrimonio: this.patrimony.id
+      idPatrimonio: this.patrimony.id,
     };
 
-    this.itemPatrimonyService.createItemPatrimony(itemDto)
-      .subscribe({
-        next: () => {
-          this.notificationService.showSuccess('Item criado com sucesso!');
-          this.itemForm.reset({ quantidade: 1 });
-          this.itemsChanged.emit();
-        },
-        error: (err) => {
-          this.notificationService.showError('Erro ao criar item.');
-          console.error('Erro ao criar item', err);
-        }
-      });
+    this.itemPatrimonyService.createItemPatrimony(itemDto).subscribe({
+      next: () => {
+        this.notificationService.showSuccess('Item criado com sucesso!');
+        this.itemForm.reset({ quantidade: 1 });
+        this.itemsChanged.emit();
+        this.refreshPatrimony();
+      },
+      error: (err) => {
+        this.notificationService.showError('Erro ao criar item.');
+        console.error('Erro ao criar item', err);
+      },
+    });
   }
 
   deleteItem(itemId: string): void {
@@ -82,25 +105,25 @@ export class ManageItemsModal implements OnInit {
   onConfirmDeletion(): void {
     if (!this.itemToDeleteId) return;
 
-    this.itemPatrimonyService.deleteItemPatrimony(this.itemToDeleteId)
-      .subscribe({
-        next: () => {
-          this.notificationService.showSuccess('Item deletado com sucesso!');
-          this.itemsChanged.emit();
-        },
-        error: (err) => {
-          this.notificationService.showError('Falha ao excluir o item.');
-          console.error('Falha ao excluir o item.', err);
-        },
-        complete: () => this.onCancelDeletion()
-      });
+    this.itemPatrimonyService.deleteItemPatrimony(this.itemToDeleteId).subscribe({
+      next: () => {
+        this.notificationService.showSuccess('Item deletado com sucesso!');
+        this.itemsChanged.emit();
+        this.refreshPatrimony();
+      },
+      error: (err) => {
+        this.notificationService.showError('Falha ao excluir o item.');
+        console.error('Falha ao excluir o item.', err);
+      },
+      complete: () => this.onCancelDeletion(),
+    });
   }
 
   onCancelDeletion(): void {
     this.isConfirmationVisible = false;
     this.itemToDeleteId = null;
   }
-  
+
   getItemStatus(item: ItemPatrimony): 'available' | 'borrowed' {
     return item.quantidade > 0 ? 'available' : 'borrowed';
   }

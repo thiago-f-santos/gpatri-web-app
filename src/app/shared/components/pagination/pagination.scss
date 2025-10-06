@@ -1,0 +1,35 @@
+@use 'variables' as v;
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  color: v.$color-text-light;
+  font-family: v.$font-family-base;
+
+  button {
+    color: v.$color-text-light;
+    border: 2px solid v.$color-primary;
+    border-radius: v.$border-radius-default;
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+
+    &:disabled {
+      border: 2px solid v.$color-border-default;
+      cursor: not-allowed;
+    }
+  }
+
+  span {
+    font-size: 14px;
+  }
+}

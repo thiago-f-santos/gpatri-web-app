@@ -6,26 +6,40 @@ import { Button } from '../../../../shared/components/button/button';
 import { PatrimonyService } from '../../../../core/services/patrimony-service';
 import { PatrimonySummaryCard } from './components/patrimony-summary-card/patrimony-summary-card';
 import { ConfirmationMessage } from '../../../../shared/components/confirmation-message/confirmation-message';
-import { SelectInput, SelectOption } from "../../../../shared/components/select-input/select-input";
+import { SelectInput, SelectOption } from '../../../../shared/components/select-input/select-input';
 import { ManageItemsModal } from './components/manage-items-modal/manage-items-modal';
 import { Patrimony, PatrimonyDto } from '../../../../core/models/patrimony.model';
 import { CategoryService } from '../../../../core/services/category-service';
 import { map } from 'rxjs';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { Pagination } from '../../../../shared/components/pagination/pagination';
 
 @Component({
   selector: 'app-patrimonies',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, PatrimonySummaryCard, InputComponent, Button, ConfirmationMessage, SelectInput, ManageItemsModal],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    PatrimonySummaryCard,
+    InputComponent,
+    Button,
+    ConfirmationMessage,
+    SelectInput,
+    ManageItemsModal,
+    Pagination,
+  ],
   templateUrl: './patrimonies.html',
-  styleUrl: './patrimonies.scss'
+  styleUrl: './patrimonies.scss',
 })
 export class Patrimonies implements OnInit {
-
   patrimonyForm!: FormGroup;
   categories: SelectOption[] = [];
   patrimonies: Patrimony[] = [];
   isLoading: boolean = false;
+
+  currentPage = 0;
+  totalPages = 0;
+  pageSize = 5;
 
   isPatrimonyDeletionConfirmationOpen: boolean = false;
   isManageItemsModalOpen: boolean = false;
@@ -42,7 +56,7 @@ export class Patrimonies implements OnInit {
       descricao: [''],
       tipoControle: ['UNITARIO', Validators.required],
       precoEstimado: [null],
-      idCategoria: ['', Validators.required]
+      idCategoria: ['', Validators.required],
     });
 
     this.loadPatrimonies();
@@ -50,19 +64,24 @@ export class Patrimonies implements OnInit {
   }
 
   loadCategories(): void {
-    this.categoryService.getCategories().pipe(
-      map(apiCategories => 
-        apiCategories.map(cat => ({ value: cat.id, label: cat.nome }))
-      )
-    ).subscribe(options => this.categories = options);
+    this.categoryService
+      .getCategories()
+      .pipe(map((apiCategories) => apiCategories.map((cat) => ({ value: cat.id, label: cat.nome }))))
+      .subscribe((options) => (this.categories = options));
   }
 
   loadPatrimonies(): void {
     this.isLoading = true;
-    this.patrimonyService.getPatrimonies().subscribe(data => {
-      this.patrimonies = data;
+    this.patrimonyService.getPatrimonies(this.currentPage, this.pageSize).subscribe((data) => {
+      this.patrimonies = data.content;
+      this.totalPages = data.page.totalPages;
       this.isLoading = false;
     });
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadPatrimonies();
   }
 
   createPatrimony(): void {
@@ -70,7 +89,7 @@ export class Patrimonies implements OnInit {
       this.patrimonyForm.markAllAsTouched();
       return;
     }
-    
+
     const newPatrimonyData: PatrimonyDto = this.patrimonyForm.value;
 
     this.patrimonyService.createPatrimony(newPatrimonyData).subscribe({
@@ -82,7 +101,7 @@ export class Patrimonies implements OnInit {
       error: (err) => {
         this.notificationService.showError('Erro ao criar patrimônio.');
         console.error('Erro ao criar patrimônio:', err);
-      }
+      },
     });
   }
 
@@ -105,9 +124,9 @@ export class Patrimonies implements OnInit {
         },
         error: (err) => {
           this.notificationService.showError('Erro ao deletar patrimônio.');
-          console.error("Erro ao deletar patrimonio", err);
+          console.error('Erro ao deletar patrimonio', err);
         },
-        complete: () => this.onCancel()
+        complete: () => this.onCancel(),
       });
     }
   }

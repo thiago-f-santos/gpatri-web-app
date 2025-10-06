@@ -50,7 +50,7 @@
 
     <div class="available-items-section">
       <h2 class="available-items-title">Itens disponíveis</h2>
-        @for (patrimony of state.patrimonies; track patrimony.id) {
+        @for (patrimony of state.patrimonyPage.content; track patrimony.id) {
           <app-patrimony-display
             [patrimonyName]="patrimony.nome"
             [categoryName]="patrimony.nomeCategoria"
@@ -62,6 +62,11 @@
         } @empty {
           <p class="request-subtitle">Nenhum item disponível no momento.</p>
         }
+      <app-pagination
+        [currentPage]="state.patrimonyPage.page.number"
+        [totalPages]="state.patrimonyPage.page.totalPages"
+        (pageChange)="onPageChange($event)">
+      </app-pagination>
     </div>
 
   } @else {

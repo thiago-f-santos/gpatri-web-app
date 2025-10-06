@@ -54,7 +54,7 @@
     <div class="found-items-section">
       <h2 class="found-items-title">Itens encontrados para '{{ previousSearch }}'</h2>
       
-      @for (patrimony of state.patrimonies; track patrimony.id) {
+      @for (patrimony of state.patrimonyPage.content; track patrimony.id) {
         <app-patrimony-display
           [patrimonyName]="patrimony.nome"
           [categoryName]="patrimony.nomeCategoria"
@@ -66,6 +66,11 @@
       } @empty {
         <p class="request-subtitle">Nenhum item encontrado para esta busca.</p>
       }
+      <app-pagination
+        [currentPage]="state.patrimonyPage.page.number"
+        [totalPages]="state.patrimonyPage.page.totalPages"
+        (pageChange)="onPageChange($event)">
+      </app-pagination>
     </div>
   } @else {
     <p class="request-subtitle">Buscando itens...</p>

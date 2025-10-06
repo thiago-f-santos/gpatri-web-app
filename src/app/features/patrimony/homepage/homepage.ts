@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError, combineLatest, map, Observable, of, take } from 'rxjs';
+import { catchError, combineLatest, map, Observable, of, startWith, switchMap, take } from 'rxjs';
 import { ItemPatrimony } from '../../../core/models/item-patrimony.model';
 import { LoanDto } from '../../../core/models/loan.model';
 import { Patrimony } from '../../../core/models/patrimony.model';
@@ -17,9 +17,12 @@ import { SearchInput } from '../../../shared/components/search-input/search-inpu
 import { ConditionDisplayPipe } from '../../../shared/pipes/condition-display-pipe';
 import { PatrimonyDisplay } from '../components/patrimony-display/patrimony-display';
 import { RequestItem, RequestStateService } from '../services/request-state-service';
+import { Page } from '../../../core/models/page.model';
+import { Pagination } from '../../../shared/components/pagination/pagination';
+import { BehaviorSubject } from 'rxjs';
 
 interface HomepageViewState {
-  patrimonies: Patrimony[];
+  patrimonyPage: Page<Patrimony>;
   requestItems: RequestItem[];
   selectedItems: ItemPatrimony[];
   returnDate: string;
@@ -37,12 +40,15 @@ interface HomepageViewState {
     Button,
     InputComponent,
     ConditionDisplayPipe,
+    Pagination,
   ],
   templateUrl: './homepage.html',
   styleUrl: './homepage.scss',
 })
 export class Homepage implements OnInit {
   viewState$!: Observable<HomepageViewState>;
+  private page$ = new BehaviorSubject<number>(0);
+  pageSize = 5;
 
   constructor(
     private patrimonyService: PatrimonyService,
@@ -54,24 +60,33 @@ export class Homepage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const patrimonies$ = this.patrimonyService.getAvailablePatrimonies().pipe(
-      catchError(() => {
-        this.notificationService.showError('Não foi possível carregar os itens disponíveis.');
-        return of([]);
-      })
+    const patrimonies$ = this.page$.pipe(
+      switchMap((page) =>
+        this.patrimonyService.getAvailablePatrimonies(page, this.pageSize).pipe(
+          catchError(() => {
+            this.notificationService.showError('Não foi possível carregar os itens disponíveis.');
+            return of({ content: [], page: { size: 5, number: 0, totalElements: 0, totalPages: 0 } });
+          })
+        )
+      )
     );
+
     const requestItems$ = this.requestStateService.requestItems$;
     const selectedItems$ = requestItems$.pipe(map((requestItems) => requestItems.map((reqItem) => reqItem.item)));
     const returnDate$ = this.requestStateService.returnDate$;
 
     this.viewState$ = combineLatest({
-      patrimonies: patrimonies$,
+      patrimonyPage: patrimonies$,
       requestItems: requestItems$,
       selectedItems: selectedItems$,
       returnDate: returnDate$,
     });
 
     this.headerService.showMenuButton();
+  }
+
+  onPageChange(page: number): void {
+    this.page$.next(page);
   }
 
   selectItem(item: ItemPatrimony, patrimony: Patrimony): void {

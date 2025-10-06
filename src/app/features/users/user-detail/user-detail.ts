@@ -51,7 +51,8 @@ export class UserDetail implements OnInit {
 
     this.loans$ = userId$.pipe(
       switchMap((id) =>
-        this.loanService.getLoansByUserId(id).pipe(
+        this.loanService.getLoansByUserId(id, 0, 5).pipe(
+          map((page) => page.content),
           catchError(() => {
             this.notificationService.showError('Não foi possível carregar os empréstimos do usuário.');
             return of([]);

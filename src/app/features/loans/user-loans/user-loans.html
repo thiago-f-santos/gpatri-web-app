@@ -11,12 +11,12 @@
           </app-confirmation-message>
       }
 
-    @if (loans$ | async; as loanRequests) {
-      @if (loanRequests.length === 0) {
+    @if (loans$ | async; as loanPage) {
+      @if (loanPage.content.length === 0) {
         <p class="no-requests-text">Você ainda não tem solicitações...</p>
       } @else {
         <div class="loan-requests-list">
-          @for (request of loanRequests; track request.id) {
+          @for (request of loanPage.content; track request.id) {
               @if (request.situacao === 'EM_ESPERA') {
                   <app-loan-display
                   [loanRequest]="request"
@@ -30,6 +30,11 @@
               }
           }
         </div>
+        <app-pagination
+          [currentPage]="loanPage.page.number"
+          [totalPages]="loanPage.page.totalPages"
+          (pageChange)="onPageChange($event)">
+        </app-pagination>
       }
     } @else {
       <p class="loading-text">Carregando solicitações...</p>

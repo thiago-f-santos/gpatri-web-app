@@ -2,7 +2,7 @@ export type CondicaoProduto = 'EXCELENTE' | 'BOM' | 'REGULAR' | 'DANIFICADO' | '
 
 export interface ItemPatrimony {
   id: string;
-  patrimonioId: string;
+  idPatrimonio: string;
   nomePatrimonio: string;
   condicaoProduto: CondicaoProduto;
   condicaoDescricao: string;

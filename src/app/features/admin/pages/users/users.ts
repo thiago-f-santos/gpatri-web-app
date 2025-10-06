@@ -6,16 +6,20 @@ import { User } from '../../../../core/models/user.model';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { UserService } from '../../../../core/services/user-service';
 import { UserCard } from './user-card/user-card';
+import { Page } from '../../../../core/models/page.model';
+import { Pagination } from '../../../../shared/components/pagination/pagination';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, UserCard],
+  imports: [CommonModule, UserCard, Pagination],
   templateUrl: './users.html',
   styleUrl: './users.scss',
 })
 export class Users implements OnInit {
-  users$!: Observable<User[]>;
+  users$!: Observable<Page<User>>;
+  currentPage = 0;
+  pageSize = 5;
 
   constructor(
     private userService: UserService,
@@ -28,12 +32,17 @@ export class Users implements OnInit {
   }
 
   loadUsers(): void {
-    this.users$ = this.userService.getUsers().pipe(
+    this.users$ = this.userService.getUsers(this.currentPage, this.pageSize).pipe(
       catchError(() => {
         this.notificationService.showError('Falha ao carregar usuários.');
-        return of([]);
+        return of({ content: [], page: { size: 5, number: 0, totalElements: 0, totalPages: 0 } });
       })
     );
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadUsers();
   }
 
   onView(user: User): void {

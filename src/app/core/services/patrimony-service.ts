@@ -1,30 +1,34 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Page } from '../models/page.model';
 import { Patrimony, PatrimonyDto } from '../models/patrimony.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PatrimonyService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/patrimonios/api/v1/patrimonios`;
 
-  getPatrimonies(): Observable<Patrimony[]> {
-    return this.http.get<Patrimony[]>(this.apiUrl);
+  getPatrimonies(page: number, size: number): Observable<Page<Patrimony>> {
+    const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+    return this.http.get<Page<Patrimony>>(this.apiUrl, { params });
   }
 
-  getAvailablePatrimonies(): Observable<Patrimony[]> {
-    return this.http.get<Patrimony[]>(`${this.apiUrl}/available`);
+  getAvailablePatrimonies(page: number, size: number): Observable<Page<Patrimony>> {
+    const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+    return this.http.get<Page<Patrimony>>(`${this.apiUrl}/available`, { params });
   }
 
   getPatrimonyById(id: string): Observable<Patrimony> {
     return this.http.get<Patrimony>(`${this.apiUrl}/${id}`);
   }
 
-  getPatrimoniesByName(name: string): Observable<Patrimony[]> {
-    return this.http.get<Patrimony[]>(`${this.apiUrl}?nome=${name}`);
+  getPatrimoniesByName(name: string, page: number, size: number): Observable<Page<Patrimony>> {
+    const params = new HttpParams().set('nome', name).set('page', page.toString()).set('size', size.toString());
+    return this.http.get<Page<Patrimony>>(this.apiUrl, { params });
   }
 
   createPatrimony(patrimonyDto: PatrimonyDto): Observable<Patrimony> {

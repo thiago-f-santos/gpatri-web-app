@@ -24,6 +24,7 @@
         label="Filtrar por"
         [options]="filterOptions"
         [(ngModel)]="selectedFilter"
+        (ngModelChange)="onFilterChange()"
         [backgroundColor]="'#1C1F27'">
       </app-select-input>
     </div>
@@ -32,7 +33,7 @@
       @if (isLoading()) {
         <p class="info-text">Carregando empréstimos...</p>
       } @else {
-        @for (loan of filteredLoans(); track loan.id) {
+        @for (loan of loans(); track loan.id) {
           <div class="loan-card" (click)="openViewModal(loan)">
             <div class="card-header">
                 <div class="text-container">
@@ -69,5 +70,10 @@
         }
       }
     </div>
+    <app-pagination
+        [currentPage]="currentPage()"
+        [totalPages]="totalPages()"
+        (pageChange)="onPageChange($event)">
+    </app-pagination>
   </div>
 </div>
