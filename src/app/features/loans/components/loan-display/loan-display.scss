@@ -75,23 +75,25 @@ $color-delete-button: #017BA9;
     align-items: center;
     padding: 0px 8px;
     border-radius: v.$border-radius-default;
+
+    &.em_espera {
+      background-color: $color-status-pending;
+    }
+
+    &.aprovado {
+      background-color: $color-status-approved;
+    }
+
+    &.negado {
+      background-color: $color-status-denied;
+    }
+
+    &.devolvido {
+      background-color: $color-status-returned;
+    }
 }
 
-.tag-em_espera {
-  background-color: $color-status-pending;
-}
 
-.tag-aprovado {
-  background-color: $color-status-approved;
-}
-
-.tag-negado {
-  background-color: $color-status-denied;
-}
-
-.tag-devolvido {
-  background-color: $color-status-returned;
-}
 
 .delete-button {
   border: none;

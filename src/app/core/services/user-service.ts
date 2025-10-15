@@ -13,7 +13,7 @@ export class UserService {
   private readonly apiUrl = `${environment.apiUrl}/usuarios/api/v1/usuarios`;
 
   getUsers(page: number, size: number): Observable<Page<User>> {
-    const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+    const params = new HttpParams().set('page', page.toString()).set('size', size.toString()).set('sortBy', 'nome').set('direction', 'ASC');
     return this.http.get<Page<User>>(this.apiUrl, { params });
   }
 

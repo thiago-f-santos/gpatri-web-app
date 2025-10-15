@@ -36,16 +36,16 @@
         @for (loan of loans(); track loan.id) {
           <div class="loan-card" (click)="openViewModal(loan)">
             <div class="card-header">
-                <div class="text-container">
-                    <h3 class="card-title"><strong>Solicitação</strong> #{{ loan.id.substring(0, 8) }}</h3>
-                    <p class="return-date">Devolução: {{ loan.dataDevolucao | date:'dd/MM/yyyy' }}</p>
-                </div>
-              
-              @if (isOverdue(loan)) {
-                <span class="status-tag overdue" [style.backgroundColor]="loan | overdueColor">Atrasado</span>
-              } @else {
-                <span class="status-tag" [ngClass]="loan.situacao.toLowerCase()">{{ loan.situacao | titlecase }}</span>
-              }
+              <div class="text-container">
+                  <h3 class="card-title"><strong>Solicitação</strong> #{{ loan.id.substring(0, 8) }}</h3>
+                  <p class="return-date">Devolução: {{ loan.dataDevolucao | date:'dd/MM/yyyy' }}</p>
+              </div>
+              <span
+                class="status-tag"
+                [ngClass]="loan.situacao.toLowerCase()"
+                [style.backgroundColor]="loan.situacao === 'ATRASADO' ? (loan | overdueColor) : null">
+                {{ loan.situacao | titlecase }}
+              </span>
             </div>
 
             <div class="items-list">
@@ -58,7 +58,7 @@
               }
             </div>
 
-            @if (loan.situacao === 'APROVADO' || isOverdue(loan)) {
+            @if (loan.situacao === 'APROVADO' || loan.situacao === 'ATRASADO') {
               <app-button
                 text="Devolver"
                 (onClick)="onReturnClick(loan)">
@@ -70,10 +70,13 @@
         }
       }
     </div>
-    <app-pagination
-        [currentPage]="currentPage()"
-        [totalPages]="totalPages()"
-        (pageChange)="onPageChange($event)">
-    </app-pagination>
+    
+    @if (totalPages() > 0) {
+      <app-pagination
+          [currentPage]="currentPage()"
+          [totalPages]="totalPages()"
+          (pageChange)="onPageChange($event)">
+      </app-pagination>
+    }
   </div>
 </div>

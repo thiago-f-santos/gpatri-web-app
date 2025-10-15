@@ -66,11 +66,14 @@
       } @empty {
         <p class="request-subtitle">Nenhum item encontrado para esta busca.</p>
       }
-      <app-pagination
-        [currentPage]="state.patrimonyPage.page.number"
-        [totalPages]="state.patrimonyPage.page.totalPages"
-        (pageChange)="onPageChange($event)">
-      </app-pagination>
+      
+      @if (state.patrimonyPage.page.totalPages > 0) {
+        <app-pagination
+          [currentPage]="state.patrimonyPage.page.number"
+          [totalPages]="state.patrimonyPage.page.totalPages"
+          (pageChange)="onPageChange($event)">
+        </app-pagination>
+      }
     </div>
   } @else {
     <p class="request-subtitle">Buscando itens...</p>

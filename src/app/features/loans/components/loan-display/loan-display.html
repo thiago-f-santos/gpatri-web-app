@@ -5,8 +5,11 @@
         <p class="card-text">Devolução: {{ loanRequest.dataDevolucao | date: 'dd/MM/yyyy' }}</p>
       </div>  
       <div class="card-actions">
-          <span class="status-tag" [ngClass]="'tag-' + loanRequest.situacao.toLowerCase()">
-              {{ statusText[loanRequest.situacao] }}
+          <span
+            class="status-tag"
+            [ngClass]="loanRequest.situacao.toLowerCase()"
+            [style.backgroundColor]="loanRequest.situacao === 'ATRASADO' ? (loanRequest | overdueColor) : null">
+            {{ loanRequest.situacao.replace('_', ' ') | titlecase }}
           </span>
           @if (showDeleteButton) {
               <button class="delete-button" (click)="onDelete()">

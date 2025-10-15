@@ -30,11 +30,14 @@
               }
           }
         </div>
-        <app-pagination
-          [currentPage]="loanPage.page.number"
-          [totalPages]="loanPage.page.totalPages"
-          (pageChange)="onPageChange($event)">
-        </app-pagination>
+        
+        @if (loanPage.page.totalPages > 0) {
+            <app-pagination
+              [currentPage]="loanPage.page.number"
+              [totalPages]="loanPage.page.totalPages"
+              (pageChange)="onPageChange($event)">
+            </app-pagination>
+        }
       }
     } @else {
       <p class="loading-text">Carregando solicitações...</p>

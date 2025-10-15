@@ -11,11 +11,14 @@
       } @empty {
         <p class="subtitle">Nenhum usuário cadastrado.</p>
       }
-      <app-pagination
-        [currentPage]="userPage.page.number"
-        [totalPages]="userPage.page.totalPages"
-        (pageChange)="onPageChange($event)">
-      </app-pagination>
+      
+      @if (userPage.page.totalPages > 0) {
+        <app-pagination
+          [currentPage]="userPage.page.number"
+          [totalPages]="userPage.page.totalPages"
+          (pageChange)="onPageChange($event)">
+        </app-pagination>
+      }
     } @else {
       <p class="subtitle">Carregando usuários...</p>
     }

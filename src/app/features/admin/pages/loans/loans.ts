@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Loan } from '../../../../core/models/loan.model';
 import { LoanService } from '../../../../core/services/loan-service';
@@ -70,6 +70,7 @@ export class Loans implements OnInit {
       APPROVED: 'APROVADO',
       DENIED: 'NEGADO',
       RETURNED: 'DEVOLVIDO',
+      OVERDUE: 'ATRASADO',
     };
 
     if (filter in statusMap) {
@@ -78,10 +79,6 @@ export class Loans implements OnInit {
 
     this.loanService.getLoans(this.currentPage(), this.pageSize, status).subscribe((data) => {
       let loansData = data.content.filter((loan) => loan.situacao !== 'EM_ESPERA');
-
-      if (filter === 'OVERDUE') {
-        loansData = loansData.filter((l) => this.isOverdue(l));
-      }
 
       this.loans.set(loansData);
       this.totalPages.set(data.page.totalPages);
@@ -97,10 +94,6 @@ export class Loans implements OnInit {
   onPageChange(page: number): void {
     this.currentPage.set(page);
     this.loadLoans();
-  }
-
-  isOverdue(loan: Loan): boolean {
-    return loan.situacao !== 'DEVOLVIDO' && loan.situacao !== 'NEGADO' && new Date(loan.dataDevolucao) < new Date();
   }
 
   onReturnClick(loan: Loan): void {
