@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ItemLoan } from '../../../../../../core/models/item-loan.model';
 import { Loan } from '../../../../../../core/models/loan.model';
 import { LoanService } from '../../../../../../core/services/loan-service';
-import { UserService } from '../../../../../../core/services/user-service';
 import { Button } from '../../../../../../shared/components/button/button';
 import { LoanItemDisplay } from '../loan-item-display/loan-item-display';
 import { NotificationService } from '../../../../../../core/services/notification.service';
@@ -15,7 +14,7 @@ import { NotificationService } from '../../../../../../core/services/notificatio
   templateUrl: './loan-details-modal.html',
   styleUrl: './loan-details-modal.scss'
 })
-export class LoanDetailsModal {
+export class LoanDetailsModal implements OnInit {
   @Input() loan!: Loan;
   @Output() close = new EventEmitter<void>();
   @Output() loanUpdated = new EventEmitter<void>();
@@ -25,15 +24,11 @@ export class LoanDetailsModal {
 
   constructor(
     private loanService: LoanService,
-    private userService: UserService,
     private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
-    this.userService.getUserById(this.loan.idUsuario).subscribe(user => {
-      this.requesterName = `${user.nome} ${user.sobrenome}`;
-    });
-
+    this.requesterName = `${this.loan.usuario.nome} ${this.loan.usuario.sobrenome}`;
     this.itemsRequested = this.loan.itensEmprestimo;
   }
 
